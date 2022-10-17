@@ -61,14 +61,14 @@ for (i in 1:length(n.train)){
       
       # Fit ED
       fit = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'none',
-                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=TRUE)
+                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
       U <- lapply(fit$U,function (e) "[["(e,"mat"))
       g.fitted <- create_g(fit$w, U)
       ed1[seed, i] = ed1[seed, i] + compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)[[1]]
   
       # Fit TED
       fit = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
-                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=TRUE)
+                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
       
       U <- lapply(fit$U,function (e) "[["(e,"mat"))
       g.fitted <- create_g(fit$w, U)
@@ -77,7 +77,7 @@ for (i in 1:length(n.train)){
   
       # Fit ED.reg
       fit = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'none',
-                                      tol = 1e-02, tol.lik = 1e-2, n0 = round(R/2), lambda = 0, maxiter = 5e3), verbose=TRUE)
+                                      tol = 1e-02, tol.lik = 1e-2, n0 = round(R/2), lambda = 0, maxiter = 5e3), verbose=FALSE)
       
       U <- lapply(fit$U,function (e) "[["(e,"mat"))
       g.fitted <- create_g(fit$w, U)
@@ -86,7 +86,7 @@ for (i in 1:length(n.train)){
   
       # Fit TED.reg
       fit = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
-                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = round(R/2), maxiter = 5e3), verbose=TRUE)
+                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = round(R/2), maxiter = 5e3), verbose=FALSE)
       U <- lapply(fit$U,function (e) "[["(e,"mat"))
       g.fitted <- create_g(fit$w, U)
       ted2[seed, i] = ted2[seed, i] + compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)[[1]]
@@ -137,14 +137,14 @@ for (i in 1:length(n.train)){
       
       # Fit ED
       fit = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'none',
-                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=TRUE)
+                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
       U <- lapply(fit$U,function (e) "[["(e,"mat"))
       g.fitted <- create_g(fit$w, U)
       ed1[seed, i] = ed1[seed, i] + compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)[[1]]
   
       # Fit TED
       fit = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
-                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=TRUE)
+                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
       
       U <- lapply(fit$U,function (e) "[["(e,"mat"))
       g.fitted <- create_g(fit$w, U)
@@ -153,7 +153,7 @@ for (i in 1:length(n.train)){
   
       # Fit ED.reg
       fit = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'none',
-                                      tol = 1e-02, tol.lik = 1e-2, n0 = round(R/2), lambda = 0, maxiter = 5e3), verbose=TRUE)
+                                      tol = 1e-02, tol.lik = 1e-2, n0 = round(R/2), lambda = 0, maxiter = 5e3), verbose=FALSE)
       
       U <- lapply(fit$U,function (e) "[["(e,"mat"))
       g.fitted <- create_g(fit$w, U)
@@ -162,7 +162,7 @@ for (i in 1:length(n.train)){
   
       # Fit TED.reg
       fit = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
-                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = round(R/2), maxiter = 5e3), verbose=TRUE)
+                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = round(R/2), maxiter = 5e3), verbose=FALSE)
       U <- lapply(fit$U,function (e) "[["(e,"mat"))
       g.fitted <- create_g(fit$w, U)
       ted2[seed, i] = ted2[seed, i] + compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)[[1]]

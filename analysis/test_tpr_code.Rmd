@@ -13,6 +13,11 @@ Change sample size and see how true positive rate and positive predictive value 
 
 2. Simulation 2: True $U$s contains 10 unconstrained matrix. 
 
+```{r knitr, echo=FALSE}
+knitr::opts_chunk$set(comment = "#",results = "hold",collapse = TRUE,
+                      fig.align = "center", warning = FALSE, message = FALSE)
+```
+
 ```{r}
 source("./code/simulation_func.R")
 

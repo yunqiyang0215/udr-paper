@@ -153,10 +153,10 @@ compute_metrics <- function(fit, dat, param){
   mc <- mash_set_data(dat$X, Shat = 1)
   mc.fit <- mash(mc, g = g.fitted, fixg = TRUE)
   mc.true <- mash(mc, g = g.true, fixg = TRUE)
- 
+
   # Compare lfsr
   res.lfsr <- compare_lfsr_fitted_vs_truth(dat, g.fitted, mc, threshold = 0.95)
-    
+
   # Compute posterior fit
   logpost <- compute_posterior_loglik(dat$X, dat$theta, mc.fit$posterior_weights, U, param$V) -
     compute_posterior_loglik(dat$X, dat$theta, mc.true$posterior_weights, param$U, param$V)
@@ -167,33 +167,33 @@ compute_metrics <- function(fit, dat, param){
 }
 
 
-#' Function to compare lfsr obtained under true parameters vs fitted parameters. 
+#' Function to compare lfsr obtained under true parameters vs fitted parameters.
 #' @param g.true: an object created for mash input under true parameters
 #' @param g.fitted: an object created for mash input under fitted parameters
 #' @param mc: a mash object
 #' @returns ppv: positive predictive value; tpr: true positive rate. This is different from the traditional definition
 compare_lfsr_fitted_vs_true_param <- function(g.true, g.fitted, mc){
-  
+
   res.true <- mashr::mash_compute_posterior_matrices(g.true, mc)
   res.fitted <- mashr::mash_compute_posterior_matrices(g.fitted, mc)
-  
+
   # Calculate probability that an effect is positive
   res.true$PositiveProb = 1 - res.true$NegativeProb - res.true$lfdr
   res.fitted$PositiveProb = 1 - res.fitted$NegativeProb - res.fitted$lfdr
-  
+
   # number of true positives, true discoveries with correct signs
-  tp = sum(sum((res.true$PositiveProb >= 0.95) & (res.fitted$PositiveProb >= 0.95)) + 
+  tp = sum(sum((res.true$PositiveProb >= 0.95) & (res.fitted$PositiveProb >= 0.95)) +
              sum((res.true$NegativeProb >= 0.95) & (res.fitted$NegativeProb >= 0.95)))
   # ns.true: non-signals under truth
   # ns.fitted: non-signals under fitted param
   ns.true = (res.true$NegativeProb < 0.95) & (res.true$PositiveProb < 0.95)
   ns.fitted = (res.fitted$NegativeProb < 0.95) & (res.fitted$PositiveProb < 0.95)
-  
+
   # fp(false positives): real non-signals classified as signals under fitted param + signals with wrong signs compared to truth
-  fp = sum(ns.true) - sum(ns.true & ns.fitted) + 
+  fp = sum(ns.true) - sum(ns.true & ns.fitted) +
     sum((res.true$PositiveProb >= 0.95) & (res.fitted$NegativeProb >= 0.95)) +
     sum((res.true$NegativeProb >= 0.95) & (res.fitted$PositiveProb >= 0.95))
-  
+
   tpr =  tp/ sum(sum(res.true$PositiveProb >= 0.95) + sum(res.true$NegativeProb >= 0.95))
   ppv = tp/(tp + fp)
   res <- c(tpr, ppv)
@@ -206,31 +206,31 @@ compare_lfsr_fitted_vs_true_param <- function(g.true, g.fitted, mc){
 #' @param dat: a data object from simulate_mixture_ebnm() containing X, theta, Z.
 #' @param g.fitted: an object created for mash input under fitted parameters
 #' @param mc: a mash object
-#' @param threshold: a threshold for lfsr. Usually it's 0.95, but can be more stringent. 
+#' @param threshold: a threshold for lfsr. Usually it's 0.95, but can be more stringent.
 #' @returns ppv: positive predictive value; tpr: true positive rate. This is different from the traditional definition
 compare_lfsr_fitted_vs_truth <- function(dat, g.fitted, mc, threshold){
-  
+
 
   res.fitted <- mashr::mash_compute_posterior_matrices(g.fitted, mc)
-  
+
   # Calculate probability that an effect is positive
   res.fitted$PositiveProb = 1 - res.fitted$NegativeProb - res.fitted$lfdr
-  
+
   # number of true positives, true discoveries with correct signs
-  tp = sum(sum((dat$theta > 0) & (res.fitted$PositiveProb >= threshold)) + 
+  tp = sum(sum((dat$theta > 0) & (res.fitted$PositiveProb >= threshold)) +
              sum((dat$theta < 0) & (res.fitted$NegativeProb >= threshold)))
-  
-  
+
+
   # ns.true: non-signals
   # ns.fitted: non-signals under fitted param
   ns.true = dat$theta == 0
   ns.fitted = (res.fitted$NegativeProb < threshold) & (res.fitted$PositiveProb < threshold)
-  
+
   # fp(false positives): real non-signals classified as signals under fitted param + signals with wrong signs compared to truth
-  fp = sum(ns.true) - sum(ns.true & ns.fitted) + 
+  fp = sum(ns.true) - sum(ns.true & ns.fitted) +
     sum((dat$theta > 0) & (res.fitted$NegativeProb >= threshold)) +
     sum((dat$theta < 0) & (res.fitted$PositiveProb >= threshold))
-  
+
   tpr =  tp/ sum(sum(dat$theta > 0) + sum(dat$theta<0))
   ppv = tp/(tp + fp)
   res <- c(tpr, ppv)
@@ -245,6 +245,9 @@ compare_lfsr_fitted_vs_truth <- function(dat, g.fitted, mc, threshold){
 # @param num: number of matrices to simulate
 cov_singletons = function(R, num){
   Ulist = list()
+  if (num == 0) {
+    return(Ulist)
+  }
   if (num >= R) {num = R}
   for (i in 1:num){
     U = matrix(0, ncol = R, nrow = R)
@@ -265,9 +268,9 @@ sim_U_true <- function(R, null.mat = TRUE, identity = TRUE, num_singleton, num_u
   for (i in 1:num_unconstrained){
     U <- udr:::sim_unconstrained(R)
     U <- U/max(U)
-    U_unconstrained[[i]] <- U 
+    U_unconstrained[[i]] <- U
   }
-  
+
   U.c = list()
   if (null.mat == TRUE){
     U.null <- matrix(0, ncol = R, nrow = R)
@@ -277,7 +280,7 @@ sim_U_true <- function(R, null.mat = TRUE, identity = TRUE, num_singleton, num_u
     U.identity = diag(R)
     U.c = c(U.c, list(U.identity))
   }
-  
+
   Ulist = c(U_unconstrained, U_singletons, U.c)
   return(Ulist)
 }

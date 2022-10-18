@@ -206,7 +206,7 @@ compare_lfsr_fitted_vs_true_param <- function(g.true, g.fitted, mc){
 #' @param dat: a data object from simulate_mixture_ebnm() containing X, theta, Z.
 #' @param g.fitted: an object created for mash input under fitted parameters
 #' @param mc: a mash object
-#' @param threshold: a threshold for lfsr. Usually it's 0.95, but can be more stringent.
+#' @param threshold: a threshold for lfsr. Usually it's 0.95.
 #' @returns ppv: positive predictive value; tpr: true positive rate. This is different from the traditional definition
 compare_lfsr_fitted_vs_truth <- function(dat, g.fitted, mc, threshold){
 
@@ -217,8 +217,8 @@ compare_lfsr_fitted_vs_truth <- function(dat, g.fitted, mc, threshold){
   res.fitted$PositiveProb = 1 - res.fitted$NegativeProb - res.fitted$lfdr
 
   # number of true positives, true discoveries with correct signs
-  tp = sum(sum((dat$theta > 0) & (res.fitted$PositiveProb >= threshold)) +
-             sum((dat$theta < 0) & (res.fitted$NegativeProb >= threshold)))
+  tp = sum((dat$theta > 0) & (res.fitted$PositiveProb >= threshold)) +
+             sum((dat$theta < 0) & (res.fitted$NegativeProb >= threshold))
 
 
   # ns.true: non-signals
@@ -231,7 +231,7 @@ compare_lfsr_fitted_vs_truth <- function(dat, g.fitted, mc, threshold){
     sum((dat$theta > 0) & (res.fitted$NegativeProb >= threshold)) +
     sum((dat$theta < 0) & (res.fitted$PositiveProb >= threshold))
 
-  tpr =  tp/ sum(sum(dat$theta > 0) + sum(dat$theta<0))
+  tpr =  tp/(sum(dat$theta > 0) + sum(dat$theta<0))
   ppv = tp/(tp + fp)
   res <- c(tpr, ppv)
   names(res) = c("tpr", "ppv")

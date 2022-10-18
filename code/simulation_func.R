@@ -243,7 +243,7 @@ compare_lfsr_fitted_vs_truth <- function(dat, g.fitted, mc, threshold){
 # Simulate single condition covariance matrix.
 # @param R: covariance dimension
 # @param num: number of matrices to simulate
-cov_singletons = function(R, num){
+cov_singleton <- function(R, num){
   Ulist = list()
   if (num == 0) {
     return(Ulist)
@@ -263,12 +263,10 @@ cov_singletons = function(R, num){
 # @param R: data dimension
 sim_U_true <- function(R, null.mat = TRUE, identity = TRUE, num_singleton, num_unconstrained){
   U_unconstrained = list()
-  U_singletons <- cov_singletons(R, num_singleton)
+  U_singletons <- cov_singleton(R, num_singleton)
 
   for (i in 1:num_unconstrained){
-    U <- udr:::sim_unconstrained(R)
-    U <- U/max(U)
-    U_unconstrained[[i]] <- U
+    U_unconstrained[[i]] <- sim_invwishart(R, nu = R + 2, s = 5)
   }
 
   U.c = list()
@@ -286,6 +284,18 @@ sim_U_true <- function(R, null.mat = TRUE, identity = TRUE, num_singleton, num_u
 }
 
 
+# Function to simulate from inverse Wishart distribution
+# @param nu: degree of freedom
+# @param R: matrix dimension
+# @param s: scale of the matrix
+# @return U
+sim_invwishart <- function(R, nu = R + 2, s = 5){
+  # With the standard parameterization, U <- rinvwishart(nu, S), E(U) = S/(nu-R - 1).
+  # If we want E(U) <- s*I, then
+  S <- s*(nu- R - 1)*diag(R)
+  U <- rinvwishart(nu, S)
+  return(U)
+}
 
 
 

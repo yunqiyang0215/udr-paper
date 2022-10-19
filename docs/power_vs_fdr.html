@@ -485,16 +485,16 @@ unnamed-chunk-6
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree534d5382bc03c810bdc080fef60d32911e6ca26atargetblank534d538a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/534d5382bc03c810bdc080fef60d32911e6ca26a" target="_blank">534d538</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree565821312c70aca8ae42c0f092a29264c42b4831targetblank5658213a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/565821312c70aca8ae42c0f092a29264c42b4831" target="_blank">5658213</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree534d5382bc03c810bdc080fef60d32911e6ca26atargetblank534d538a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree565821312c70aca8ae42c0f092a29264c42b4831targetblank5658213a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/534d5382bc03c810bdc080fef60d32911e6ca26a" target="_blank">534d538</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/565821312c70aca8ae42c0f092a29264c42b4831" target="_blank">5658213</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -507,6 +507,7 @@ Ignored files:
     Ignored:    analysis/power_vs_fdr_cache/
 
 Unstaged changes:
+    Modified:   analysis/index.Rmd
     Modified:   analysis/test_tpr_code.Rmd
 
 </code></pre>
@@ -546,6 +547,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/565821312c70aca8ae42c0f092a29264c42b4831/analysis/power_vs_fdr.Rmd" target="_blank">5658213</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-10-19
+</td>
+<td>
+wflow_publish("analysis/power_vs_fdr.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/39a7768efaafaf40528082ec79ce2e6c5e3b765b/docs/power_vs_fdr.html" target="_blank">39a7768</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-10-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -614,6 +649,7 @@ wflow_publish("analysis/power_vs_fdr.Rmd")
 <li><p>The scale of U, <span class="math inline">\(s\)</span> set to be 5.</p></li>
 <li><p>R = 5, scale of U = 5</p></li>
 <li><p>n.train = c(50, 100, 500, 2e3)</p></li>
+<li><p>50 data replicates</p></li>
 </ol>
 <pre class="r"><code># Create a data frame used to plot a power vs. FDR curve. Input
 # argument &quot;true&quot; is a logical vector in which true[i] is TRUE if and
@@ -2367,6 +2403,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/39a7768efaafaf40528082ec79ce2e6c5e3b765b/docs/figure/power_vs_fdr.Rmd/unnamed-chunk-7-1.png" target="_blank">39a7768</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-10-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/yunqiyang0215/udr-paper/blob/481dce1255d209d95ec77e2bccdb9a51c185abb1/docs/figure/power_vs_fdr.Rmd/unnamed-chunk-7-1.png" target="_blank">481dce1</a>
 </td>
 <td>
@@ -2390,6 +2437,43 @@ points(output.ted1[[4]]$fdr, output.ted1[[4]]$power, col = 4, type = &quot;b&quo
 legend(&quot;topleft&quot;, legend = c(&quot;n: 50&quot;, &quot;n: 100&quot;, &quot;n: 500&quot;, &quot;n: 2e3&quot;), 
        col = c(1:4), lty=1)</code></pre>
 <p><img src="figure/power_vs_fdr.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-2">
+Past versions of unnamed-chunk-7-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/39a7768efaafaf40528082ec79ce2e6c5e3b765b/docs/figure/power_vs_fdr.Rmd/unnamed-chunk-7-2.png" target="_blank">39a7768</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-10-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

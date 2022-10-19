@@ -24,6 +24,7 @@ knitr::opts_chunk$set(comment = "#",
 3. The scale of U, $s$ set to be 5.
 4. R = 5, scale of U = 5
 5. n.train = c(50, 100, 500, 2e3)
+6. 50 data replicates
 
 
 ```{r}

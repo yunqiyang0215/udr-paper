@@ -7,3 +7,5 @@ output: workflowr::wflow_html
 
 
 + [Test code for true positive rate](test_tpr_code.html)
+
++ [Plot power vs. false discovery rate](power_vs_fdr.html)

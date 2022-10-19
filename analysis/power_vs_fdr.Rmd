@@ -8,27 +8,22 @@ output: html_document
 ### Description: plot power vs. fdr by comparing lfsr with true means, varying training sample size. 
 
 #### Simulating data parameter settings:
-1. K = 10, Vj=I.
-2. True Us: identity + 5 singletons + 4 unconstrained Us from rinwishart. 
+1. K = 5, Vj=I.
+2. True Us: identity + 5 singletons. 
 
-```{r}
-# Function to simulate from inverse Wishart distribution
-# @param nu: degree of freedom
-# @param R: matrix dimension
-# @param s: scale of the matrix
-# @return U
-sim_invwishart <- function(R, nu = R + 2, s = 5){
-  # With the standard parameterization, U <- rinvwishart(nu, S), E(U) = S/(nu-R - 1).
-  # If we want E(U) <- s*I, then
-  S <- s*(nu- R - 1)*diag(R)
-  U <- rinvwishart(nu, S)
-  return(U)
-}
+```{r include = FALSE}
+knitr::opts_chunk$set(comment = "#",
+                      results = "hold",
+                      collapse = TRUE,
+                      fig.align = "center",
+                      warning = FALSE,
+                      message = FALSE)
 ```
+
 
 3. The scale of U, $s$ set to be 5.
 4. R = 5, scale of U = 5
-5. n.train = c(50, 100, 500, 1e3, 2e3, 5e3)
+5. n.train = c(50, 100, 500, 2e3)
 
 
 ```{r}
@@ -76,18 +71,17 @@ library(LaplacesDemon)
 ```
 
 ```{r}
-
 K = 10
 R = 5
 s = 5
-n.train = c(50, 100, 500, 1e3, 2e3, 5e3)
+n.train = c(50, 100, 500, 2e3)
 param = list(w = rep(1/K, K), U = list(), V = diag(R))
-seeds = c(1:10)
+seeds = c(1:50)
 
 ```
 
 #### Use ED algorithm to fit. 
-```{r}
+```{r cache = TRUE}
 
 output.ed1 <- list()
 for (i in 1:length(n.train)){
@@ -121,7 +115,7 @@ for (i in 1:length(n.train)){
 ```
 
 #### Use TED algorithm to fit. 
-```{r}
+```{r cache = TRUE}
 
 output.ted1 <- list()
 for (i in 1:length(n.train)){
@@ -155,17 +149,14 @@ for (i in 1:length(n.train)){
 ```
 
 ```{r}
-par(mfrow = c(1,2))
 
 plot(output.ed1[[1]]$fdr, output.ed1[[1]]$power, col = 1, type = "b",  pch = 20, cex = 0.5,
      ylab = "power", xlab = "fdr", main = "ED fit")
 points(output.ed1[[2]]$fdr, output.ed1[[2]]$power, col = 2, type = "b", pch = 20, cex = 0.5)
 points(output.ed1[[3]]$fdr, output.ed1[[3]]$power, col = 3, type = "b", pch = 20, cex = 0.5)
 points(output.ed1[[4]]$fdr, output.ed1[[4]]$power, col = 4, type = "b", pch = 20, cex = 0.5)
-points(output.ed1[[5]]$fdr, output.ed1[[5]]$power, col = 5, type = "b", pch = 20, cex = 0.5)
-points(output.ed1[[6]]$fdr, output.ed1[[6]]$power, col = 6, type = "b", pch = 20, cex = 0.5)
-legend("topleft", legend = c("n: 50", "n: 100", "n: 500", "n: 1e3", "n: 2e3", "n: 5e3"), 
-       col = c(1:6), lty=1)
+legend("topleft", legend = c("n: 50", "n: 100", "n: 500", "n: 2e3"), 
+       col = c(1:4), lty=1)
 
 
 plot(output.ted1[[1]]$fdr, output.ted1[[1]]$power, col = 1, type = "b",  pch = 20, cex = 0.5,
@@ -173,8 +164,6 @@ plot(output.ted1[[1]]$fdr, output.ted1[[1]]$power, col = 1, type = "b",  pch = 2
 points(output.ted1[[2]]$fdr, output.ted1[[2]]$power, col = 2, type = "b", pch = 20, cex = 0.5)
 points(output.ted1[[3]]$fdr, output.ted1[[3]]$power, col = 3, type = "b", pch = 20, cex = 0.5)
 points(output.ted1[[4]]$fdr, output.ted1[[4]]$power, col = 4, type = "b", pch = 20, cex = 0.5)
-points(output.ted1[[5]]$fdr, output.ted1[[5]]$power, col = 5, type = "b", pch = 20, cex = 0.5)
-points(output.ted1[[6]]$fdr, output.ted1[[6]]$power, col = 6, type = "b", pch = 20, cex = 0.5)
-legend("topleft", legend = c("n: 50", "n: 100", "n: 500", "n: 1e3", "n: 2e3", "n: 5e3"), 
-       col = c(1:6), lty=1)
+legend("topleft", legend = c("n: 50", "n: 100", "n: 500", "n: 2e3"), 
+       col = c(1:4), lty=1)
 ```

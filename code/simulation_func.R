@@ -242,8 +242,9 @@ compare_lfsr_fitted_vs_truth <- function(dat, g.fitted, mc, threshold){
 
 # Simulate single condition covariance matrix.
 # @param R: covariance dimension
+# @param s: scale of the matrix
 # @param num: number of matrices to simulate
-cov_singleton <- function(R, num){
+cov_singletons = function(R, s, num){
   Ulist = list()
   if (num == 0) {
     return(Ulist)
@@ -251,7 +252,7 @@ cov_singleton <- function(R, num){
   if (num >= R) {num = R}
   for (i in 1:num){
     U = matrix(0, ncol = R, nrow = R)
-    U[i, i] = 1
+    U[i, i] = s
     Ulist[[i]] = U
   }
   return(Ulist)
@@ -261,12 +262,13 @@ cov_singleton <- function(R, num){
 
 # Function to simulate various Us.
 # @param R: data dimension
-sim_U_true <- function(R, null.mat = TRUE, identity = TRUE, num_singleton, num_unconstrained){
+# @param s: scale of the matrix
+sim_U_true <- function(R, s, null.mat = TRUE, identity = TRUE, num_singleton, num_unconstrained){
   U_unconstrained = list()
-  U_singletons <- cov_singleton(R, num_singleton)
+  U_singletons <- cov_singletons(R, s, num_singleton)
 
   for (i in 1:num_unconstrained){
-    U_unconstrained[[i]] <- sim_invwishart(R, nu = R + 2, s = 5)
+    U_unconstrained[[i]] <- sim_invwishart(R, nu = R + 2, s = s)
   }
 
   U.c = list()
@@ -296,7 +298,4 @@ sim_invwishart <- function(R, nu = R + 2, s = 5){
   U <- rinvwishart(nu, S)
   return(U)
 }
-
-
-
 

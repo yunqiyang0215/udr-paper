@@ -207,3 +207,13 @@ legend("topleft", legend = c("oracle", "ed", "ted"), col = c(1:3), lty=1, cex = 
 
 ```
 
+```{r}
+plot(output.oracle[[1]]$fdr, output.oracle[[1]]$power, col = 1, type = "b",  pch = 20, cex = 0.5,
+     ylab = "power", xlab = "fdr", main = "Oracle")
+points(output.oracle[[2]]$fdr, output.oracle[[2]]$power, col = 2, type = "b", pch = 20, cex = 0.5)
+points(output.oracle[[3]]$fdr, output.oracle[[3]]$power, col = 3, type = "b", pch = 20, cex = 0.5)
+points(output.oracle[[4]]$fdr, output.oracle[[4]]$power, col = 4, type = "b", pch = 20, cex = 0.5)
+legend("topleft", legend = c("n: 50", "n: 100", "n: 500", "n: 2e3"), 
+       col = c(1:4), lty=1)
+```
+

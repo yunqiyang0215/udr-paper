@@ -1,0 +1,153 @@
+---
+title: "lfsr_calibration"
+author: "Yunqi Yang"
+date: "11/2/2022"
+output: html_document
+---
+
+```{r}
+source("./code/simulation_func.R")
+library(udr)
+library(mashr)
+library(mvtnorm)
+library(LaplacesDemon)
+```
+
+```{r}
+#### True param in simulation
+K = 10
+R = 5
+s = 5
+n.train = c(1e2, 5e3)
+range = c(0.045, 0.055)
+param = list(w = rep(1/K, K), U = list(), V = diag(R))
+seeds = c(1:20)
+```
+
+
+```{r}
+output.oracle <- list()
+for (i in 1:length(n.train)){
+  empirical_est <- c()
+  for (seed in seeds){
+      set.seed(seed)
+      param$U <-  sim_U_true(R, s, null.mat = FALSE, identity = TRUE, num_singleton = 5, num_unconstrained = 4)
+      dat.train <- simulate_mixture_ebnm(n.train[i], param$w,param$U,param$V)
+      mc <- mash_set_data(dat.train$X, Shat = 1)
+      theta_mat = dat.train$theta
+      
+      g.fitted <- create_g(param$w, param$U)
+      res <- mash(mc, g = g.fitted, fixg = TRUE)
+      lfsr_mat <- res$result$lfsr
+      
+      signals <- sum(lfsr_mat >= range[1] & lfsr_mat <= range[2])
+      if (signals != 0){
+        false_signals <- sum((lfsr_mat >= range[1] & lfsr_mat <= range[2]) & theta_mat == 0)
+        fpr_empirical = false_signals/ signals
+        empirical_est <- c(empirical_est, fpr_empirical)
+      }
+  }
+  output.oracle[[i]] = empirical_est
+}
+```
+
+```{r}
+output.ed1 <- list()
+for (i in 1:length(n.train)){
+  empirical_est <- c()
+  for (seed in seeds){
+      set.seed(seed)
+      param$U <-  sim_U_true(R, s, null.mat = FALSE, identity = TRUE, num_singleton = 5, num_unconstrained = 4)
+      dat.train <- simulate_mixture_ebnm(n.train[i], param$w,param$U,param$V)
+      mc <- mash_set_data(dat.train$X, Shat = 1)
+      
+      theta_mat = dat.train$theta
+      
+      set.seed(888)
+      U.init = c()
+      for (k in 1:K){
+        U.init[[k]] <- udr:::sim_unconstrained(R)
+      }
+      f0 = ud_init(X = dat.train$X, V = param$V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+      # Fit ED
+      fit = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'none',
+                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
+      U <- lapply(fit$U,function (e) "[["(e,"mat"))
+      g.fitted <- create_g(fit$w, U)
+      res <- mash(mc, g = g.fitted, fixg = TRUE)
+      lfsr_mat<- res$result$lfsr
+      signals <- sum(lfsr_mat >= range[1] & lfsr_mat <= range[2])
+      if (signals != 0){
+        false_signals <- sum((lfsr_mat >= range[1] & lfsr_mat <= range[2]) & theta_mat == 0)
+        fpr_empirical = false_signals/ signals
+        empirical_est <- c(empirical_est, fpr_empirical)
+      }
+  } 
+  output.ed1[[i]] <- empirical_est
+}
+```
+
+
+
+```{r}
+output.ted1 <- list()
+for (i in 1:length(n.train)){
+  empirical_est <- c()
+  for (seed in seeds){
+      set.seed(seed)
+      param$U <-  sim_U_true(R, s, null.mat = FALSE, identity = TRUE, num_singleton = 5, num_unconstrained = 4)
+      dat.train <- simulate_mixture_ebnm(n.train[i], param$w,param$U,param$V)
+      mc <- mash_set_data(dat.train$X, Shat = 1)
+      
+      theta_mat = dat.train$theta
+      
+      set.seed(888)
+      U.init = c()
+      for (k in 1:K){
+        U.init[[k]] <- udr:::sim_unconstrained(R)
+      }
+      f0 = ud_init(X = dat.train$X, V = param$V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+      # Fit ED
+      fit = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
+                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
+      U <- lapply(fit$U,function (e) "[["(e,"mat"))
+      g.fitted <- create_g(fit$w, U)
+      res <- mash(mc, g = g.fitted, fixg = TRUE)
+      lfsr_mat<- res$result$lfsr
+      signals <- sum(lfsr_mat >= range[1] & lfsr_mat <= range[2])
+      if (signals != 0){
+        false_signals <- sum((lfsr_mat >= range[1] & lfsr_mat <= range[2]) & theta_mat == 0)
+        fpr_empirical = false_signals/ signals
+        empirical_est <- c(empirical_est, fpr_empirical)
+      }
+  } 
+  output.ted1[[i]] <- empirical_est
+}
+```
+
+```{r}
+par(mfrow = c(1,2))
+plot(output.oracle[[1]], ylab = "empirical fpr", main = "Oracle: n = 100")
+abline(h = 0.05, col = 2)
+plot(output.oracle[[2]], ylab = "empirical fpr", main = "Oracle: n = 5000")
+abline(h = 0.05, col = 2)
+```
+
+```{r}
+par(mfrow = c(1,2))
+plot(output.ed1[[1]], ylab = "empirical fpr", main = "ED: n = 100")
+abline(h = 0.05, col = 2)
+plot(output.ed1[[2]], ylab = "empirical fpr", main = "ED: n = 5000")
+abline(h = 0.05, col = 2)
+```
+
+
+```{r}
+par(mfrow = c(1,2))
+plot(output.ted1[[1]], ylab = "empirical fpr", main = "TED: n = 100")
+abline(h = 0.05, col = 2)
+plot(output.ted1[[2]], ylab = "empirical fpr", main = "TED: n = 5000")
+abline(h = 0.05, col = 2)
+```
+
+

@@ -39,7 +39,7 @@ param = list(w = rep(1/K, K), U = list(), V = diag(R))
 ## Simulation 1: True $U$s contains 5 singleton matrix + 5 unconstrained matrix. 
 ```{r }
 #### Simulation and fitting
-seeds = c(1:5)
+seeds = c(1:20)
 
 ed1 <- matrix(0, ncol = 4, nrow = length(seeds))
 ted1 <- matrix(0, ncol = 4, nrow = length(seeds))

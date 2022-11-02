@@ -20,18 +20,18 @@ knitr::opts_chunk$set(comment = "#",results = "hold",collapse = TRUE,
 
 ```{r}
 source("./code/simulation_func.R")
-
-#### Load packages
 library(udr)
 library(mashr)
 library(mvtnorm)
+library(LaplacesDemon)
 ```
 
 ```{r }
 #### True param in simulation
 K = 10
 R = 5
-n.train = c(5e2, 1e3, 5e3, 1e4)
+s = 5
+n.train = c(1e2, 5e2, 1e3, 5e3)
 threshold = 0.95
 param = list(w = rep(1/K, K), U = list(), V = diag(R))
 ```
@@ -52,7 +52,7 @@ for (i in 1:length(n.train)){
   for (seed in seeds){
   # Simulate data
       set.seed(seed)
-      param$U <-  sim_U_true(R, null.mat = FALSE, identity = TRUE, num_singleton = 5, num_unconstrained = 4)
+      param$U <-  sim_U_true(R, s, null.mat = FALSE, identity = TRUE, num_singleton = 5, num_unconstrained = 4)
       dat.train <- simulate_mixture_ebnm(n.train[i], param$w,param$U,param$V)
       mc <- mash_set_data(dat.train$X, Shat = 1)
       
@@ -78,83 +78,6 @@ for (i in 1:length(n.train)){
       U <- lapply(fit$U,function (e) "[["(e,"mat"))
       g.fitted <- create_g(fit$w, U)
       ted1[seed, i] = ted1[seed, i] + compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)[[1]]
-  
-  
-      # Fit ED.reg
-      fit = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'none',
-                                      tol = 1e-02, tol.lik = 1e-2, n0 = round(R/2), lambda = 0, maxiter = 5e3), verbose=FALSE)
-      
-      U <- lapply(fit$U,function (e) "[["(e,"mat"))
-      g.fitted <- create_g(fit$w, U)
-      ed2[seed, i] = ed2[seed, i] + compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)[[1]]
-
-  
-      # Fit TED.reg
-      fit = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
-                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = round(R/2), maxiter = 5e3), verbose=FALSE)
-      U <- lapply(fit$U,function (e) "[["(e,"mat"))
-      g.fitted <- create_g(fit$w, U)
-      ted2[seed, i] = ted2[seed, i] + compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)[[1]]
-    }
-}
-
-
-```
-
-```{r}
-par(mfrow = c(2,2))
-boxplot(ed1, names = n.train, xlab = "n.train", ylab = "true positive rate", main = "ED")
-boxplot(ted1, names = n.train, xlab = "n.train", ylab = "true positive rate", main = "TED")
-boxplot(ed2, names = n.train, xlab = "n.train", ylab = "true positive rate", main = "ED.reg")
-boxplot(ted2, names = n.train, xlab = "n.train", ylab = "true positive rate", main = "TED.reg")
-
-```
-
-
-## Simulation 2: True $U$s contains 10 unconstrained matrix. 
-
-```{r }
-#### Simulation and fitting
-seeds = c(1:5)
-
-ed1 <- matrix(0, ncol = 4, nrow = length(seeds))
-ted1 <- matrix(0, ncol = 4, nrow = length(seeds))
-ed2 <- matrix(0, ncol = 4, nrow = length(seeds))
-ted2 <- matrix(0, ncol = 4, nrow = length(seeds))
-fa <- matrix(0, ncol = 4, nrow = length(seeds))
-
-
-for (i in 1:length(n.train)){
-  for (seed in seeds){
-  # Simulate data
-      set.seed(seed)
-      param$U <-  sim_U_true(R, null.mat = FALSE, identity = TRUE, num_singleton = 0, num_unconstrained = 9)
-      dat.train <- simulate_mixture_ebnm(n.train[i], param$w,param$U,param$V)
-      mc <- mash_set_data(dat.train$X, Shat = 1)
-      
-      # Initialization
-      set.seed(888)
-      U.init = c()
-      for (k in 1:K){
-        U.init[[k]] <- udr:::sim_unconstrained(R)
-      }
-      f0 = ud_init(X = dat.train$X, V = param$V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
-      
-      # Fit ED
-      fit = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'none',
-                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
-      U <- lapply(fit$U,function (e) "[["(e,"mat"))
-      g.fitted <- create_g(fit$w, U)
-      ed1[seed, i] = ed1[seed, i] + compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)[[1]]
-  
-      # Fit TED
-      fit = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
-                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
-      
-      U <- lapply(fit$U,function (e) "[["(e,"mat"))
-      g.fitted <- create_g(fit$w, U)
-      ted1[seed, i] = ted1[seed, i] + compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)[[1]]
-  
   
       # Fit ED.reg
       fit = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'none',

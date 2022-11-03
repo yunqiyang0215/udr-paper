@@ -138,8 +138,7 @@ for (i in 1:length(n.train)){
 strong_signals
 ```
 
-#### plot 1: n = 100
-
+## Plot for true theta: n = 100
 ```{r}
 df <- expand.grid(x = 0:4, y = 0:99)
 df$z <- c(t(dat.train[[1]]$theta))
@@ -150,7 +149,7 @@ ggplot(df, aes(x = x, y = y, fill = z)) +
                        high = "#FF0000")
 ```
 
-#### plot 2: n = 500
+## Plot for true theta: n = 500
 ```{r}
 
 df <- expand.grid(x = 0:4, y = 0:499)

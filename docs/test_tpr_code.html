@@ -482,16 +482,16 @@ unnamed-chunk-3
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree1276be6fe402a242b592ffc0dd06eff3c0942e3atargetblank1276be6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/1276be6fe402a242b592ffc0dd06eff3c0942e3a" target="_blank">1276be6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree0984d4169db1c6b9026d28a8574240ae0f19b509targetblank0984d41a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/0984d4169db1c6b9026d28a8574240ae0f19b509" target="_blank">0984d41</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree1276be6fe402a242b592ffc0dd06eff3c0942e3atargetblank1276be6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree0984d4169db1c6b9026d28a8574240ae0f19b509targetblank0984d41a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/1276be6fe402a242b592ffc0dd06eff3c0942e3a" target="_blank">1276be6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/0984d4169db1c6b9026d28a8574240ae0f19b509" target="_blank">0984d41</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -501,7 +501,6 @@ Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    analysis/power_vs_fdr_cache/
     Ignored:    analysis/test_tpr_code_cache/
 
@@ -542,6 +541,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/0984d4169db1c6b9026d28a8574240ae0f19b509/analysis/test_tpr_code.Rmd" target="_blank">0984d41</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-03
+</td>
+<td>
+wflow_publish("analysis/test_tpr_code.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/c65e6f6d8b9ac5e97ea4f1937abc0286c1362665/docs/test_tpr_code.html" target="_blank">c65e6f6</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -738,10 +771,9 @@ wflow_publish("analysis/test_tpr_code.Rmd")
 </div>
 <div id="description" class="section level3">
 <h3>Description:</h3>
-<p>Change sample size and see how true positive rate and positive predictive value change.</p>
+<p>Change sample size and see how true positive rate change. Threshold is chosen to be <span class="math inline">\(0.95\)</span> and we consider the sign of estimated effects. If the estimated effects (non-null) have different sign as true theta, it is not true positive.</p>
 <ol style="list-style-type: decimal">
-<li><p>Simulation 1: True <span class="math inline">\(U\)</span>s contains 5 singleton matrix + 5 unconstrained matrix.</p></li>
-<li><p>Simulation 2: True <span class="math inline">\(U\)</span>s contains 10 unconstrained matrix.</p></li>
+<li>Simulation: True <span class="math inline">\(U\)</span>s contains 5 singleton matrix + 5 unconstrained matrix.</li>
 </ol>
 <pre class="r"><code>source(&quot;./code/simulation_func.R&quot;)
 library(udr)
@@ -757,8 +789,8 @@ n.train = c(1e2, 5e2, 1e3, 5e3)
 threshold = 0.95
 param = list(w = rep(1/K, K), U = list(), V = diag(R))</code></pre>
 </div>
-<div id="simulation-1-true-us-contains-5-singleton-matrix-5-unconstrained-matrix." class="section level2">
-<h2>Simulation 1: True <span class="math inline">\(U\)</span>s contains 5 singleton matrix + 5 unconstrained matrix.</h2>
+<div id="simulation-true-us-contains-5-singleton-matrix-5-unconstrained-matrix." class="section level2">
+<h2>Simulation: True <span class="math inline">\(U\)</span>s contains 5 singleton matrix + 5 unconstrained matrix.</h2>
 <pre class="r"><code>#### Simulation and fitting
 seeds = c(1:20)
 
@@ -889,9 +921,9 @@ yunqiyang0215
 </table>
 </div>
 </div>
-<div id="plot-the-distribution-of-thetas-under-different-sample-sizes." class="section level4">
-<h4>Plot the distribution of thetas under different sample sizes.</h4>
-<p>One data example</p>
+</div>
+<div id="plot-the-distribution-of-thetas-under-different-sample-sizes.-one-data-example." class="section level2">
+<h2>Plot the distribution of thetas under different sample sizes. One data example.</h2>
 <pre class="r"><code>set.seed(2)
 dat.train = list()
 param$U &lt;-  sim_U_true(R, s, null.mat = FALSE, identity = TRUE, num_singleton = 5, num_unconstrained = 4)
@@ -928,6 +960,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/c65e6f6d8b9ac5e97ea4f1937abc0286c1362665/docs/figure/test_tpr_code.Rmd/unnamed-chunk-6-1.png" target="_blank">c65e6f6</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/yunqiyang0215/udr-paper/blob/600b78d80e5d4b702e80d8ec730171606f514a52/docs/figure/test_tpr_code.Rmd/unnamed-chunk-6-1.png" target="_blank">600b78d</a>
 </td>
 <td>
@@ -952,7 +995,6 @@ yunqiyang0215
 </table>
 </div>
 </div>
-</div>
 <div id="the-proportion-of-strong-signals-defined-as-abstheta-1" class="section level4">
 <h4>The proportion of strong signals (defined as abs(theta) &gt; 1):</h4>
 <pre class="r"><code>strong_signals &lt;- rep(NA, length(n.train))
@@ -973,6 +1015,43 @@ ggplot(df, aes(x = x, y = y, fill = z)) +
                        mid = &quot;#FFFFCC&quot;,
                        high = &quot;#FF0000&quot;)</code></pre>
 <p><img src="figure/test_tpr_code.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/c65e6f6d8b9ac5e97ea4f1937abc0286c1362665/docs/figure/test_tpr_code.Rmd/unnamed-chunk-8-1.png" target="_blank">c65e6f6</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="plot-2-n-500" class="section level4">
 <h4>plot 2: n = 500</h4>
@@ -985,6 +1064,43 @@ ggplot(df, aes(x = x, y = y, fill = z)) +
                        mid = &quot;#FFFFCC&quot;,
                        high = &quot;#FF0000&quot;)</code></pre>
 <p><img src="figure/test_tpr_code.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/c65e6f6d8b9ac5e97ea4f1937abc0286c1362665/docs/figure/test_tpr_code.Rmd/unnamed-chunk-9-1.png" target="_blank">c65e6f6</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

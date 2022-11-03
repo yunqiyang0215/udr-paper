@@ -7,11 +7,10 @@ output: html_document
 
 ### Description:
 
-Change sample size and see how true positive rate and positive predictive value change.
+Change sample size and see how true positive rate change. Threshold is chosen to be $0.95$ and we consider the sign of estimated effects. If the estimated effects (non-null) have different sign as true theta, it is not true positive. 
 
-1. Simulation 1: True $U$s contains 5 singleton matrix + 5 unconstrained matrix. 
+1. Simulation: True $U$s contains 5 singleton matrix + 5 unconstrained matrix. 
 
-2. Simulation 2: True $U$s contains 10 unconstrained matrix. 
 
 ```{r knitr, echo=FALSE}
 knitr::opts_chunk$set(comment = "#",results = "hold",collapse = TRUE,
@@ -37,7 +36,7 @@ threshold = 0.95
 param = list(w = rep(1/K, K), U = list(), V = diag(R))
 ```
 
-## Simulation 1: True $U$s contains 5 singleton matrix + 5 unconstrained matrix. 
+## Simulation: True $U$s contains 5 singleton matrix + 5 unconstrained matrix. 
 ```{r  cache = TRUE}
 #### Simulation and fitting
 seeds = c(1:20)
@@ -110,8 +109,7 @@ boxplot(ted2, names = n.train, xlab = "n.train", ylab = "true positive rate", ma
 
 ```
 
-#### Plot the distribution of thetas under different sample sizes. 
-One data example
+## Plot the distribution of thetas under different sample sizes. One data example.
 
 ```{r}
 set.seed(2)

@@ -5,6 +5,12 @@ date: "11/2/2022"
 output: html_document
 ---
 
+#### Description: assess the calibration of lfsr at 0.05. 
+
+The local range = c(0.045, 0.055). I try different sample size, where n.train = c(1e2, 5e3). 
+
+Under each case, I simulate 20 datasets, and calculate among  0.045<lfsr<0.055, the proportion of false discoveries. 
+
 ```{r}
 source("./code/simulation_func.R")
 library(udr)
@@ -125,6 +131,8 @@ for (i in 1:length(n.train)){
 }
 ```
 
+## Empirical fpr under truth
+
 ```{r}
 par(mfrow = c(1,2))
 plot(output.oracle[[1]], ylab = "empirical fpr", main = "Oracle: n = 100")
@@ -132,6 +140,8 @@ abline(h = 0.05, col = 2)
 plot(output.oracle[[2]], ylab = "empirical fpr", main = "Oracle: n = 5000")
 abline(h = 0.05, col = 2)
 ```
+
+## Empirical fpr under ED fit
 
 ```{r}
 par(mfrow = c(1,2))
@@ -141,6 +151,8 @@ plot(output.ed1[[2]], ylab = "empirical fpr", main = "ED: n = 5000")
 abline(h = 0.05, col = 2)
 ```
 
+
+## Empirical fpr under TED fit
 
 ```{r}
 par(mfrow = c(1,2))

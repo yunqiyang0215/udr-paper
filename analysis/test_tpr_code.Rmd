@@ -24,6 +24,7 @@ library(udr)
 library(mashr)
 library(mvtnorm)
 library(LaplacesDemon)
+library(ggplot2)
 ```
 
 ```{r }
@@ -37,7 +38,7 @@ param = list(w = rep(1/K, K), U = list(), V = diag(R))
 ```
 
 ## Simulation 1: True $U$s contains 5 singleton matrix + 5 unconstrained matrix. 
-```{r }
+```{r  cache = TRUE}
 #### Simulation and fitting
 seeds = c(1:20)
 
@@ -108,3 +109,59 @@ boxplot(ed2, names = n.train, xlab = "n.train", ylab = "true positive rate", mai
 boxplot(ted2, names = n.train, xlab = "n.train", ylab = "true positive rate", main = "TED.reg")
 
 ```
+
+#### Plot the distribution of thetas under different sample sizes. 
+One data example
+
+```{r}
+set.seed(2)
+dat.train = list()
+param$U <-  sim_U_true(R, s, null.mat = FALSE, identity = TRUE, num_singleton = 5, num_unconstrained = 4)
+
+for (i in 1:length(n.train)){
+  dat.train[[i]] <- simulate_mixture_ebnm(n.train[i], param$w,param$U,param$V)
+}
+```
+
+```{r}
+par(mfrow = c(2,2))
+for (i in 1:length(n.train)){
+  hist(dat.train[[i]]$theta, xlab = "theta", main = paste0("n = ", n.train[i]), breaks = 20, freq = FALSE)
+}
+```
+
+#### The proportion of strong signals (defined as abs(theta) > 1):
+```{r}
+strong_signals <- rep(NA, length(n.train))
+for (i in 1:length(n.train)){
+  num_effects = n.train[i] * R
+  strong_signals[i] = sum(abs(dat.train[[i]]$theta) > 1)/ num_effects
+}
+strong_signals
+```
+
+#### plot 1: n = 100
+
+```{r}
+df <- expand.grid(x = 0:4, y = 0:99)
+df$z <- c(t(dat.train[[1]]$theta))
+ggplot(df, aes(x = x, y = y, fill = z)) +
+  geom_tile(color = "black") +
+  scale_fill_gradient2(low = "#075AFF",
+                       mid = "#FFFFCC",
+                       high = "#FF0000")
+```
+
+#### plot 2: n = 500
+```{r}
+
+df <- expand.grid(x = 0:4, y = 0:499)
+df$z <- c(t(dat.train[[2]]$theta))
+ggplot(df, aes(x = x, y = y, fill = z)) +
+  geom_tile(color = "black") +
+  scale_fill_gradient2(low = "#075AFF",
+                       mid = "#FFFFCC",
+                       high = "#FF0000")
+```
+
+

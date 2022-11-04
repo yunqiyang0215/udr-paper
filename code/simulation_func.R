@@ -263,7 +263,8 @@ cov_singletons = function(R, s, num){
 # Function to simulate various Us.
 # @param R: data dimension
 # @param s: scale of the matrix
-sim_U_true <- function(R, s, null.mat = TRUE, identity = TRUE, num_singleton, num_unconstrained){
+sim_U_true <- function(R, s, null.mat = TRUE, identity = TRUE, cov_structured = TRUE,
+                       all.one = TRUE, num_singleton, num_unconstrained){
   U_unconstrained = list()
   U_singletons <- cov_singletons(R, s, num_singleton)
 
@@ -277,11 +278,16 @@ sim_U_true <- function(R, s, null.mat = TRUE, identity = TRUE, num_singleton, nu
     U.c = c(U.c, list(U.null))
   }
   if (identity == TRUE){
-    U.identity = diag(R)
+    U.identity = s*diag(R)
     U.c = c(U.c, list(U.identity))
   }
+  if (all.one == TRUE){
+    U1 <- s*matrix(1, ncol = R, nrow = R)
+    U.c = c(U.c, list(U1))
+  }
 
-  Ulist = c(U_unconstrained, U_singletons, U.c)
+  U.structured <- cov_structured_sharing(R, s)
+  Ulist = c(U_unconstrained, U_singletons, U.c, U.structured)
   return(Ulist)
 }
 
@@ -299,3 +305,19 @@ sim_invwishart <- function(R, nu = R + 2, s = 5){
   return(U)
 }
 
+
+# Create partial sharings where sharing only occurs in half of the conditions.
+# @param R: number of conditions.
+# @param s: the scaling factor
+# @param corr: strength of sharing
+cov_structured_sharing = function(R, s, corr=c(0.25,0.5,0.75)){
+  U <- list()
+  R1 = round(R/2)
+  for(i in 1:length(corr)){
+    mat <- matrix(0, ncol = R, nrow =R)
+    mat[1:R1,  1:R1] <- corr[i]
+    diag(mat) <-1
+    U[[i]] <- mat*s
+  }
+  return(U)
+}

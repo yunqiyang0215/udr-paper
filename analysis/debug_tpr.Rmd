@@ -9,6 +9,7 @@ output: html_document
 
 The true positive rate is defined as significant signals which estimated signs are the same as true theta. 
 
+## Function for tpr calculation 
 ```{r}
 #' Function to compare lfsr under fitted parameters vs. true means, theta.
 #' @param dat: a data object from simulate_mixture_ebnm() containing X, theta, Z.
@@ -68,7 +69,7 @@ threshold = 0.95
 param = list(w = rep(1/K, K), U = list(), V = diag(R))
 ```
 
-## Simulation 1: True $U$s contains 5 singleton matrix + 5 unconstrained matrix. 
+## Simulation: True $U$s contains 5 singleton matrix + 5 unconstrained matrix. 
 ```{r }
 
 # Simulate data
@@ -91,12 +92,12 @@ fit = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'non
                                       tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
 ```
 
+## Compute TPR and PPV. 
 ```{r}
-# Compute TPR and PPV. 
 U <- lapply(fit$U,function (e) "[["(e,"mat"))
 g.fitted <- create_g(fit$w, U)
-
 res <- compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)
+res
 ```
 
 

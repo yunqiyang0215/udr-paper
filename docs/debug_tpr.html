@@ -13,7 +13,7 @@
 
 <meta name="date" content="2022-10-17" />
 
-<title>debug_tpr</title>
+<title>True positive rate calculation</title>
 
 <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -358,7 +358,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">debug_tpr</h1>
+<h1 class="title toc-ignore">True positive rate calculation</h1>
 <h4 class="author">Yunqi Yang</h4>
 <h4 class="date">10/17/2022</h4>
 
@@ -476,16 +476,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreead66731f5a17c5a73185d9566d62c3a89cd1b9dctargetblankad66731a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/ad66731f5a17c5a73185d9566d62c3a89cd1b9dc" target="_blank">ad66731</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreef9d950c9dd4f0c8a9b78e4768e3c8f0402a3781ftargetblankf9d950ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/f9d950c9dd4f0c8a9b78e4768e3c8f0402a3781f" target="_blank">f9d950c</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreead66731f5a17c5a73185d9566d62c3a89cd1b9dctargetblankad66731a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreef9d950c9dd4f0c8a9b78e4768e3c8f0402a3781ftargetblankf9d950ca" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/ad66731f5a17c5a73185d9566d62c3a89cd1b9dc" target="_blank">ad66731</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/f9d950c9dd4f0c8a9b78e4768e3c8f0402a3781f" target="_blank">f9d950c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -541,6 +541,40 @@ Message
 <tbody>
 <tr>
 <td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/f9d950c9dd4f0c8a9b78e4768e3c8f0402a3781f/analysis/debug_tpr.Rmd" target="_blank">f9d950c</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-04
+</td>
+<td>
+wflow_publish("analysis/debug_tpr.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/b8aa8d7cffb4c39d9ae295f20b6e7ca54bbce277/docs/debug_tpr.html" target="_blank">b8aa8d7</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-04
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
 html
 </td>
 <td>
@@ -580,6 +614,9 @@ wflow_publish("analysis/debug_tpr.Rmd")
 </div>
 </div>
 </div>
+<div id="description-the-minimal-working-example-for-calculating-true-positive-rate." class="section level4">
+<h4>Description: the minimal working example for calculating true positive rate.</h4>
+<p>The true positive rate is defined as significant signals which estimated signs are the same as true theta.</p>
 <pre class="r"><code>#&#39; Function to compare lfsr under fitted parameters vs. true means, theta.
 #&#39; @param dat: a data object from simulate_mixture_ebnm() containing X, theta, Z.
 #&#39; @param g.fitted: an object created for mash input under fitted parameters
@@ -634,6 +671,7 @@ s = 5
 n.train = 100
 threshold = 0.95
 param = list(w = rep(1/K, K), U = list(), V = diag(R))</code></pre>
+</div>
 <div id="simulation-1-true-us-contains-5-singleton-matrix-5-unconstrained-matrix." class="section level2">
 <h2>Simulation 1: True <span class="math inline">\(U\)</span>s contains 5 singleton matrix + 5 unconstrained matrix.</h2>
 <pre class="r"><code># Simulate data

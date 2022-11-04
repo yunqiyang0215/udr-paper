@@ -1,9 +1,13 @@
 ---
-title: "debug_tpr"
+title: "True positive rate calculation"
 author: "Yunqi Yang"
 date: "10/17/2022"
 output: html_document
 ---
+
+#### Description: the minimal working example for calculating true positive rate. 
+
+The true positive rate is defined as significant signals which estimated signs are the same as true theta. 
 
 ```{r}
 #' Function to compare lfsr under fitted parameters vs. true means, theta.

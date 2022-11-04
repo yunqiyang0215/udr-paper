@@ -476,16 +476,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreef9d950c9dd4f0c8a9b78e4768e3c8f0402a3781ftargetblankf9d950ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/f9d950c9dd4f0c8a9b78e4768e3c8f0402a3781f" target="_blank">f9d950c</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree1c8a8f7b7fe8cc024ccf84292bd829f1b2b97fabtargetblank1c8a8f7a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/1c8a8f7b7fe8cc024ccf84292bd829f1b2b97fab" target="_blank">1c8a8f7</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreef9d950c9dd4f0c8a9b78e4768e3c8f0402a3781ftargetblankf9d950ca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree1c8a8f7b7fe8cc024ccf84292bd829f1b2b97fabtargetblank1c8a8f7a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/f9d950c9dd4f0c8a9b78e4768e3c8f0402a3781f" target="_blank">f9d950c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/1c8a8f7b7fe8cc024ccf84292bd829f1b2b97fab" target="_blank">1c8a8f7</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -539,6 +539,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/1c8a8f7b7fe8cc024ccf84292bd829f1b2b97fab/analysis/debug_tpr.Rmd" target="_blank">1c8a8f7</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-04
+</td>
+<td>
+wflow_publish("analysis/debug_tpr.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/0e92b5d69e7960a8d9ba7c6fbd5af974f87e7aa3/docs/debug_tpr.html" target="_blank">0e92b5d</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-04
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -617,6 +651,9 @@ wflow_publish("analysis/debug_tpr.Rmd")
 <div id="description-the-minimal-working-example-for-calculating-true-positive-rate." class="section level4">
 <h4>Description: the minimal working example for calculating true positive rate.</h4>
 <p>The true positive rate is defined as significant signals which estimated signs are the same as true theta.</p>
+</div>
+<div id="function-for-tpr-calculation" class="section level2">
+<h2>Function for tpr calculation</h2>
 <pre class="r"><code>#&#39; Function to compare lfsr under fitted parameters vs. true means, theta.
 #&#39; @param dat: a data object from simulate_mixture_ebnm() containing X, theta, Z.
 #&#39; @param g.fitted: an object created for mash input under fitted parameters
@@ -672,8 +709,8 @@ n.train = 100
 threshold = 0.95
 param = list(w = rep(1/K, K), U = list(), V = diag(R))</code></pre>
 </div>
-<div id="simulation-1-true-us-contains-5-singleton-matrix-5-unconstrained-matrix." class="section level2">
-<h2>Simulation 1: True <span class="math inline">\(U\)</span>s contains 5 singleton matrix + 5 unconstrained matrix.</h2>
+<div id="simulation-true-us-contains-5-singleton-matrix-5-unconstrained-matrix." class="section level2">
+<h2>Simulation: True <span class="math inline">\(U\)</span>s contains 5 singleton matrix + 5 unconstrained matrix.</h2>
 <pre class="r"><code># Simulate data
 set.seed(1)
 param$U &lt;-  sim_U_true(R, s, null.mat = FALSE, identity = TRUE, num_singleton = 5, num_unconstrained = 4)
@@ -692,12 +729,16 @@ f0 = ud_init(X = dat.train$X, V = param$V, U_scaled = NULL, U_unconstrained = U.
 # Fit ED
 fit = ud_fit(f0, control = list(unconstrained.update = &quot;ed&quot;, resid.update = &#39;none&#39;,
                                       tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)</code></pre>
-<pre class="r"><code># Compute TPR and PPV. 
-U &lt;- lapply(fit$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))
+</div>
+<div id="compute-tpr-and-ppv." class="section level2">
+<h2>Compute TPR and PPV.</h2>
+<pre class="r"><code>U &lt;- lapply(fit$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))
 g.fitted &lt;- create_g(fit$w, U)
-
 res &lt;- compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)</code></pre>
 <pre><code>Warning: Please make sure the alpha in data is consistent with the `alpha` used to compute the fitted_g.</code></pre>
+<pre class="r"><code>res</code></pre>
+<pre><code>      tpr       ppv 
+0.2837838 0.8000000 </code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

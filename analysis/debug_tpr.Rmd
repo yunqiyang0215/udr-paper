@@ -1,0 +1,99 @@
+---
+title: "debug_tpr"
+author: "Yunqi Yang"
+date: "10/17/2022"
+output: html_document
+---
+
+```{r}
+#' Function to compare lfsr under fitted parameters vs. true means, theta.
+#' @param dat: a data object from simulate_mixture_ebnm() containing X, theta, Z.
+#' @param g.fitted: an object created for mash input under fitted parameters
+#' @param mc: a mash object
+#' @param threshold: a threshold for lfsr. Usually it's 0.95, but can be more stringent. 
+#' @returns ppv: positive predictive value; tpr: true positive rate. This is different from the traditional definition
+compare_lfsr_fitted_vs_truth <- function(dat, g.fitted, mc, threshold){
+  
+
+  res.fitted <- mashr::mash_compute_posterior_matrices(g.fitted, mc)
+  
+  # Calculate probability that an effect is positive
+  res.fitted$PositiveProb = 1 - res.fitted$NegativeProb - res.fitted$lfdr
+  
+  # number of true positives, true discoveries with correct signs
+  tp = sum(sum((dat$theta > 0) & (res.fitted$PositiveProb >= threshold)) + 
+             sum((dat$theta < 0) & (res.fitted$NegativeProb >= threshold)))
+  
+  
+  # ns.true: non-signals
+  # ns.fitted: non-signals under fitted param
+  ns.true = dat$theta == 0
+  ns.fitted = (res.fitted$NegativeProb < threshold) & (res.fitted$PositiveProb < threshold)
+  
+  # fp(false positives): real non-signals classified as signals under fitted param + signals with wrong signs compared to truth
+  fp = sum(ns.true) - sum(ns.true & ns.fitted) + 
+    sum((dat$theta > 0) & (res.fitted$NegativeProb >= threshold)) +
+    sum((dat$theta < 0) & (res.fitted$PositiveProb >= threshold))
+  
+  tpr =  tp/ sum(sum(dat$theta > 0) + sum(dat$theta<0))
+  ppv = tp/(tp + fp)
+  res <- c(tpr, ppv)
+  names(res) = c("tpr", "ppv")
+  return(res)
+}
+```
+
+
+
+```{r}
+#### Load packages
+library(udr)
+library(mashr)
+library(mvtnorm)
+library(LaplacesDemon)
+source("./code/simulation_func.R")
+```
+
+```{r }
+#### True param in simulation
+K = 10
+R = 5
+s = 5
+n.train = 100
+threshold = 0.95
+param = list(w = rep(1/K, K), U = list(), V = diag(R))
+```
+
+## Simulation 1: True $U$s contains 5 singleton matrix + 5 unconstrained matrix. 
+```{r }
+
+# Simulate data
+set.seed(1)
+param$U <-  sim_U_true(R, s, null.mat = FALSE, identity = TRUE, num_singleton = 5, num_unconstrained = 4)
+dat.train <- simulate_mixture_ebnm(n.train, param$w,param$U,param$V)
+mc <- mash_set_data(dat.train$X, Shat = 1)
+      
+# Initialization
+set.seed(888)
+U.init = c()
+for (k in 1:K){
+  U.init[[k]] <- udr:::sim_unconstrained(R)
+}
+
+f0 = ud_init(X = dat.train$X, V = param$V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+      
+# Fit ED
+fit = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'none',
+                                      tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
+```
+
+```{r}
+# Compute TPR and PPV. 
+U <- lapply(fit$U,function (e) "[["(e,"mat"))
+g.fitted <- create_g(fit$w, U)
+
+res <- compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)
+```
+
+
+

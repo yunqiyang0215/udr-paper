@@ -384,7 +384,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-11-02
+<strong>Last updated:</strong> 2022-11-03
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -475,16 +475,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree04725df414694726085220a3419a95e244e615aatargetblank04725dfa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/04725df414694726085220a3419a95e244e615aa" target="_blank">04725df</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreeff68f60fb5880718b67d748d8491b3c7f8f25782targetblankff68f60a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/ff68f60fb5880718b67d748d8491b3c7f8f25782" target="_blank">ff68f60</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree04725df414694726085220a3419a95e244e615aatargetblank04725dfa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreeff68f60fb5880718b67d748d8491b3c7f8f25782targetblankff68f60a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/04725df414694726085220a3419a95e244e615aa" target="_blank">04725df</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/ff68f60fb5880718b67d748d8491b3c7f8f25782" target="_blank">ff68f60</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -495,6 +495,7 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/power_vs_fdr_cache/
+    Ignored:    analysis/test_tpr_code_cache/
 
 </code></pre>
 <p>
@@ -538,6 +539,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/ff68f60fb5880718b67d748d8491b3c7f8f25782/analysis/lfsr_calibration.Rmd" target="_blank">ff68f60</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-03
+</td>
+<td>
+wflow_publish("analysis/lfsr_calibration.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/c9d516e9c173b0c5520095dc637890c542a313ed/docs/lfsr_calibration.html" target="_blank">c9d516e</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/yunqiyang0215/udr-paper/blob/04725df414694726085220a3419a95e244e615aa/analysis/lfsr_calibration.Rmd" target="_blank">04725df</a>
 </td>
 <td>
@@ -557,6 +592,10 @@ wflow_publish("analysis/lfsr_calibration.Rmd")
 </div>
 </div>
 </div>
+<div id="description-assess-the-calibration-of-lfsr-at-0.05." class="section level4">
+<h4>Description: assess the calibration of lfsr at 0.05.</h4>
+<p>The local range = c(0.045, 0.055). I try different sample size, where n.train = c(1e2, 5e3).</p>
+<p>Under each case, I simulate 20 datasets, and calculate among 0.045&lt;lfsr&lt;0.055, the proportion of false discoveries.</p>
 <pre class="r"><code>source(&quot;./code/simulation_func.R&quot;)
 library(udr)
 library(mashr)</code></pre>
@@ -682,6 +721,26 @@ for (i in 1:length(n.train)){
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.03 seconds.
  - Computing posterior matrices.
+ - Computation allocated took 0.05 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.03 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.04 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.03 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.04 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.04 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.05 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.03 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.05 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.03 seconds.
+ - Computing posterior matrices.
  - Computation allocated took 0.04 seconds.
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.02 seconds.
@@ -690,7 +749,23 @@ for (i in 1:length(n.train)){
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.03 seconds.
  - Computing posterior matrices.
- - Computation allocated took 0.12 seconds.
+ - Computation allocated took 0.05 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.04 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.08 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.06 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.04 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.04 seconds.
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
@@ -700,41 +775,9 @@ for (i in 1:length(n.train)){
  - Computing posterior matrices.
  - Computation allocated took 0.04 seconds.
  - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
+ - Likelihood calculations took 0.03 seconds.
  - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
+ - Computation allocated took 0.05 seconds.
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
@@ -742,23 +785,19 @@ for (i in 1:length(n.train)){
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.03 seconds.
  - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.03 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
+ - Computation allocated took 0.05 seconds.
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
  - Computation allocated took 0.04 seconds.
  - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
+ - Likelihood calculations took 0.04 seconds.
  - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
+ - Computation allocated took 0.07 seconds.
  - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
+ - Likelihood calculations took 0.04 seconds.
  - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.</code></pre>
+ - Computation allocated took 0.07 seconds.</code></pre>
 <pre class="r"><code>output.ed1 &lt;- list()
 for (i in 1:length(n.train)){
   empirical_est &lt;- c()
@@ -877,10 +916,6 @@ for (i in 1:length(n.train)){
  - Computing posterior matrices.
  - Computation allocated took 0.03 seconds.
  - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.03 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.03 seconds.
- - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
  - Computation allocated took 0.03 seconds.
@@ -900,26 +935,18 @@ for (i in 1:length(n.train)){
  - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
  - Computation allocated took 0.03 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.03 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.06 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.03 seconds.
  - Computing posterior matrices.
  - Computation allocated took 0.04 seconds.
  - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.03 seconds.
+ - Likelihood calculations took 0.05 seconds.
  - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
+ - Computation allocated took 0.03 seconds.
  - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.03 seconds.
+ - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
+ - Computation allocated took 0.03 seconds.
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.03 seconds.
  - Computing posterior matrices.
@@ -937,13 +964,25 @@ for (i in 1:length(n.train)){
  - Computing posterior matrices.
  - Computation allocated took 0.03 seconds.
  - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.03 seconds.
+ - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
  - Computation allocated took 0.03 seconds.
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
@@ -1066,21 +1105,25 @@ for (i in 1:length(n.train)){
  - Computing posterior matrices.
  - Computation allocated took 0.00 seconds.
  - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.03 seconds.
+ - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
  - Computation allocated took 0.03 seconds.
  - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.03 seconds.
+ - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
  - Computation allocated took 0.03 seconds.
  - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.03 seconds.
+ - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
  - Computation allocated took 0.03 seconds.
  - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.05 seconds.
+ - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
- - Computation allocated took 0.05 seconds.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
@@ -1090,9 +1133,45 @@ for (i in 1:length(n.train)){
  - Computing posterior matrices.
  - Computation allocated took 0.03 seconds.
  - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.03 seconds.
  - Computing posterior matrices.
- - Computation allocated took 0.06 seconds.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
+ - Computing 5000 x 10 likelihood matrix.
+ - Likelihood calculations took 0.02 seconds.
+ - Computing posterior matrices.
+ - Computation allocated took 0.03 seconds.
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.03 seconds.
  - Computing posterior matrices.
@@ -1100,69 +1179,149 @@ for (i in 1:length(n.train)){
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.03 seconds.
  - Computing posterior matrices.
- - Computation allocated took 0.03 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.03 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
  - Computation allocated took 0.04 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.03 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.03 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.02 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.03 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.03 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.04 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.03 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.03 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.03 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.03 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.04 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.05 seconds.
- - Computing 5000 x 10 likelihood matrix.
- - Likelihood calculations took 0.05 seconds.
- - Computing posterior matrices.
- - Computation allocated took 0.09 seconds.
  - Computing 5000 x 10 likelihood matrix.
  - Likelihood calculations took 0.02 seconds.
  - Computing posterior matrices.
  - Computation allocated took 0.03 seconds.</code></pre>
+</div>
+<div id="empirical-fpr-under-truth" class="section level2">
+<h2>Empirical fpr under truth</h2>
 <pre class="r"><code>par(mfrow = c(1,2))
 plot(output.oracle[[1]], ylab = &quot;empirical fpr&quot;, main = &quot;Oracle: n = 100&quot;)
 abline(h = 0.05, col = 2)
 plot(output.oracle[[2]], ylab = &quot;empirical fpr&quot;, main = &quot;Oracle: n = 5000&quot;)
 abline(h = 0.05, col = 2)</code></pre>
 <p><img src="figure/lfsr_calibration.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/c9d516e9c173b0c5520095dc637890c542a313ed/docs/figure/lfsr_calibration.Rmd/unnamed-chunk-6-1.png" target="_blank">c9d516e</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="empirical-fpr-under-ed-fit" class="section level2">
+<h2>Empirical fpr under ED fit</h2>
 <pre class="r"><code>par(mfrow = c(1,2))
 plot(output.ed1[[1]], ylab = &quot;empirical fpr&quot;, main = &quot;ED: n = 100&quot;)
 abline(h = 0.05, col = 2)
 plot(output.ed1[[2]], ylab = &quot;empirical fpr&quot;, main = &quot;ED: n = 5000&quot;)
 abline(h = 0.05, col = 2)</code></pre>
 <p><img src="figure/lfsr_calibration.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/c9d516e9c173b0c5520095dc637890c542a313ed/docs/figure/lfsr_calibration.Rmd/unnamed-chunk-7-1.png" target="_blank">c9d516e</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="empirical-fpr-under-ted-fit" class="section level2">
+<h2>Empirical fpr under TED fit</h2>
 <pre class="r"><code>par(mfrow = c(1,2))
 plot(output.ted1[[1]], ylab = &quot;empirical fpr&quot;, main = &quot;TED: n = 100&quot;)
 abline(h = 0.05, col = 2)
 plot(output.ted1[[2]], ylab = &quot;empirical fpr&quot;, main = &quot;TED: n = 5000&quot;)
 abline(h = 0.05, col = 2)</code></pre>
 <p><img src="figure/lfsr_calibration.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/c9d516e9c173b0c5520095dc637890c542a313ed/docs/figure/lfsr_calibration.Rmd/unnamed-chunk-8-1.png" target="_blank">c9d516e</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1203,6 +1362,7 @@ loaded via a namespace (and not attached):
 [41] assertthat_0.2.1 abind_1.4-5      softImpute_1.4-1 httpuv_1.6.3    
 [45] utf8_1.2.2       stringi_1.7.5    truncnorm_1.0-8  SQUAREM_2021.1  
 [49] crayon_1.4.1    </code></pre>
+</div>
 </div>
 
 

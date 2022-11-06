@@ -37,7 +37,7 @@ param = list(w = rep(1/K, K), U = list(), V = diag(R))
 ```
 
 ## Simulation: True $U$s contains 5 singleton matrix + 5 unconstrained matrix. 
-```{r  cache = TRUE}
+```{r  }
 #### Simulation and fitting
 seeds = c(1:20)
 

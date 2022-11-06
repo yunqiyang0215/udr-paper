@@ -41,6 +41,7 @@ param = list(w = rep(1/K, K), U = list(), V = diag(R))
 #### Simulation and fitting
 seeds = c(1:20)
 
+oracle <- matrix(0, ncol = 4, nrow = length(seeds))
 ed1 <- matrix(0, ncol = 4, nrow = length(seeds))
 ted1 <- matrix(0, ncol = 4, nrow = length(seeds))
 ed2 <- matrix(0, ncol = 4, nrow = length(seeds))
@@ -52,9 +53,13 @@ for (i in 1:length(n.train)){
   for (seed in seeds){
   # Simulate data
       set.seed(seed)
-      param$U <-  sim_U_true(R, s, null.mat = FALSE, identity = TRUE, num_singleton = 5, num_unconstrained = 4)
+      param$U <-  sim_U_true(R, s, null.mat = FALSE, identity = TRUE, cov_structured = FALSE,
+                             num_singleton = 5, num_unconstrained = 4)
       dat.train <- simulate_mixture_ebnm(n.train[i], param$w,param$U,param$V)
       mc <- mash_set_data(dat.train$X, Shat = 1)
+      ## Oracle tpr
+      g.fitted <- create_g(param$w, param$U)
+      oracle[seed, i] = oracle[seed, i] + compare_lfsr_fitted_vs_truth(dat.train, g.fitted, mc, threshold = threshold)[[1]]
       
       # Initialization
       set.seed(888)
@@ -102,10 +107,11 @@ for (i in 1:length(n.train)){
 
 ```{r}
 par(mfrow = c(2,2))
+boxplot(oracle, names = n.train, xlab = "n.train", ylab = "true positive rate", main = "Oracle")
 boxplot(ed1, names = n.train, xlab = "n.train", ylab = "true positive rate", main = "ED")
 boxplot(ted1, names = n.train, xlab = "n.train", ylab = "true positive rate", main = "TED")
 boxplot(ed2, names = n.train, xlab = "n.train", ylab = "true positive rate", main = "ED.reg")
-boxplot(ted2, names = n.train, xlab = "n.train", ylab = "true positive rate", main = "TED.reg")
+#boxplot(ted2, names = n.train, xlab = "n.train", ylab = "true positive rate", main = "TED.reg")
 
 ```
 

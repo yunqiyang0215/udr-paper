@@ -263,9 +263,11 @@ cov_singletons = function(R, s, num){
 # Function to simulate various Us.
 # @param R: data dimension
 # @param s: scale of the matrix
-sim_U_true <- function(R, s, null.mat = TRUE, identity = TRUE, cov_structured = TRUE,
-                       all.one = TRUE, num_singleton, num_unconstrained){
+sim_U_true <- function(R, s, null.mat = FALSE, identity = FALSE, cov_structured = FALSE,
+                       all.one = FALSE, num_singleton, num_unconstrained){
+  
   U_unconstrained = list()
+  U.structured = list()
   U_singletons <- cov_singletons(R, s, num_singleton)
 
   for (i in 1:num_unconstrained){
@@ -285,8 +287,10 @@ sim_U_true <- function(R, s, null.mat = TRUE, identity = TRUE, cov_structured = 
     U1 <- s*matrix(1, ncol = R, nrow = R)
     U.c = c(U.c, list(U1))
   }
+  if (cov_structured == TRUE){
+    U.structured <- cov_structured_sharing(R, s)
+  }
 
-  U.structured <- cov_structured_sharing(R, s)
   Ulist = c(U_unconstrained, U_singletons, U.c, U.structured)
   return(Ulist)
 }

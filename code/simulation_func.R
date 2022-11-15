@@ -265,7 +265,7 @@ cov_singletons = function(R, s, num){
 # @param s: scale of the matrix
 sim_U_true <- function(R, s, null.mat = FALSE, identity = FALSE, cov_structured = FALSE,
                        all.one = FALSE, num_singleton, num_unconstrained){
-  
+
   U_unconstrained = list()
   U.structured = list()
   U_singletons <- cov_singletons(R, s, num_singleton)
@@ -325,3 +325,91 @@ cov_structured_sharing = function(R, s, corr=c(0.25,0.5,0.75)){
   }
   return(U)
 }
+
+
+## Function to compute empirical lfsr. That is, around a threshold t for lfsr,
+## the proportion of units with wrong signs.
+# @param theta: a matrix of underlying true means
+# @param posterior_mean: a matrix of posterior means
+# @param lfsr: a matrix contains the lfsr for each unit.
+# @param range: a vector of length 2 containing the local range around a threshold t.
+compute_empirical_lfsr <- function(theta, posterior_mean, lfsr, range){
+  lfsr.empirical <- NA
+  indx <- (lfsr >= range[1] & lfsr <= range[2])
+  n <- sum(indx)   # total number of units in the range.
+  if (n != 0){
+    theta.lc <- theta[indx]
+    posterior_mean.lc <- posterior_mean[indx]
+    # Units with wrong signs.
+    # If the estimated sign is wrong, then theta*posterior_mean <= 0.
+    # (except when theta == posterior_mean == 0)
+    m <- sum( theta.lc * posterior_mean.lc <= 0) - sum(theta.lc == 0 & posterior_mean.lc == 0)
+    lfsr.empirical <- m/n
+  }
+  return(lfsr.empirical)
+}
+
+
+## Function to compute empirical fsr. That is, for all lfsr <= t, the proportion of
+## lfsr with wrong signs.
+# @param theta: a matrix of underlying true means
+# @param posterior_mean: a matrix of posterior means
+# @param lfsr: a matrix contains the lfsr for each unit.
+# @param t: a threshold for lfsr
+compute_empirical_fsr <- function(theta, posterior_mean, lfsr, t){
+  fsr.empirical <- NA
+  indx <- (lfsr <= t)
+  n <- sum(indx)   # total number of units in the range.
+  if (n != 0){
+    theta.tail <- theta[indx]
+    posterior_mean.tail <- posterior_mean[indx]
+    # Units with wrong signs.
+    # If the estimated sign is wrong, then theta*posterior_mean <= 0.
+    # (except when theta == posterior_mean == 0)
+    m <- sum( theta.tail * posterior_mean.tail <= 0) - sum(theta.tail == 0 & posterior_mean.tail == 0)
+    fsr.empirical <- m/n
+  }
+  return(fsr.empirical)
+}
+
+
+## Function to compute nominal fsr. That is, mean(lfsr <= t)
+# @param lfsr: a matrix contains the lfsr for each unit.
+# @param t: a threshold for lfsr
+compute_nominal_fsr <- function(lfsr, t){
+  fsr.nominal <- NA
+  if (sum(lfsr <= t) != 0){
+    fsr.nominal <- mean(lfsr[lfsr <= t])
+  }
+  return(fsr.nominal)
+}
+
+
+## Function to compute true positive rate & false discovery rate
+## at a given threshold t.
+# @param theta: a matrix of underlying true means
+# @param posterior_mean: a matrix of posterior means
+# @param lfsr: a matrix contains the lfsr for each unit.
+# @param t: a threshold for lfsr
+create_tpr_vs_fdr_curve <- function(theta, posterior_mean, lfsr, t){
+  res <- c(0, 0)
+  names(res) = c("tpr", "fdr")
+  indx <- (lfsr <= t)
+  n <- sum(indx) # total number of units in the range. 
+  if (n != 0){
+    theta.subset <- theta[indx]
+    posterior_mean.subset <- posterior_mean[indx]
+    ## Number of true positives 
+    tp <- sum(theta.subset * posterior_mean.subset > 0)
+    tpr <-  tp/(sum(theta > 0) + sum(theta<0))
+    # Units with wrong signs within all significant units at t. 
+    fp <- sum(theta.subset * posterior_mean.subset <= 0) - sum(theta.subset == 0 & posterior_mean.subset == 0)
+    fdr <- fp / (fp + tp)
+    res[1] <- tpr
+    res[2] <- fdr
+  }
+  return(res)
+}
+
+
+

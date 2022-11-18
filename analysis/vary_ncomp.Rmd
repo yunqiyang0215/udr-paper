@@ -5,7 +5,11 @@ date: "11/17/2022"
 output: html_document
 ---
 
-#### Description: This file try to assess why regularized methods is stable across different number of components. 
+#### Description: 
+
+This file try to assess why regularized methods is stable across different number of components. I compare the patterns between fitted Us (top 6 patterns) and the truth.
+
+The truth contains 6 different patterns. 
 
 ```{r}
 source("./code/simulation_func.R")

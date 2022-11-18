@@ -260,21 +260,40 @@ cov_singletons = function(R, s, num){
 
 
 
+# Create partial sharings where sharing only occurs in half of the conditions.
+# @param R: number of conditions.
+# @param s: the scaling factor
+# @param corr: strength of sharing
+cov_structured_sharing = function(R, s, corr=c(0.25,0.5,0.75)){
+  U <- list()
+  r = round(R/2)
+  for(i in 1:length(corr)){
+    start <- sample(1:(R-r), 1)
+    mat <- matrix(0, ncol = R, nrow =R)
+    mat[start:(start+r),  start:(start+r)] <- corr[i]
+    diag(mat[start:(start+r),  start:(start+r)]) <-1
+    U[[i]] <- mat*s
+  }
+  return(U)
+}
+
+
 # Function to simulate various Us.
 # @param R: data dimension
 # @param s: scale of the matrix
-sim_U_true <- function(R, s, null.mat = FALSE, identity = FALSE, cov_structured = FALSE,
-                       all.one = FALSE, num_singleton, num_unconstrained){
+sim_U_true <- function(R, s, null.mat = FALSE, identity = FALSE, partial_sharing = FALSE,
+                       equal_effect = FALSE, num_singleton = 0, num_unconstrained = 0){
 
-  U_unconstrained = list()
-  U.structured = list()
-  U_singletons <- cov_singletons(R, s, num_singleton)
+  U.unconstrained <- list()
+  U.c <- list()
+  U.structured <- list()
+  U.singletons <- cov_singletons(R, s, num_singleton)
 
-  for (i in 1:num_unconstrained){
-    U_unconstrained[[i]] <- sim_invwishart(R, nu = R + 2, s = s)
+  if (num_unconstrained != 0){
+    for (i in 1:num_unconstrained){
+      U.unconstrained[[i]] <- sim_invwishart(R, nu = R + 2, s = s)
+    }
   }
-
-  U.c = list()
   if (null.mat == TRUE){
     U.null <- matrix(0, ncol = R, nrow = R)
     U.c = c(U.c, list(U.null))
@@ -283,17 +302,20 @@ sim_U_true <- function(R, s, null.mat = FALSE, identity = FALSE, cov_structured 
     U.identity = s*diag(R)
     U.c = c(U.c, list(U.identity))
   }
-  if (all.one == TRUE){
+  if (equal_effect == TRUE){
     U1 <- s*matrix(1, ncol = R, nrow = R)
     U.c = c(U.c, list(U1))
   }
-  if (cov_structured == TRUE){
+  if (partial_sharing == TRUE){
     U.structured <- cov_structured_sharing(R, s)
   }
 
-  Ulist = c(U_unconstrained, U_singletons, U.c, U.structured)
+  Ulist = c(U.unconstrained, U.singletons, U.c, U.structured)
   return(Ulist)
 }
+
+
+
 
 
 # Function to simulate from inverse Wishart distribution
@@ -308,24 +330,6 @@ sim_invwishart <- function(R, nu = R + 2, s = 5){
   U <- rinvwishart(nu, S)
   return(U)
 }
-
-
-# Create partial sharings where sharing only occurs in half of the conditions.
-# @param R: number of conditions.
-# @param s: the scaling factor
-# @param corr: strength of sharing
-cov_structured_sharing = function(R, s, corr=c(0.25,0.5,0.75)){
-  U <- list()
-  R1 = round(R/2)
-  for(i in 1:length(corr)){
-    mat <- matrix(0, ncol = R, nrow =R)
-    mat[1:R1,  1:R1] <- corr[i]
-    diag(mat) <-1
-    U[[i]] <- mat*s
-  }
-  return(U)
-}
-
 
 ## Function to compute empirical lfsr. That is, around a threshold t for lfsr,
 ## the proportion of units with wrong signs.
@@ -395,14 +399,14 @@ create_tpr_vs_fdr_curve <- function(theta, posterior_mean, lfsr, t){
   res <- c(0, 0)
   names(res) = c("tpr", "fdr")
   indx <- (lfsr <= t)
-  n <- sum(indx) # total number of units in the range. 
+  n <- sum(indx) # total number of units in the range.
   if (n != 0){
     theta.subset <- theta[indx]
     posterior_mean.subset <- posterior_mean[indx]
-    ## Number of true positives 
+    ## Number of true positives
     tp <- sum(theta.subset * posterior_mean.subset > 0)
     tpr <-  tp/(sum(theta > 0) + sum(theta<0))
-    # Units with wrong signs within all significant units at t. 
+    # Units with wrong signs within all significant units at t.
     fp <- sum(theta.subset * posterior_mean.subset <= 0) - sum(theta.subset == 0 & posterior_mean.subset == 0)
     fdr <- fp / (fp + tp)
     res[1] <- tpr

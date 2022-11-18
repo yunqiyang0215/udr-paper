@@ -367,7 +367,7 @@ div.tocify {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -376,7 +376,7 @@ div.tocify {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -388,7 +388,7 @@ div.tocify {
 <strong>Last updated:</strong> 2022-11-18
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>udr-paper/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -452,12 +452,18 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongdetected"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>Cache:</strong> detected </a>
 </p>
 </div>
-<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div id="strongCachestrongdetected" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+The following chunks had caches available:
+<ul>
+<li>
+unnamed-chunk-6
+</li>
+</ul>
+<p>To ensure reproducibility of the results, delete the cache directory <code>vary_ncomp_cache</code> and re-run the analysis. To have workflowr automatically delete the cache directory prior to building the file, set <code>delete_cache = TRUE</code> when running <code>wflow_build()</code> or <code>wflow_publish()</code>.</p>
 </div>
 </div>
 </div>
@@ -476,16 +482,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreeeffc68acdc1388247043bdb56462bb23c47f26d7targetblankeffc68aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/effc68acdc1388247043bdb56462bb23c47f26d7" target="_blank">effc68a</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree8759e50d12bbbae24fec4ffed4bb2ebe26c71cbetargetblank8759e50a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/8759e50d12bbbae24fec4ffed4bb2ebe26c71cbe" target="_blank">8759e50</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreeeffc68acdc1388247043bdb56462bb23c47f26d7targetblankeffc68aa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree8759e50d12bbbae24fec4ffed4bb2ebe26c71cbetargetblank8759e50a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/effc68acdc1388247043bdb56462bb23c47f26d7" target="_blank">effc68a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/8759e50d12bbbae24fec4ffed4bb2ebe26c71cbe" target="_blank">8759e50</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -497,6 +503,7 @@ Ignored files:
     Ignored:    .Rproj.user/
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/power_vs_fdr_cache/
+    Ignored:    analysis/vary_ncomp_cache/
 
 Untracked files:
     Untracked:  analysis/tpr&fpr_code.Rmd
@@ -544,6 +551,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/8759e50d12bbbae24fec4ffed4bb2ebe26c71cbe/analysis/vary_ncomp.Rmd" target="_blank">8759e50</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-18
+</td>
+<td>
+wflow_publish("analysis/vary_ncomp.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/102388ead9164e4ad255c846a7ff4a172fe851e9/docs/vary_ncomp.html" target="_blank">102388e</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/yunqiyang0215/udr-paper/blob/effc68acdc1388247043bdb56462bb23c47f26d7/analysis/vary_ncomp.Rmd" target="_blank">effc68a</a>
 </td>
 <td>
@@ -563,8 +604,10 @@ wflow_publish("analysis/vary_ncomp.Rmd")
 </div>
 </div>
 </div>
-<div id="description-this-file-try-to-assess-why-regularized-methods-is-stable-across-different-number-of-components." class="section level4">
-<h4>Description: This file try to assess why regularized methods is stable across different number of components.</h4>
+<div id="description" class="section level4">
+<h4>Description:</h4>
+<p>This file try to assess why regularized methods is stable across different number of components. I compare the patterns between fitted Us (top 6 patterns) and the truth.</p>
+<p>The truth contains 6 different patterns.</p>
 <pre class="r"><code>source(&quot;./code/simulation_func.R&quot;)
 library(udr)
 library(mashr)</code></pre>
@@ -618,6 +661,43 @@ for (i in 1:6) {
           plot.true[[4]], plot.true[[5]], plot.true[[6]],
           ncol = 2, byrow = TRUE)</code></pre>
 <p><img src="figure/vary_ncomp.Rmd/unnamed-chunk-5-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/102388ead9164e4ad255c846a7ff4a172fe851e9/docs/figure/vary_ncomp.Rmd/unnamed-chunk-5-1.png" target="_blank">102388e</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>fit.ted_reg = ud_fit(f0, control = list(unconstrained.update = &quot;ted&quot;, resid.update = &#39;none&#39;,
                                         tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = round(R), maxiter = 5e3), verbose=FALSE)
 
@@ -672,6 +752,43 @@ for (i in 1:6) {
           ted_reg[[4]], ted_reg[[5]], ted_reg[[6]],
           ncol = 2, byrow = TRUE)</code></pre>
 <p><img src="figure/vary_ncomp.Rmd/unnamed-chunk-10-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/102388ead9164e4ad255c846a7ff4a172fe851e9/docs/figure/vary_ncomp.Rmd/unnamed-chunk-10-1.png" target="_blank">102388e</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="ed.reg-patterns" class="section level4">
 <h4>ED.reg patterns</h4>
@@ -679,6 +796,43 @@ for (i in 1:6) {
           ed_reg[[4]], ed_reg[[5]], ed_reg[[6]],
           ncol = 2, byrow = TRUE)</code></pre>
 <p><img src="figure/vary_ncomp.Rmd/unnamed-chunk-11-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/102388ead9164e4ad255c846a7ff4a172fe851e9/docs/figure/vary_ncomp.Rmd/unnamed-chunk-11-1.png" target="_blank">102388e</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -714,15 +868,14 @@ loaded via a namespace (and not attached):
 [17] jquerylib_0.1.4  Matrix_1.3-4     rmarkdown_2.11   labeling_0.4.2  
 [21] stringr_1.4.0    munsell_0.5.0    mixsqp_0.3-43    compiler_4.1.1  
 [25] httpuv_1.6.3     xfun_0.27        pkgconfig_2.0.3  SQUAREM_2021.1  
-[29] htmltools_0.5.2  tidyselect_1.1.1 tibble_3.1.5     codetools_0.2-18
-[33] fansi_0.5.0      crayon_1.4.1     dplyr_1.0.7      withr_2.4.2     
-[37] later_1.3.0      grid_4.1.1       gtable_0.3.0     lifecycle_1.0.1 
-[41] git2r_0.28.0     magrittr_2.0.1   scales_1.1.1     stringi_1.7.5   
-[45] farver_2.1.0     fs_1.5.0         promises_1.2.0.1 ellipsis_0.3.2  
-[49] vctrs_0.3.8      generics_0.1.2   rmeta_3.0        tools_4.1.1     
-[53] glue_1.4.2       softImpute_1.4-1 purrr_0.3.4      abind_1.4-5     
-[57] parallel_4.1.1   fastmap_1.1.0    yaml_2.2.1       colorspace_2.0-2
-[61] knitr_1.36      </code></pre>
+[29] htmltools_0.5.2  tidyselect_1.1.1 tibble_3.1.5     fansi_0.5.0     
+[33] crayon_1.4.1     dplyr_1.0.7      withr_2.4.2      later_1.3.0     
+[37] grid_4.1.1       gtable_0.3.0     lifecycle_1.0.1  git2r_0.28.0    
+[41] magrittr_2.0.1   scales_1.1.1     stringi_1.7.5    farver_2.1.0    
+[45] fs_1.5.0         promises_1.2.0.1 ellipsis_0.3.2   vctrs_0.3.8     
+[49] generics_0.1.2   rmeta_3.0        tools_4.1.1      glue_1.4.2      
+[53] softImpute_1.4-1 purrr_0.3.4      abind_1.4-5      parallel_4.1.1  
+[57] fastmap_1.1.0    yaml_2.2.1       colorspace_2.0-2 knitr_1.36      </code></pre>
 </div>
 </div>
 

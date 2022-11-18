@@ -9,7 +9,7 @@ output: html_document
 
 This file try to assess why regularized methods is stable across different number of components. I compare the patterns between fitted Us (top 6 patterns) and the truth.
 
-The truth contains 6 different patterns. 
+The truth contains 6 different patterns. I initialize 100 components for all the algorithms: TED.reg, ED.reg and TED. 
 
 ```{r include = FALSE}
 knitr::opts_chunk$set(comment = "#",
@@ -89,23 +89,32 @@ fit.ed_reg = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update
                                     tol = 1e-02, tol.lik = 1e-2, n0 = round(R), lambda = 0, maxiter = 5e3), verbose=FALSE)
 ```
 
+```{r}
+fit.ted = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
+                                        tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
+```
+
 #### Check mixture model weights
 ```{r}
 sum(fit.ted_reg$w > 1e-2)
 sum(fit.ed_reg$w > 1e-2)
+sum(fit.ted$w > 1e-2)
 ```
 
 ```{r}
 U.ted_reg <- lapply(fit.ted_reg$U,function (e) "[["(e,"mat"))
-U.ed_reg <- U <- lapply(fit.ed_reg$U,function (e) "[["(e,"mat"))
+U.ed_reg <- lapply(fit.ed_reg$U,function (e) "[["(e,"mat"))
+U.ted <- lapply(fit.ed_reg$U,function (e) "[["(e,"mat"))
 
 indx1 = order(fit.ted_reg$w, decreasing = TRUE)[1:6]
 indx2 = order(fit.ed_reg$w, decreasing = TRUE)[1:6]
+indx3 = order(fit.ted$w, decreasing = TRUE)[1:6]
 ```
 
 ```{r}
 ted_reg <- list() 
 ed_reg <- list()
+ted <- list()
 
 for (i in 1:6) {
   U <- U.ted_reg[[indx1[i]]]
@@ -129,6 +138,17 @@ for (i in 1:6) {
   ed_reg[[i]] <- p 
 }
 
+for (i in 1:6) {
+  U <- U.ted[[indx3[i]]]
+  df <- expand.grid(x = 0:49, y = 0:49)
+  df$z <- c(t(U))
+  p <- ggplot(df, aes(x = x, y = y, fill = z)) + geom_tile(color = "black") +
+    scale_fill_gradient2(low = "#075AFF",
+                        mid = "#FFFFCC",
+                        high = "#FF0000")
+  ted[[i]] <- p 
+}
+
 ```
 
 ## TED.reg patterns
@@ -145,3 +165,13 @@ plot_grid(ed_reg[[1]], ed_reg[[2]], ed_reg[[3]],
           ed_reg[[4]], ed_reg[[5]], ed_reg[[6]],
           ncol = 2, byrow = TRUE)
 ```
+
+
+## TED patterns
+```{r fig.width = 8, fig.height = 12}
+plot_grid(ted[[1]], ted[[2]], ted[[3]],
+          ted[[4]], ted[[5]], ted[[6]],
+          ncol = 2, byrow = TRUE)
+```
+
+

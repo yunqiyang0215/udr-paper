@@ -11,6 +11,16 @@ This file try to assess why regularized methods is stable across different numbe
 
 The truth contains 6 different patterns. 
 
+```{r include = FALSE}
+knitr::opts_chunk$set(comment = "#",
+                      results = "hold",
+                      collapse = TRUE,
+                      fig.align = "center",
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+
 ```{r}
 source("./code/simulation_func.R")
 library(udr)

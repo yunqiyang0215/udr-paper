@@ -59,7 +59,7 @@ for (k in 1:ncomp){
 f0 = ud_init(X = X.train, V = param$V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
 ```
 
-#### True patterns
+## True patterns
 ```{r}
 plot.true <- list()
 for (i in 1:6) {
@@ -131,7 +131,7 @@ for (i in 1:6) {
 
 ```
 
-#### TED.reg patterns
+## TED.reg patterns
 ```{r fig.width = 8, fig.height = 12}
 plot_grid(ted_reg[[1]], ted_reg[[2]], ted_reg[[3]],
           ted_reg[[4]], ted_reg[[5]], ted_reg[[6]],
@@ -139,7 +139,7 @@ plot_grid(ted_reg[[1]], ted_reg[[2]], ted_reg[[3]],
 ```
 
 
-#### ED.reg patterns
+## ED.reg patterns
 ```{r fig.width = 8, fig.height = 12}
 plot_grid(ed_reg[[1]], ed_reg[[2]], ed_reg[[3]],
           ed_reg[[4]], ed_reg[[5]], ed_reg[[6]],

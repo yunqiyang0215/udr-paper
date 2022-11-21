@@ -1,0 +1,39 @@
+---
+title: "GTEx V8 data"
+author: "Yunqi Yang"
+date: "11/21/2022"
+output: html_document
+---
+
+#### Description: GTEx V8 data overview. 
+
+Directory: /project2/compbio/GTEx_eQTL/mashr_flashr_workflow_output
+
+```{r}
+dat <- readRDS("/project2/compbio/GTEx_eQTL/mashr_flashr_workflow_output/FastQTLSumStats.mash.rds")
+```
+
+```{r}
+names(dat)
+```
+
+```{r}
+random.z = dat[[1]]
+strong.z = dat[[3]]
+dim(random.z)
+dim(strong.z)
+```
+
+```{r}
+sum(is.na(random.z))
+sum(is.na(strong.z))
+```
+
+```{r}
+Vhat <- readRDS("/project2/compbio/GTEx_eQTL/mashr_flashr_workflow_output/FastQTLSumStats.mash.Vhat.rds")
+```
+
+
+
+
+

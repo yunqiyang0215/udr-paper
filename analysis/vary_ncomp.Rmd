@@ -169,8 +169,9 @@ plot_grid(ted[[1]], ted[[2]], ted[[3]],
 
 
 # 100 components
-```{r }
+```{r  cache = TRUE}
 # Initialization
+ncomp = 100
 set.seed(888)
 U.init = c()
 for (k in 1:ncomp){

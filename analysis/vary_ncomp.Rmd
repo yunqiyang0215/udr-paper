@@ -70,7 +70,7 @@ plot_grid(plot.true[[1]], plot.true[[2]], plot.true[[3]],
 ```
 
 # Fit 6 components 
-```{r cache = TRUE}
+```{r  }
 
 # Initialization
 ncomp = 6
@@ -169,7 +169,7 @@ plot_grid(ted[[1]], ted[[2]], ted[[3]],
 
 
 # 100 components
-```{r cache = TRUE}
+```{r }
 # Initialization
 set.seed(888)
 U.init = c()

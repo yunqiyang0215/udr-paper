@@ -9,7 +9,7 @@ output: html_document
 
 This file try to assess why regularized methods is stable across different number of components. I compare the patterns between fitted Us (top 6 patterns) and the truth.
 
-The truth contains 6 different patterns. I initialize 100 components for all the algorithms: TED.reg, ED.reg and TED. 
+The truth contains 6 different patterns. First, I initialize 6 components for TED.reg, ED.reg and TED. Then I initialize 100 components for all the algorithms: TED.reg, ED.reg and TED. 
 
 ```{r include = FALSE}
 knitr::opts_chunk$set(comment = "#",
@@ -39,7 +39,6 @@ R = 50
 s = 5
 n.train = 1e3
 param = list(w = rep(1/K, K), U = list(), V = diag(R))
-ncomp = 100
 ```
 
 ```{r}
@@ -48,15 +47,6 @@ set.seed(4)
 param$U <- sim_U_true(R, s, identity = TRUE, partial_sharing = TRUE,
                        equal_effect = TRUE, num_singleton = 1)
 X.train <- simulate_ud_data(n.train, param$w,param$U,param$V)
-  
-# Initialization
-set.seed(888)
-U.init = c()
-for (k in 1:ncomp){
-  U.init[[k]] <- udr:::sim_unconstrained(R)
-}
-
-f0 = ud_init(X = X.train, V = param$V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
 ```
 
 ## True patterns
@@ -79,17 +69,120 @@ plot_grid(plot.true[[1]], plot.true[[2]], plot.true[[3]],
           ncol = 2, byrow = TRUE)
 ```
 
-
+# Fit 6 components 
 ```{r cache = TRUE}
+
+# Initialization
+ncomp = 6
+set.seed(888)
+U.init = c()
+for (k in 1:ncomp){
+  U.init[[k]] <- udr:::sim_unconstrained(R)
+}
+
+f0 = ud_init(X = X.train, V = param$V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
 
 fit.ted_reg = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
                                         tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = round(R), maxiter = 5e3), verbose=FALSE)
 
 fit.ed_reg = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'none',
                                     tol = 1e-02, tol.lik = 1e-2, n0 = round(R), lambda = 0, maxiter = 5e3), verbose=FALSE)
+fit.ted = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
+                                        tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
+```
+
+#### Check mixture model weights
+```{r }
+fit.ted_reg$w 
+fit.ed_reg$w 
+fit.ted$w
 ```
 
 ```{r}
+U.ted_reg <- lapply(fit.ted_reg$U,function (e) "[["(e,"mat"))
+U.ed_reg <- lapply(fit.ed_reg$U,function (e) "[["(e,"mat"))
+U.ted <- lapply(fit.ed_reg$U,function (e) "[["(e,"mat"))
+```
+
+```{r}
+ted_reg <- list() 
+ed_reg <- list()
+ted <- list()
+
+for (i in 1:6) {
+  U <- U.ted_reg[[i]]
+  df <- expand.grid(x = 0:49, y = 0:49)
+  df$z <- c(t(U))
+  p <- ggplot(df, aes(x = x, y = y, fill = z)) + geom_tile(color = "black") +
+    scale_fill_gradient2(low = "#075AFF",
+                        mid = "#FFFFCC",
+                        high = "#FF0000")
+  ted_reg[[i]] <- p 
+}
+
+for (i in 1:6) {
+  U <- U.ed_reg[[i]]
+  df <- expand.grid(x = 0:49, y = 0:49)
+  df$z <- c(t(U))
+  p <- ggplot(df, aes(x = x, y = y, fill = z)) + geom_tile(color = "black") +
+    scale_fill_gradient2(low = "#075AFF",
+                        mid = "#FFFFCC",
+                        high = "#FF0000")
+  ed_reg[[i]] <- p 
+}
+
+for (i in 1:6) {
+  U <- U.ted[[i]]
+  df <- expand.grid(x = 0:49, y = 0:49)
+  df$z <- c(t(U))
+  p <- ggplot(df, aes(x = x, y = y, fill = z)) + geom_tile(color = "black") +
+    scale_fill_gradient2(low = "#075AFF",
+                        mid = "#FFFFCC",
+                        high = "#FF0000")
+  ted[[i]] <- p 
+}
+
+```
+
+## TED.reg patterns from 6 components fit
+```{r fig.width = 8, fig.height = 12}
+plot_grid(ted_reg[[1]], ted_reg[[2]], ted_reg[[3]],
+          ted_reg[[4]], ted_reg[[5]], ted_reg[[6]],
+          ncol = 2, byrow = TRUE)
+```
+
+
+## ED.reg patterns from 6 components fit
+```{r fig.width = 8, fig.height = 12}
+plot_grid(ed_reg[[1]], ed_reg[[2]], ed_reg[[3]],
+          ed_reg[[4]], ed_reg[[5]], ed_reg[[6]],
+          ncol = 2, byrow = TRUE)
+```
+
+
+## TED patterns from 6 components fit
+```{r fig.width = 8, fig.height = 12}
+plot_grid(ted[[1]], ted[[2]], ted[[3]],
+          ted[[4]], ted[[5]], ted[[6]],
+          ncol = 2, byrow = TRUE)
+```
+
+
+# 100 components
+```{r cache = TRUE}
+# Initialization
+set.seed(888)
+U.init = c()
+for (k in 1:ncomp){
+  U.init[[k]] <- udr:::sim_unconstrained(R)
+}
+
+f0 = ud_init(X = X.train, V = param$V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+
+fit.ted_reg = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
+                                        tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = round(R), maxiter = 5e3), verbose=FALSE)
+fit.ed_reg = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'none',
+                                    tol = 1e-02, tol.lik = 1e-2, n0 = round(R), lambda = 0, maxiter = 5e3), verbose=FALSE)
 fit.ted = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
                                         tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)
 ```
@@ -151,7 +244,7 @@ for (i in 1:6) {
 
 ```
 
-## TED.reg patterns
+## TED.reg patterns top 6 from 100 components
 ```{r fig.width = 8, fig.height = 12}
 plot_grid(ted_reg[[1]], ted_reg[[2]], ted_reg[[3]],
           ted_reg[[4]], ted_reg[[5]], ted_reg[[6]],
@@ -159,7 +252,7 @@ plot_grid(ted_reg[[1]], ted_reg[[2]], ted_reg[[3]],
 ```
 
 
-## ED.reg patterns
+## ED.reg patterns top 6 from 100 components
 ```{r fig.width = 8, fig.height = 12}
 plot_grid(ed_reg[[1]], ed_reg[[2]], ed_reg[[3]],
           ed_reg[[4]], ed_reg[[5]], ed_reg[[6]],
@@ -167,7 +260,7 @@ plot_grid(ed_reg[[1]], ed_reg[[2]], ed_reg[[3]],
 ```
 
 
-## TED patterns
+## TED patterns top 6 from 100 components
 ```{r fig.width = 8, fig.height = 12}
 plot_grid(ted[[1]], ted[[2]], ted[[3]],
           ted[[4]], ted[[5]], ted[[6]],

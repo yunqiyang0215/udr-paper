@@ -476,16 +476,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree3bf231d8084b350692755eb6237654549b3c2a46targetblank3bf231da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/3bf231d8084b350692755eb6237654549b3c2a46" target="_blank">3bf231d</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree51f354dd8ea254bd65b4e93625f30508cc0e09d2targetblank51f354da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/51f354dd8ea254bd65b4e93625f30508cc0e09d2" target="_blank">51f354d</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree3bf231d8084b350692755eb6237654549b3c2a46targetblank3bf231da" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree51f354dd8ea254bd65b4e93625f30508cc0e09d2targetblank51f354da" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/3bf231d8084b350692755eb6237654549b3c2a46" target="_blank">3bf231d</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/51f354dd8ea254bd65b4e93625f30508cc0e09d2" target="_blank">51f354d</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -541,10 +541,44 @@ Message
 <tbody>
 <tr>
 <td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/51f354dd8ea254bd65b4e93625f30508cc0e09d2/analysis/vary_ncomp.Rmd" target="_blank">51f354d</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-28
+</td>
+<td>
+wflow_publish("analysis/vary_ncomp.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/472c337da6249659044a4da7e5d4c98afcc9c083/analysis/vary_ncomp.Rmd" target="_blank">472c337</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2022-11-28
+</td>
+<td>
+wflow_publish("analysis/vary_ncomp.Rmd")
+</td>
+</tr>
+<tr>
+<td>
 html
 </td>
 <td>
-<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/3bf231d8084b350692755eb6237654549b3c2a46/docs/vary_ncomp.html" target="_blank">3bf231d</a>
+<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/21d41090e75495df9cef3c45e6e22afcaf8b306b/docs/vary_ncomp.html" target="_blank">21d4109</a>
 </td>
 <td>
 yunqiyang0215
@@ -558,10 +592,10 @@ Build site.
 </tr>
 <tr>
 <td>
-Rmd
+html
 </td>
 <td>
-<a href="https://github.com/yunqiyang0215/udr-paper/blob/c3ce98a839fef9c4abeb50284ebf057abcc94cc1/analysis/vary_ncomp.Rmd" target="_blank">c3ce98a</a>
+<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/22fca7398e6b6506a5359273f5538b9d8f1c2521/docs/vary_ncomp.html" target="_blank">22fca73</a>
 </td>
 <td>
 yunqiyang0215
@@ -570,7 +604,7 @@ yunqiyang0215
 2022-11-28
 </td>
 <td>
-wflow_publish("analysis/vary_ncomp.Rmd")
+Build site.
 </td>
 </tr>
 <tr>
@@ -848,12 +882,6 @@ fit.ed_reg = ud_fit(f0, control = list(unconstrained.update = &quot;ed&quot;, re
                                     tol = 1e-02, tol.lik = 1e-2, n0 = round(R), lambda = 0, maxiter = 5e3), verbose=FALSE)
 fit.ted = ud_fit(f0, control = list(unconstrained.update = &quot;ted&quot;, resid.update = &#39;none&#39;,
                                         tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)</code></pre>
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but it won’t be re-run if previous chunks it depends on are updated. If you need to use caching, it is highly recommended to also set <code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the file (in a chunk that is not cached). Alternatively, you can customize the option <code>dependson</code> for each individual chunk that is cached. Using either <code>autodep</code> or <code>dependson</code> will remove this warning. See the <a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
 <div id="check-mixture-model-weights" class="section level4">
 <h4>Check mixture model weights</h4>
 <pre class="r"><code>fit.ted_reg$w 
@@ -941,7 +969,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/yunqiyang0215/udr-paper/blob/3bf231d8084b350692755eb6237654549b3c2a46/docs/figure/vary_ncomp.Rmd/unnamed-chunk-11-1.png" target="_blank">3bf231d</a>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/22fca7398e6b6506a5359273f5538b9d8f1c2521/docs/figure/vary_ncomp.Rmd/unnamed-chunk-11-1.png" target="_blank">22fca73</a>
 </td>
 <td>
 yunqiyang0215
@@ -1018,7 +1046,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/yunqiyang0215/udr-paper/blob/3bf231d8084b350692755eb6237654549b3c2a46/docs/figure/vary_ncomp.Rmd/unnamed-chunk-12-1.png" target="_blank">3bf231d</a>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/22fca7398e6b6506a5359273f5538b9d8f1c2521/docs/figure/vary_ncomp.Rmd/unnamed-chunk-12-1.png" target="_blank">22fca73</a>
 </td>
 <td>
 yunqiyang0215
@@ -1084,7 +1112,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/yunqiyang0215/udr-paper/blob/3bf231d8084b350692755eb6237654549b3c2a46/docs/figure/vary_ncomp.Rmd/unnamed-chunk-13-1.png" target="_blank">3bf231d</a>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/22fca7398e6b6506a5359273f5538b9d8f1c2521/docs/figure/vary_ncomp.Rmd/unnamed-chunk-13-1.png" target="_blank">22fca73</a>
 </td>
 <td>
 yunqiyang0215
@@ -1127,12 +1155,6 @@ fit.ed_reg = ud_fit(f0, control = list(unconstrained.update = &quot;ed&quot;, re
                                     tol = 1e-02, tol.lik = 1e-2, n0 = round(R), lambda = 0, maxiter = 5e3), verbose=FALSE)
 fit.ted = ud_fit(f0, control = list(unconstrained.update = &quot;ted&quot;, resid.update = &#39;none&#39;,
                                         tol = 1e-02, tol.lik = 1e-2, n0 = 0, lambda = 0, maxiter = 5e3), verbose=FALSE)</code></pre>
-<div class="alert alert-warning">
-<p>
-<strong>Warning:</strong> The above code chunk cached its results, but it won’t be re-run if previous chunks it depends on are updated. If you need to use caching, it is highly recommended to also set <code>knitr::opts_chunk$set(autodep = TRUE)</code> at the top of the file (in a chunk that is not cached). Alternatively, you can customize the option <code>dependson</code> for each individual chunk that is cached. Using either <code>autodep</code> or <code>dependson</code> will remove this warning. See the <a href="https://yihui.name/knitr/options/#cache"
->knitr cache options</a> for more details.
-</p>
-</div>
 <div id="check-mixture-model-weights-1" class="section level4">
 <h4>Check mixture model weights</h4>
 <pre class="r"><code>sum(fit.ted_reg$w &gt; 1e-2)
@@ -1215,7 +1237,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/yunqiyang0215/udr-paper/blob/3bf231d8084b350692755eb6237654549b3c2a46/docs/figure/vary_ncomp.Rmd/unnamed-chunk-18-1.png" target="_blank">3bf231d</a>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/22fca7398e6b6506a5359273f5538b9d8f1c2521/docs/figure/vary_ncomp.Rmd/unnamed-chunk-18-1.png" target="_blank">22fca73</a>
 </td>
 <td>
 yunqiyang0215
@@ -1259,7 +1281,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/yunqiyang0215/udr-paper/blob/3bf231d8084b350692755eb6237654549b3c2a46/docs/figure/vary_ncomp.Rmd/unnamed-chunk-19-1.png" target="_blank">3bf231d</a>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/22fca7398e6b6506a5359273f5538b9d8f1c2521/docs/figure/vary_ncomp.Rmd/unnamed-chunk-19-1.png" target="_blank">22fca73</a>
 </td>
 <td>
 yunqiyang0215
@@ -1303,7 +1325,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/yunqiyang0215/udr-paper/blob/3bf231d8084b350692755eb6237654549b3c2a46/docs/figure/vary_ncomp.Rmd/unnamed-chunk-20-1.png" target="_blank">3bf231d</a>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/22fca7398e6b6506a5359273f5538b9d8f1c2521/docs/figure/vary_ncomp.Rmd/unnamed-chunk-20-1.png" target="_blank">22fca73</a>
 </td>
 <td>
 yunqiyang0215
@@ -1351,15 +1373,14 @@ yunqiyang0215
 # [17] jquerylib_0.1.4  Matrix_1.3-4     rmarkdown_2.11   labeling_0.4.2  
 # [21] stringr_1.4.0    munsell_0.5.0    mixsqp_0.3-43    compiler_4.1.1  
 # [25] httpuv_1.6.3     xfun_0.27        pkgconfig_2.0.3  SQUAREM_2021.1  
-# [29] htmltools_0.5.2  tidyselect_1.1.1 tibble_3.1.5     codetools_0.2-18
-# [33] fansi_0.5.0      crayon_1.4.1     dplyr_1.0.7      withr_2.4.2     
-# [37] later_1.3.0      grid_4.1.1       gtable_0.3.0     lifecycle_1.0.1 
-# [41] git2r_0.28.0     magrittr_2.0.1   scales_1.1.1     stringi_1.7.5   
-# [45] farver_2.1.0     fs_1.5.0         promises_1.2.0.1 ellipsis_0.3.2  
-# [49] vctrs_0.3.8      generics_0.1.2   rmeta_3.0        tools_4.1.1     
-# [53] glue_1.4.2       softImpute_1.4-1 purrr_0.3.4      abind_1.4-5     
-# [57] parallel_4.1.1   fastmap_1.1.0    yaml_2.2.1       colorspace_2.0-2
-# [61] knitr_1.36</code></pre>
+# [29] htmltools_0.5.2  tidyselect_1.1.1 tibble_3.1.5     fansi_0.5.0     
+# [33] crayon_1.4.1     dplyr_1.0.7      withr_2.4.2      later_1.3.0     
+# [37] grid_4.1.1       gtable_0.3.0     lifecycle_1.0.1  git2r_0.28.0    
+# [41] magrittr_2.0.1   scales_1.1.1     stringi_1.7.5    farver_2.1.0    
+# [45] fs_1.5.0         promises_1.2.0.1 ellipsis_0.3.2   vctrs_0.3.8     
+# [49] generics_0.1.2   rmeta_3.0        tools_4.1.1      glue_1.4.2      
+# [53] softImpute_1.4-1 purrr_0.3.4      abind_1.4-5      parallel_4.1.1  
+# [57] fastmap_1.1.0    yaml_2.2.1       colorspace_2.0-2 knitr_1.36</code></pre>
 </div>
 </div>
 </div>

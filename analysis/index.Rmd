@@ -16,4 +16,6 @@ output: workflowr::wflow_html
 
 + [Vary number of components](vary_ncomp.html)
 
++ [Scale invariant property](scale_invariant.html)
+
 + [GTEx V8 data overview](gtex_data_overview.html)

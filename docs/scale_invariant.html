@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2024-04-25" />
+
+<title>Check scale invariant</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">udr-paper</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/yunqiyang0215/udr-paper">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Check scale invariant</h1>
+<h4 class="date">2024-04-25</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-04-25
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>udr-paper/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20221016code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20221016)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20221016code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20221016)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+</p>
+</div>
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Using absolute paths to the files within your workflowr project makes it difficult for you and others to run your code on a different machine. Change the absolute path(s) below to the suggested relative path(s) to make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+/Users/nicholeyang/Downloads/udr-paper/code/simulation_func.R
+</td>
+<td style="text-align:left;">
+code/simulation_func.R
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree80c38d886ff2f95fbe57d6c2b349a5ac811b1f2ctargetblank80c38d8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/80c38d886ff2f95fbe57d6c2b349a5ac811b1f2c" target="_blank">80c38d8</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree80c38d886ff2f95fbe57d6c2b349a5ac811b1f2ctargetblank80c38d8a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/80c38d886ff2f95fbe57d6c2b349a5ac811b1f2c" target="_blank">80c38d8</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rproj.user/
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/scale_invariant.Rmd</code>) and HTML (<code>docs/scale_invariant.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/80c38d886ff2f95fbe57d6c2b349a5ac811b1f2c/analysis/scale_invariant.Rmd" target="_blank">80c38d8</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2024-04-25
+</td>
+<td>
+wflow_publish("analysis/scale_invariant.Rmd")
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="description" class="section level2">
+<h2>Description:</h2>
+<p>Check scale invariant property from the fitting results. Check for a single scaler <span class="math inline">\(s=5\)</span>.</p>
+<ol style="list-style-type: decimal">
+<li><p>In large n/R + running TED, the scale invariance property satisfies.</p></li>
+<li><p>In smaller n/R + running TED.iw (very strong penalty), there is one matrix that doesn’t satisfy scale invariance property.</p></li>
+</ol>
+<pre class="r"><code>library(udr)
+library(mashr)</code></pre>
+<pre><code>Loading required package: ashr</code></pre>
+<pre class="r"><code>library(mvtnorm)
+source(&quot;/Users/nicholeyang/Downloads/udr-paper/code/simulation_func.R&quot;)</code></pre>
+<div id="simulate-data" class="section level3">
+<h3>1. Simulate data</h3>
+<pre class="r"><code>set.seed(1)
+R = 5
+U = list()
+U[[1]] = diag(seq(1:5))
+U[[2]] = matrix(0, ncol = R, nrow = R)
+U[[2]][1,1] = 1
+u = rnorm(R)
+U[[3]] = u %*% t(u)
+
+# Non-diagonal V
+V &lt;- matrix(1, ncol =5, nrow = 5)
+diag(V) &lt;- 2
+
+K = length(U)
+w = rep(1/K, K)
+n_train = 1e4
+dat_train = simulate_mixture_ebnm(n_train, w, U, V)
+print(U)</code></pre>
+<pre><code>[[1]]
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    1    0    0    0    0
+[2,]    0    2    0    0    0
+[3,]    0    0    3    0    0
+[4,]    0    0    0    4    0
+[5,]    0    0    0    0    5
+
+[[2]]
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    1    0    0    0    0
+[2,]    0    0    0    0    0
+[3,]    0    0    0    0    0
+[4,]    0    0    0    0    0
+[5,]    0    0    0    0    0
+
+[[3]]
+           [,1]        [,2]       [,3]       [,4]       [,5]
+[1,]  0.3924444 -0.11504406  0.5234827 -0.9993697 -0.2064214
+[2,] -0.1150441  0.03372487 -0.1534576  0.2929627  0.0605119
+[3,]  0.5234827 -0.15345762  0.6982752 -1.3330623 -0.2753461
+[4,] -0.9993697  0.29296267 -1.3330623  2.5449208  0.5256574
+[5,] -0.2064214  0.06051190 -0.2753461  0.5256574  0.1085754</code></pre>
+</div>
+<div id="check-scale-invariant-for-ted.-large-n-small-r" class="section level3">
+<h3>Check scale invariant for TED. Large n &amp; small R</h3>
+<pre class="r"><code># fit 1: original fit
+maxiter = 2e3
+U.init = list()
+# The scaler 
+s = 5 
+for (k in 1:K){
+  U.init[[k]] &lt;- udr:::sim_unconstrained(R)
+}
+
+f0 = ud_init(dat_train$X, V = V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+fit1 = ud_fit(f0, control = list(unconstrained.update = &quot;ted&quot;, resid.update = &#39;none&#39;,
+                                tol = 1e-02, tol.lik = 1e-2, lambda = 0, maxiter = maxiter), verbose=FALSE)
+
+# fit2: scaled fit
+f0 = ud_init(s* dat_train$X, V = s^2*V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+fit2 = ud_fit(f0, control = list(unconstrained.update = &quot;ted&quot;, resid.update = &#39;none&#39;,
+                                tol = 1e-02, tol.lik = 1e-2, lambda = 0, maxiter = maxiter), verbose=FALSE)
+
+U1 &lt;- lapply(fit1$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))
+U2 &lt;- lapply(fit2$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))</code></pre>
+<pre class="r"><code>U1</code></pre>
+<pre><code>$unconstrained1
+           [,1]        [,2]       [,3]       [,4]        [,5]
+[1,]  0.4370672 -0.14678077  0.6353653 -1.1294193 -0.18144164
+[2,] -0.1467808  0.08117472 -0.2122709  0.3004687  0.03042572
+[3,]  0.6353653 -0.21227087  0.9749840 -1.6109680 -0.23705441
+[4,] -1.1294193  0.30046873 -1.6109680  3.1354157  0.56247267
+[5,] -0.1814416  0.03042572 -0.2370544  0.5624727  0.11953951
+
+$unconstrained2
+            [,1]         [,2]        [,3]         [,4]        [,5]
+[1,]  0.93294901  0.093012891 -0.01804694 -0.062738798 -0.08516851
+[2,]  0.09301289  2.309654658  0.01717250  0.008548838 -0.02309650
+[3,] -0.01804694  0.017172498  3.03365125  0.216092134 -0.01096924
+[4,] -0.06273880  0.008548838  0.21609213  3.875043555  0.26012476
+[5,] -0.08516851 -0.023096498 -0.01096924  0.260124757  4.98746627
+
+$unconstrained3
+              [,1]         [,2]         [,3]        [,4]          [,5]
+[1,]  0.9273176248 -0.012413011 -0.010842865 -0.10038890  0.0005672338
+[2,] -0.0124130108  0.044125956  0.046220908 -0.03267232  0.0070198214
+[3,] -0.0108428652  0.046220908  0.052531191 -0.02290405  0.0014049873
+[4,] -0.1003889014 -0.032672317 -0.022904050  0.06978526 -0.0222652186
+[5,]  0.0005672338  0.007019821  0.001404987 -0.02226522  0.0097475770</code></pre>
+<pre class="r"><code>U2</code></pre>
+<pre><code>$unconstrained1
+           [,1]       [,2]         [,3]         [,4]        [,5]
+[1,] 24.3551628 -0.1235081 -0.764812213 -1.503975458  0.27961753
+[2,] -0.1235081  1.4908286  0.994726400 -0.526649956  0.40386908
+[3,] -0.7648122  0.9947264  0.856903137 -0.006927592  0.06158257
+[4,] -1.5039755 -0.5266500 -0.006927592  0.805241851 -0.50699762
+[5,]  0.2796175  0.4038691  0.061582565 -0.506997617  0.34121015
+
+$unconstrained2
+           [,1]       [,2]       [,3]       [,4]        [,5]
+[1,] 23.1438204  2.2461669 -0.4590286 -1.5978471  -2.1834995
+[2,]  2.2461669 57.6354431  0.4295587  0.0249251  -0.7134053
+[3,] -0.4590286  0.4295587 75.7664902  5.4333974  -0.2674874
+[4,] -1.5978471  0.0249251  5.4333974 96.8154771   6.4593547
+[5,] -2.1834995 -0.7134053 -0.2674874  6.4593547 124.5928191
+
+$unconstrained3
+           [,1]       [,2]       [,3]       [,4]       [,5]
+[1,]  10.804524 -3.4384501  15.121484 -27.183208 -4.3422065
+[2,]  -3.438450  1.7390722  -4.631714   6.901877  0.7335576
+[3,]  15.121484 -4.6317142  23.060041 -37.803619 -5.4974008
+[4,] -27.183208  6.9018768 -37.803619  73.423268 12.9842571
+[5,]  -4.342207  0.7335576  -5.497401  12.984257  2.7108406</code></pre>
+</div>
+<div id="check-scale-invariant-for-ted.iw.-smaller-n-strong-penalty" class="section level3">
+<h3>Check scale invariant for TED.iw. Smaller n &amp; strong penalty</h3>
+<pre class="r"><code>##  2. Check scale invariant for TED.iw
+# fit 1: original fit
+maxiter = 2e3
+dat_train = simulate_mixture_ebnm(500, w, U, V)
+lambda = 100*R
+U.init = list()
+for (k in 1:K){
+  U.init[[k]] &lt;- udr:::sim_unconstrained(R)
+}
+
+f0 = ud_init(dat_train$X, V = V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+fit1 = ud_fit(f0, control = list(unconstrained.update = &quot;ted&quot;, resid.update = &#39;none&#39;,
+                                 tol = 1e-02, tol.lik = 1e-2, lambda = lambda, maxiter = maxiter, penalty = &quot;iw&quot;), verbose=FALSE)
+
+# fit 2: scaled fit
+U.init = list()
+for (k in 1:K){
+  U.init[[k]] &lt;- udr:::sim_unconstrained(R)
+}
+
+s = 5
+f0 = ud_init(s* dat_train$X, V = s^2*V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+fit2 = ud_fit(f0, control = list(unconstrained.update = &quot;ted&quot;, resid.update = &#39;none&#39;,
+                                 tol = 1e-02, tol.lik = 1e-2, lambda = lambda, maxiter = maxiter, penalty = &quot;iw&quot;), verbose=FALSE)
+
+U1 &lt;- lapply(fit1$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))
+U2 &lt;- lapply(fit2$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))</code></pre>
+<pre class="r"><code>U1</code></pre>
+<pre><code>$unconstrained1
+          [,1]      [,2]      [,3]      [,4]      [,5]
+[1,] 1.6578612 0.8271225 0.8272591 0.8253924 0.8273877
+[2,] 0.8271225 1.6556639 0.8264015 0.8274895 0.8278114
+[3,] 0.8272591 0.8264015 1.6568598 0.8244920 0.8266149
+[4,] 0.8253924 0.8274895 0.8244920 1.6602724 0.8277791
+[5,] 0.8273877 0.8278114 0.8266149 0.8277791 1.6570102
+
+$unconstrained2
+         [,1]     [,2]     [,3]     [,4]     [,5]
+[1,] 5.287258 2.564825 2.533813 2.327839 2.533521
+[2,] 2.564825 5.222700 2.552317 2.508211 2.482250
+[3,] 2.533813 2.552317 5.461059 2.342508 2.420316
+[4,] 2.327839 2.508211 2.342508 5.753912 2.564658
+[5,] 2.533521 2.482250 2.420316 2.564658 5.586963
+
+$unconstrained3
+          [,1]      [,2]      [,3]      [,4]      [,5]
+[1,] 0.8614970 0.4121657 0.4174601 0.3958200 0.4166723
+[2,] 0.4121657 0.8416630 0.4065166 0.4223888 0.4236348
+[3,] 0.4174601 0.4065166 0.8469176 0.3879787 0.4110273
+[4,] 0.3958200 0.4223888 0.3879787 0.8900218 0.4216378
+[5,] 0.4166723 0.4236348 0.4110273 0.4216378 0.8464856</code></pre>
+<pre class="r"><code>lapply(1:3, function(i) U2[[i]]/25)</code></pre>
+<pre><code>[[1]]
+          [,1]      [,2]      [,3]      [,4]      [,5]
+[1,] 1.0772529 0.5319071 0.5330202 0.5263825 0.5334373
+[2,] 0.5319071 1.0697945 0.5295712 0.5346276 0.5356491
+[3,] 0.5330202 0.5295712 1.0720079 0.5232233 0.5310036
+[4,] 0.5263825 0.5346276 0.5232233 1.0858560 0.5348399
+[5,] 0.5334373 0.5356491 0.5310036 0.5348399 1.0724854
+
+[[2]]
+         [,1]     [,2]     [,3]     [,4]     [,5]
+[1,] 5.426664 2.633604 2.603022 2.392458 2.601343
+[2,] 2.633604 5.361026 2.620973 2.576411 2.549696
+[3,] 2.603022 2.620973 5.603394 2.407450 2.487315
+[4,] 2.392458 2.576411 2.407450 5.901156 2.633852
+[5,] 2.601343 2.549696 2.487315 2.633852 5.729467
+
+[[3]]
+          [,1]      [,2]      [,3]      [,4]      [,5]
+[1,] 0.8283055 0.4002961 0.4038568 0.3886696 0.4038143
+[2,] 0.4002961 0.8137067 0.3960643 0.4078418 0.4090473
+[3,] 0.4038568 0.3960643 0.8170715 0.3828438 0.3995923
+[4,] 0.3886696 0.4078418 0.3828438 0.8485826 0.4072275
+[5,] 0.4038143 0.4090473 0.3995923 0.4072275 0.8172741</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.1 (2021-08-10)
+Platform: x86_64-apple-darwin20.6.0 (64-bit)
+Running under: macOS Monterey 12.0.1
+
+Matrix products: default
+BLAS:   /usr/local/Cellar/openblas/0.3.18/lib/libopenblasp-r0.3.18.dylib
+LAPACK: /usr/local/Cellar/r/4.1.1_1/lib/R/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] mvtnorm_1.1-3   mashr_0.2.51    ashr_2.2-47     udr_0.3-152    
+[5] workflowr_1.6.2
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.8.3     plyr_1.8.6       pillar_1.9.0     compiler_4.1.1  
+ [5] bslib_0.4.1      later_1.3.0      jquerylib_0.1.4  git2r_0.28.0    
+ [9] highr_0.9        tools_4.1.1      digest_0.6.28    lattice_0.20-44 
+[13] jsonlite_1.7.2   evaluate_0.14    lifecycle_1.0.3  tibble_3.1.5    
+[17] pkgconfig_2.0.3  rlang_1.1.1      Matrix_1.5-3     cli_3.6.1       
+[21] rstudioapi_0.13  yaml_2.2.1       xfun_0.27        fastmap_1.1.0   
+[25] invgamma_1.1     stringr_1.4.0    knitr_1.36       fs_1.5.0        
+[29] vctrs_0.6.3      sass_0.4.4       grid_4.1.1       rprojroot_2.0.2 
+[33] glue_1.4.2       R6_2.5.1         fansi_0.5.0      rmarkdown_2.11  
+[37] mixsqp_0.3-43    rmeta_3.0        irlba_2.3.5      magrittr_2.0.1  
+[41] whisker_0.4      promises_1.2.0.1 ellipsis_0.3.2   htmltools_0.5.5 
+[45] assertthat_0.2.1 abind_1.4-5      softImpute_1.4-1 httpuv_1.6.3    
+[49] utf8_1.2.2       stringi_1.7.5    truncnorm_1.0-8  SQUAREM_2021.1  
+[53] cachem_1.0.6    </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

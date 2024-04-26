@@ -6,12 +6,7 @@ date: '2024-04-25'
 
 ## Description: 
 
-Check scale invariant property from the fitting results. Check for a single scaler $s=5$. 
-
-1. In large n/R + running TED, the scale invariance property satisfies.
-
-2. In smaller n/R + running TED.iw (very strong penalty), there is one matrix that doesn't satisfy scale invariance property. 
-
+Check scale invariant property from the fitting results. Check for a single scaler $s=5$ and a matrix $A$ for single component model. 
 
 ```{r}
 library(udr)
@@ -40,7 +35,7 @@ print(U)
 ```
 
 
-### Check scale invariant for TED. Large n & small R
+### 2. Check scale invariant for TED, single scalar. Large n & small R
 ```{r}
 # fit 1: original fit
 maxiter = 2e3
@@ -75,7 +70,7 @@ U2[[1]]/25
 ```
 
 
-### Check scale invariant for TED.iw. Smaller n & strong penalty
+### 3. Check scale invariant for TED.iw, single scalar. Smaller n & strong penalty
 ```{r   }
 ##  2. Check scale invariant for TED.iw
 # fit 1: original fit
@@ -110,5 +105,81 @@ U1
 U2[[1]]/25
 ```
 
+
+### 4. Check scale invariant for TED, a matrix A. Large n & small R
+```{r}
+# fit 1: original fit
+maxiter = 2e3
+U.init = list()
+# The matrix A 
+A = rbind(c(1, 0, 0, 0, 0), c(2, 1, 0, 0, 0))
+  
+for (k in 1:K){
+  U.init[[k]] <- udr:::sim_unconstrained(R)
+}
+
+f0 = ud_init(dat_train$X, V = V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+fit1 = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
+                                tol = 1e-02, tol.lik = 1e-2, lambda = 0, maxiter = maxiter), verbose=FALSE)
+
+for (k in 1:K){
+  U.init[[k]] <- A %*% U.init[[k]] %*% t(A)
+}
+
+# fit2: scaled fit
+f0 = ud_init(dat_train$X %*% t(A), V = A %*% V %*% t(A), U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+fit2 = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
+                                tol = 1e-02, tol.lik = 1e-2, lambda = 0, maxiter = maxiter), verbose=FALSE)
+
+U1 <- lapply(fit1$U,function (e) "[["(e,"mat"))
+U2 <- lapply(fit2$U,function (e) "[["(e,"mat"))
+```
+
+```{r}
+A %*% U1[[1]] %*% t(A)
+U2
+```
+
+
+### 5. Check scale invariant for TED.iw, a matrix A. Smaller n & strong penalty
+
+```{r}
+# fit 1: original fit
+maxiter = 2e3
+U.init = list()
+# The matrix A 
+A = rbind(c(1, 0, 0, 0, 0), c(2, 1, 0, 0, 0))
+
+maxiter = 2e3
+dat_train = simulate_mixture_ebnm(500, w, U, V)
+lambda = 100*R
+U.init = list()
+
+for (k in 1:K){
+  U.init[[k]] <- udr:::sim_unconstrained(R)
+}
+
+f0 = ud_init(dat_train$X, V = V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+fit1 = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
+                                tol = 1e-02, tol.lik = 1e-2, lambda = lambda, maxiter = maxiter, penalty = "iw"), verbose=FALSE)
+
+
+for (k in 1:K){
+  U.init[[k]] <- A %*% U.init[[k]] %*% t(A)
+}
+
+# fit2: scaled fit
+f0 = ud_init(dat_train$X %*% t(A), V = A %*% V %*% t(A), U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+fit2 = ud_fit(f0, control = list(unconstrained.update = "ted", resid.update = 'none',
+                                tol = 1e-02, tol.lik = 1e-2, lambda = lambda, maxiter = maxiter, penalty = "iw"), verbose=FALSE)
+
+U1 <- lapply(fit1$U,function (e) "[["(e,"mat"))
+U2 <- lapply(fit2$U,function (e) "[["(e,"mat"))
+```
+
+```{r}
+A %*% U1[[1]] %*% t(A)
+U2
+```
 
 

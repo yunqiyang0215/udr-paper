@@ -20,4 +20,6 @@ output: workflowr::wflow_html
 
 + [Scale invariant property 2](scale_invariant_A.html)
 
++ [Compare test loglikelihood using simulation from real data](simulation_real_data.html)
+
 + [GTEx V8 data overview](gtex_data_overview.html)

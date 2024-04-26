@@ -1,0 +1,32 @@
+---
+title: "Simulate from real data"
+output: html_document
+date: '2024-04-26'
+---
+
+## Description:
+
+Simulate data from patterns found by ED.iw from GTEx strong sets. 
+
+```{r}
+res = readRDS("/project2/mstephens/yunqiyang/udr-paper/test-udr/sim_real_data/loglik.rds")
+loglik.test = res[res$evaluate == "loglik_test", ] 
+```
+
+```{r}
+nrep = 10
+ntest = 5e3
+algorithms = c( "ted", "ed", "ted.iw", "ed.iw")
+res = matrix(NA, ncol = length(algorithms), nrow = nrep)
+colnames(res) = algorithms
+
+for (i in 1:length(algorithms)){
+  val = loglik.test$evaluate.loglik[loglik.test$fit.prior_cov_update == "oracle"] - loglik.test$evaluate.loglik[loglik.test$fit.prior_cov_update == algorithms[i]]
+  res[, i] = val/ntest
+}
+```
+
+```{r}
+boxplot(res, ylab = "KL divergence")
+```
+

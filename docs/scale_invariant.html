@@ -498,16 +498,16 @@ code/simulation_func.R
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreeeb1641ab3dbc9c5530ce5ea5f40b0ae0e2c5dad5targetblankeb1641aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/eb1641ab3dbc9c5530ce5ea5f40b0ae0e2c5dad5" target="_blank">eb1641a</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree1a037a9be74e975f38bc11d98bdeff3b96a8103ctargetblank1a037a9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/yunqiyang0215/udr-paper/tree/1a037a9be74e975f38bc11d98bdeff3b96a8103c" target="_blank">1a037a9</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreeeb1641ab3dbc9c5530ce5ea5f40b0ae0e2c5dad5targetblankeb1641aa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree1a037a9be74e975f38bc11d98bdeff3b96a8103ctargetblank1a037a9a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/eb1641ab3dbc9c5530ce5ea5f40b0ae0e2c5dad5" target="_blank">eb1641a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/yunqiyang0215/udr-paper/tree/1a037a9be74e975f38bc11d98bdeff3b96a8103c" target="_blank">1a037a9</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -556,6 +556,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/1a037a9be74e975f38bc11d98bdeff3b96a8103c/analysis/scale_invariant.Rmd" target="_blank">1a037a9</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2024-04-29
+</td>
+<td>
+wflow_publish("analysis/scale_invariant.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/fac498dad82430b4ad84ce31b3a0692c0464df73/docs/scale_invariant.html" target="_blank">fac498d</a>
+</td>
+<td>
+yunqiyang0215
+</td>
+<td>
+2024-04-29
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -667,7 +701,7 @@ wflow_publish("analysis/scale_invariant.Rmd")
 </div>
 <div id="description" class="section level2">
 <h2>Description:</h2>
-<p>Check scale invariant property from the fitting results. Check for a single scaler <span class="math inline">\(s=5\)</span> and a matrix <span class="math inline">\(A\)</span> for single component model.</p>
+<p>Check scale invariant property from the fitting results using the single component model. Check for a single scaler <span class="math inline">\(s=5\)</span> and a matrix <span class="math inline">\(A\)</span>.</p>
 <pre class="r"><code>library(udr)
 library(mashr)</code></pre>
 <pre><code>Loading required package: ashr</code></pre>
@@ -697,8 +731,8 @@ print(U)</code></pre>
 [4,]    0    0    0    4    0
 [5,]    0    0    0    0    5</code></pre>
 </div>
-<div id="check-scale-invariant-for-ted-single-scalar.-large-n-small-r" class="section level3">
-<h3>2. Check scale invariant for TED, single scalar. Large n &amp; small R</h3>
+<div id="check-scale-invariant-for-ted-single-scalar.-large-n-small-r.-scale-invariant-holds." class="section level3">
+<h3>2. Check scale invariant for TED, single scalar. Large n &amp; small R. Scale invariant holds.</h3>
 <pre class="r"><code># fit 1: original fit
 maxiter = 2e3
 U.init = list()
@@ -740,8 +774,8 @@ U2 &lt;- lapply(fit2$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))</code></p
 [4,] -8.165293e-02 -0.013966904 0.093721140  3.93341190 -3.988430e-02
 [5,]  9.253973e-05  0.033868765 0.005244503 -0.03988430  4.920575e+00</code></pre>
 </div>
-<div id="check-scale-invariant-for-ted.iw-single-scalar.-smaller-n-strong-penalty" class="section level3">
-<h3>3. Check scale invariant for TED.iw, single scalar. Smaller n &amp; strong penalty</h3>
+<div id="check-scale-invariant-for-ted.iw-single-scalar.-smaller-n-strong-penalty.-scale-invariant-holds." class="section level3">
+<h3>3. Check scale invariant for TED.iw, single scalar. Smaller n &amp; strong penalty. Scale invariant holds.</h3>
 <pre class="r"><code>##  2. Check scale invariant for TED.iw
 # fit 1: original fit
 maxiter = 2e3
@@ -784,8 +818,8 @@ U2 &lt;- lapply(fit2$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))</code></p
 [4,] 1.769188 1.687386 1.803553 4.629627 1.764420
 [5,] 1.741585 1.666825 1.740540 1.764420 5.110872</code></pre>
 </div>
-<div id="check-scale-invariant-for-ted-a-matrix-a.-large-n-small-r" class="section level3">
-<h3>4. Check scale invariant for TED, a matrix A. Large n &amp; small R</h3>
+<div id="check-scale-invariant-for-ted-a-non-diagonal-matrix-a.-large-n-small-r.-scale-invariant-holds." class="section level3">
+<h3>4. Check scale invariant for TED, a non-diagonal matrix A. Large n &amp; small R. Scale invariant holds.</h3>
 <pre class="r"><code># fit 1: original fit
 maxiter = 2e3
 U.init = list()
@@ -821,8 +855,8 @@ U2 &lt;- lapply(fit2$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))</code></p
 [1,] 1.270888 2.605442
 [2,] 2.605442 7.960212</code></pre>
 </div>
-<div id="check-scale-invariant-for-ted.iw-a-matrix-a.-smaller-n-strong-penalty" class="section level3">
-<h3>5. Check scale invariant for TED.iw, a matrix A. Smaller n &amp; strong penalty</h3>
+<div id="check-scale-invariant-for-ted.iw-a-non-diagonal-matrix-a.-smaller-n-strong-penalty.-scale-invariant-doesnt-hold." class="section level3">
+<h3>5. Check scale invariant for TED.iw, a non-diagonal matrix A. Smaller n &amp; strong penalty. Scale invariant doesn’t hold.</h3>
 <pre class="r"><code># fit 1: original fit
 maxiter = 2e3
 U.init = list()
@@ -863,6 +897,98 @@ U2 &lt;- lapply(fit2$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))</code></p
          [,1]      [,2]
 [1,] 1.543539  3.753446
 [2,] 3.753446 10.510804</code></pre>
+</div>
+<div id="check-scale-invariant-for-ted-a-diagonal-matrix-a.-large-n-small-r.-scale-invariant-holds." class="section level3">
+<h3>6. Check scale invariant for TED, a diagonal matrix A. Large n &amp; small R. Scale invariant holds.</h3>
+<pre class="r"><code># fit 1: original fit
+maxiter = 2e3
+U.init = list()
+# The matrix A 
+A = diag(c(1,3,2,4,0.1))
+  
+for (k in 1:K){
+  U.init[[k]] &lt;- udr:::sim_unconstrained(R)
+}
+
+f0 = ud_init(dat_train$X, V = V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+fit1 = ud_fit(f0, control = list(unconstrained.update = &quot;ted&quot;, resid.update = &#39;none&#39;,
+                                tol = 1e-02, tol.lik = 1e-2, lambda = 0, maxiter = maxiter), verbose=FALSE)
+
+for (k in 1:K){
+  U.init[[k]] &lt;- A %*% U.init[[k]] %*% t(A)
+}
+
+# fit2: scaled fit
+f0 = ud_init(dat_train$X %*% t(A), V = A %*% V %*% t(A), U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+fit2 = ud_fit(f0, control = list(unconstrained.update = &quot;ted&quot;, resid.update = &#39;none&#39;,
+                                tol = 1e-02, tol.lik = 1e-2, lambda = 0, maxiter = maxiter), verbose=FALSE)
+
+U1 &lt;- lapply(fit1$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))
+U2 &lt;- lapply(fit2$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))</code></pre>
+<pre class="r"><code>A %*% U1[[1]] %*% t(A)</code></pre>
+<pre><code>             [,1]        [,2]        [,3]        [,4]         [,5]
+[1,]  0.759993112 -0.68752783  0.47113763  0.75115897 -0.002885539
+[2,] -0.687527827 13.47912630 -0.31606091  1.08726554 -0.071101247
+[3,]  0.471137633 -0.31606091 11.30816565 -0.07200921  0.017884135
+[4,]  0.751158970  1.08726554 -0.07200921 70.70248363 -0.042904613
+[5,] -0.002885539 -0.07110125  0.01788413 -0.04290461  0.044282226</code></pre>
+<pre class="r"><code>U2</code></pre>
+<pre><code>$unconstrained1
+             [,1]        [,2]        [,3]        [,4]         [,5]
+[1,]  0.759993112 -0.68752783  0.47113763  0.75115897 -0.002885539
+[2,] -0.687527827 13.47912630 -0.31606091  1.08726554 -0.071101247
+[3,]  0.471137633 -0.31606091 11.30816565 -0.07200921  0.017884135
+[4,]  0.751158970  1.08726554 -0.07200921 70.70248363 -0.042904613
+[5,] -0.002885539 -0.07110125  0.01788413 -0.04290461  0.044282226</code></pre>
+</div>
+<div id="check-scale-invariant-for-ted.iw-a-diagonal-matrix-a.-smaller-n-strong-penalty.-scale-invariant-doesnt-hold." class="section level3">
+<h3>7. Check scale invariant for TED.iw, a diagonal matrix A. Smaller n &amp; strong penalty. Scale invariant doesn’t hold.</h3>
+<pre class="r"><code># fit 1: original fit
+maxiter = 2e3
+U.init = list()
+# The matrix A 
+A = diag(c(1,3,2,4,0.1))
+
+maxiter = 2e3
+dat_train = simulate_mixture_ebnm(500, w, U, V)
+lambda = 100*R
+U.init = list()
+
+for (k in 1:K){
+  U.init[[k]] &lt;- udr:::sim_unconstrained(R)
+}
+
+f0 = ud_init(dat_train$X, V = V, U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+fit1 = ud_fit(f0, control = list(unconstrained.update = &quot;ted&quot;, resid.update = &#39;none&#39;,
+                                tol = 1e-02, tol.lik = 1e-2, lambda = lambda, maxiter = maxiter, penalty = &quot;iw&quot;), verbose=FALSE)
+
+
+for (k in 1:K){
+  U.init[[k]] &lt;- A %*% U.init[[k]] %*% t(A)
+}
+
+# fit2: scaled fit
+f0 = ud_init(dat_train$X %*% t(A), V = A %*% V %*% t(A), U_scaled = NULL, U_unconstrained = U.init, n_rank1 = 0)
+fit2 = ud_fit(f0, control = list(unconstrained.update = &quot;ted&quot;, resid.update = &#39;none&#39;,
+                                tol = 1e-02, tol.lik = 1e-2, lambda = lambda, maxiter = maxiter, penalty = &quot;iw&quot;), verbose=FALSE)
+
+U1 &lt;- lapply(fit1$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))
+U2 &lt;- lapply(fit2$U,function (e) &quot;[[&quot;(e,&quot;mat&quot;))</code></pre>
+<pre class="r"><code>A %*% U1[[1]] %*% t(A)</code></pre>
+<pre><code>          [,1]       [,2]       [,3]       [,4]       [,5]
+[1,] 3.6329981  4.9458430  3.4613103  6.5689190 0.15782844
+[2,] 4.9458430 34.9452465 10.0480224 20.0064209 0.47844867
+[3,] 3.4613103 10.0480224 17.7851919 13.5274835 0.30873394
+[4,] 6.5689190 20.0064209 13.5274835 73.6320876 0.62021486
+[5,] 0.1578284  0.4784487  0.3087339  0.6202149 0.05007705</code></pre>
+<pre class="r"><code>U2</code></pre>
+<pre><code>$unconstrained1
+          [,1]       [,2]       [,3]       [,4]       [,5]
+[1,] 3.6329981  4.9458430  3.4613103  6.5689190 0.15782844
+[2,] 4.9458430 34.9452465 10.0480224 20.0064209 0.47844867
+[3,] 3.4613103 10.0480224 17.7851919 13.5274835 0.30873394
+[4,] 6.5689190 20.0064209 13.5274835 73.6320876 0.62021486
+[5,] 0.1578284  0.4784487  0.3087339  0.6202149 0.05007705</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

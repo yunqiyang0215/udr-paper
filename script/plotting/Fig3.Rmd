@@ -1,0 +1,299 @@
+---
+title: "Plot: misspecifying K"
+author: "Yunqi Yang"
+date: "12/20/2022"
+output: html_document
+---
+
+```{r}
+loglik <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Comparison3/loglik.rds")
+varied_R5 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Comparison3/varied_R5.rds")
+varied_R50 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Comparison3/varied_R50.rds")
+rank1_R5 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Comparison3/rank1_R5.rds")
+rank1_R50 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Comparison3/rank1_R50.rds")
+```
+
+
+## Main fig3 
+```{r}
+train <- loglik[loglik$evaluate == "loglik_train" & loglik$simulate.U_pattern== "varied", ]
+test <- loglik[loglik$evaluate == "loglik_test" & loglik$simulate.U_pattern== "varied", ]
+```
+
+```{r}
+kcomp <- unique(loglik$fit.K_init)
+algorithms <- c("ted", "ed", "ted.nu", "ted.iw", "ed.iw", "ted.rank1")
+
+loglik_train1 <- matrix(NA, ncol = length(kcomp), nrow = length(algorithms))
+colnames(loglik_train1) = kcomp
+rownames(loglik_train1) = algorithms
+
+loglik_test1 <- matrix(NA, ncol = length(kcomp), nrow = length(algorithms))
+colnames(loglik_test1) = kcomp
+rownames(loglik_test1) = algorithms
+
+
+loglik_train2 <- matrix(NA, ncol = length(kcomp), nrow = length(algorithms))
+colnames(loglik_train2) = kcomp
+rownames(loglik_train2) = algorithms
+
+loglik_test2 <- matrix(NA, ncol = length(kcomp), nrow = length(algorithms))
+colnames(loglik_test2) = kcomp
+rownames(loglik_test2) = algorithms
+
+```
+
+```{r}
+n1 = 1e4
+n2 = 1e3
+for (i in 1:length(kcomp)){
+  for (j in 1:length(algorithms)){
+    loglik_test1[j, i] = -mean(test$evaluate.loglik[test$simulate.p == 5 & test$fit.K_init == kcomp[i] & test$fit.prior_cov_update == algorithms[j]]) + mean(test$evaluate.loglik[test$simulate.p == 5 & test$fit.K_init == kcomp[i] & test$fit.prior_cov_update == "oracle"])
+    loglik_test2[j, i] = -mean(test$evaluate.loglik[test$simulate.p == 50 & test$fit.K_init == kcomp[i] & test$fit.prior_cov_update == algorithms[j]]) + mean(test$evaluate.loglik[test$simulate.p == 50 & test$fit.K_init == kcomp[i] & test$fit.prior_cov_update == "oracle"])
+  }
+}
+
+loglik_test1 = apply(loglik_test1, 2, function(x) x/n1)
+loglik_test2 = apply(loglik_test2, 2, function(x) x/n1)
+
+```
+
+```{r fig.width=10, fig.height=10}
+
+
+cols = c("#D62728", "#17BECF", "#FF7F0E", "#D62728", "#17BECF", "#9467BD")
+pdf("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Comparison3/fig3_main.pdf", width = 10, height = 10)
+par(mfrow = c(2,2), mar = c(5, 5, 3, 2) + 0.1, oma = c(3, 1, 0, 0) + 0.1)
+
+plot.default(factor(kcomp), varied_R5[2,], pch = 7, col = cols[1],
+             xlab = "Number of components", ylab = "Mean FSR at 0.05", 
+             xaxt='n', ylim = c(0.01, 0.4), type = "l", lty = 2, lwd = 2)
+lines(varied_R5[3,], pch = 7, col = cols[2], type = "l", lty = 2, lwd = 2)
+lines(varied_R5[4,], pch = 10, col = cols[3], type = "l", lwd = 2)
+lines(varied_R5[5,], pch = 10, col = cols[4], type = "l", lwd = 2)
+lines(varied_R5[6,], pch = 10, col = cols[5], type = "l", lwd = 2)
+lines(varied_R5[7,], pch = 10, col = cols[6], type = "l", lwd = 2)
+axis(side = 1, at = 1:7, labels = kcomp, cex.axis = 0.8)
+legend("topright", legend = algorithms, col = cols, lty = c(2,2,1,1,1,1), cex = 1, lwd =2)
+mtext("(a) Train Set", side = 1, line = 4.5)
+
+plot.default(factor(kcomp), loglik_test1[1,], pch = 7, col = cols[1],
+             xlab = "Number of components", ylab = "Mean KL divergence", 
+             xaxt='n', ylim = c(-0.05, 2), type = "l", lty = 2, lwd = 2)
+abline(v = log2(10), lty = 3)
+lines(loglik_test1[2,], pch = 7, col = cols[2], type = "l", lty = 2, lwd = 2)
+lines(loglik_test1[3,], pch = 10, col = cols[3], type = "l", lwd = 2)
+lines(loglik_test1[4,], pch = 10, col = cols[4], type = "l", lwd = 2)
+lines(loglik_test1[5,], pch = 10, col = cols[5], type = "l", lwd = 2)
+lines(loglik_test1[6,], pch = 10, col = cols[6], type = "l", lwd = 2)
+axis(side = 1, at = 1:7, labels = kcomp, cex.axis = 0.8)
+mtext("Large n/R", side = 3, line = - 2, outer = TRUE)
+mtext("(b) Test Set", side = 1, line = 4.5)
+
+
+plot.default(factor(kcomp), varied_R50[2,], pch = 7, col = cols[1],
+             xlab = "Number of components", ylab = "Mean FSR at 0.05", 
+             xaxt='n', ylim = c(0.01, 0.4), type = "l", lty = 2, lwd = 2)
+lines(varied_R50[3,], pch = 7, col = cols[2], type = "l", lty = 2, lwd = 2)
+lines(varied_R50[4,], pch = 10, col = cols[3], type = "l", lwd = 2)
+lines(varied_R50[5,], pch = 10, col = cols[4], type = "l", lwd = 2)
+lines(varied_R50[6,], pch = 10, col = cols[5], type = "l", lwd = 2)
+lines(varied_R50[7,], pch = 10, col = cols[6], type = "l", lwd = 2)
+axis(side = 1, at = 1:7, labels = kcomp, cex.axis = 0.8)
+
+mtext("(c) Train Set", side = 1, line = 4.5)
+
+plot.default(factor(kcomp), loglik_test2[1,], pch = 7, col = cols[1],
+             xlab = "Number of components", ylab = "Mean KL divergence",
+             xaxt='n', ylim = c(0, 50), type = "l", lty = 2, lwd = 2)
+abline(v = log2(10), lty = 3)
+lines(loglik_test2[2,], pch = 7, col = cols[2], type = "l", lty = 2, lwd = 2)
+lines(loglik_test2[3,], pch = 10, col = cols[3], type = "l", lwd = 2)
+lines(loglik_test2[4,], pch = 10, col = cols[4], type = "l", lwd = 2)
+lines(loglik_test2[5,], pch = 10, col = cols[5], type = "l", lwd = 2)
+lines(loglik_test2[6,], pch = 10, col = cols[6], type = "l", lwd = 2)
+axis(side = 1, at = 1:7, labels = kcomp, cex.axis = 0.8)
+mtext("Small n/R", side = 3, line = -30.5, outer = TRUE)
+mtext("(d) Test Set", side = 1, line = 4.5)
+#dev.off()
+
+
+```
+
+
+
+
+## Supple fig3 
+```{r}
+train <- loglik[loglik$evaluate == "loglik_train" & loglik$simulate.U_pattern== "rank1", ]
+test <- loglik[loglik$evaluate == "loglik_test" & loglik$simulate.U_pattern== "rank1", ]
+```
+
+```{r}
+kcomp <- unique(loglik$fit.K_init)
+algorithms <- c("ted", "ed", "ted.nu", "ted.iw", "ed.iw", "ted.rank1")
+
+loglik_train1 <- matrix(NA, ncol = length(kcomp), nrow = length(algorithms))
+colnames(loglik_train1) = kcomp
+rownames(loglik_train1) = algorithms
+
+loglik_test1 <- matrix(NA, ncol = length(kcomp), nrow = length(algorithms))
+colnames(loglik_test1) = kcomp
+rownames(loglik_test1) = algorithms
+
+
+loglik_train2 <- matrix(NA, ncol = length(kcomp), nrow = length(algorithms))
+colnames(loglik_train2) = kcomp
+rownames(loglik_train2) = algorithms
+
+loglik_test2 <- matrix(NA, ncol = length(kcomp), nrow = length(algorithms))
+colnames(loglik_test2) = kcomp
+rownames(loglik_test2) = algorithms
+
+```
+
+```{r}
+n1 = 1e4
+n2 = 1e3
+for (i in 1:length(kcomp)){
+  for (j in 1:length(algorithms)){
+    
+    loglik_test1[j, i] = -mean(test$evaluate.loglik[test$simulate.p == 5 & test$fit.K_init == kcomp[i] & test$fit.prior_cov_update == algorithms[j]]) + mean(test$evaluate.loglik[test$simulate.p == 5 & test$fit.K_init == kcomp[i] & test$fit.prior_cov_update == "oracle"])
+    
+    loglik_test2[j, i] = -mean(test$evaluate.loglik[test$simulate.p == 50 & test$fit.K_init == kcomp[i] & test$fit.prior_cov_update == algorithms[j]]) + mean(test$evaluate.loglik[test$simulate.p == 50 & test$fit.K_init == kcomp[i] & test$fit.prior_cov_update == "oracle"])
+  }
+}
+
+
+loglik_test1 = apply(loglik_test1, 2, function(x) x/n1)
+loglik_test2 = apply(loglik_test2, 2, function(x) x/n1)
+
+```
+
+
+```{r fig.width=10, fig.height=10}
+
+
+cols = c("#D62728", "#17BECF", "#FF7F0E", "#D62728", "#17BECF", "#9467BD")
+pdf("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Comparison3/fig3_supple.pdf", width = 10, height = 10)
+par(mfrow = c(2,2), mar = c(5, 5, 3, 2) + 0.1, oma = c(3, 1, 0, 0) + 0.1)
+
+plot.default(factor(kcomp), rank1_R5[2,], pch = 7, col = cols[1],
+             xlab = "Number of components", ylab = "Mean FSR at 0.05", 
+             xaxt='n', ylim = c(0.01, 0.43), type = "l", lty = 2, lwd = 2)
+lines(rank1_R5[3,], pch = 7, col = cols[2], type = "l", lty = 2, lwd = 2)
+lines(rank1_R5[4,], pch = 10, col = cols[3], type = "l", lwd = 2)
+lines(rank1_R5[5,], pch = 10, col = cols[4], type = "l", lwd = 2)
+lines(rank1_R5[6,], pch = 10, col = cols[5], type = "l", lwd = 2)
+lines(rank1_R5[7,], pch = 10, col = cols[6], type = "l", lwd = 2)
+axis(side = 1, at = 1:7, labels = kcomp, cex.axis = 0.8)
+legend("topright", legend = algorithms, col = cols, lty = c(2,2,1,1,1,1), cex = 1, lwd =2)
+mtext("(a) Train Set", side = 1, line = 4.5)
+
+plot.default(factor(kcomp), loglik_test1[1,], pch = 7, col = cols[1],
+             xlab = "Number of components", ylab = "Mean KL divergence", 
+             xaxt='n', ylim = c(-0.05, 0.5), type = "l", lty = 2, lwd = 2)
+abline(v = log2(10), lty = 3)
+lines(loglik_test1[2,], pch = 7, col = cols[2], type = "l", lty = 2, lwd = 2)
+lines(loglik_test1[3,], pch = 10, col = cols[3], type = "l", lwd = 2)
+lines(loglik_test1[4,], pch = 10, col = cols[4], type = "l", lwd = 2)
+lines(loglik_test1[5,], pch = 10, col = cols[5], type = "l", lwd = 2)
+lines(loglik_test1[6,], pch = 10, col = cols[6], type = "l", lwd = 2)
+axis(side = 1, at = 1:7, labels = kcomp, cex.axis = 0.8)
+mtext("Large n/R", side = 3, line = - 2, outer = TRUE)
+mtext("(b) Test Set", side = 1, line = 4.5)
+
+
+plot.default(factor(kcomp), rank1_R50[2,], pch = 7, col = cols[1],
+             xlab = "Number of components", ylab = "Mean FSR at 0.05", 
+             xaxt='n', ylim = c(0.01, 0.6), type = "l", lty = 2, lwd = 2)
+lines(rank1_R50[3,], pch = 7, col = cols[2], type = "l", lty = 2, lwd = 2)
+lines(rank1_R50[4,], pch = 10, col = cols[3], type = "l", lwd = 2)
+lines(rank1_R50[5,], pch = 10, col = cols[4], type = "l", lwd = 2)
+lines(rank1_R50[6,], pch = 10, col = cols[5], type = "l", lwd = 2)
+lines(rank1_R50[7,], pch = 10, col = cols[6], type = "l", lwd = 2)
+axis(side = 1, at = 1:7, labels = kcomp, cex.axis = 0.8)
+
+mtext("(c) Train Set", side = 1, line = 4.5)
+
+plot.default(factor(kcomp), loglik_test2[1,], pch = 7, col = cols[1],
+             xlab = "Number of components", ylab = "Mean KL divergence",
+             xaxt='n', ylim = c(0, 8), type = "l", lty = 2, lwd = 2)
+abline(v = log2(10), lty = 3)
+lines(loglik_test2[2,], pch = 7, col = cols[2], type = "l", lty = 2, lwd = 2)
+lines(loglik_test2[3,], pch = 10, col = cols[3], type = "l", lwd = 2)
+lines(loglik_test2[4,], pch = 10, col = cols[4], type = "l", lwd = 2)
+lines(loglik_test2[5,], pch = 10, col = cols[5], type = "l", lwd = 2)
+lines(loglik_test2[6,], pch = 10, col = cols[6], type = "l", lwd = 2)
+axis(side = 1, at = 1:7, labels = kcomp, cex.axis = 0.8)
+mtext("Small n/R", side = 3, line = -30.5, outer = TRUE)
+mtext("(d) Test Set", side = 1, line = 4.5)
+#dev.off()
+
+```
+
+
+```{r}
+varied_R5 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Comparison3/res202310/power_varied_R5.rds")
+varied_R50 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Comparison3/res202310/power_varied_R50.rds")
+rank1_R5 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Comparison3/res202310/power_rank1_R5.rds")
+rank1_R50 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Comparison3/res202310/power_rank1_R50.rds")
+```
+
+
+```{r, fig.width = 10, fig.height = 10}
+
+pdf("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Comparison3/power.pdf", width = 10, height = 10)
+par(mfrow = c(2,2))
+algorithms = c("ted", "ed", "ted.iw", "ted.nu", "ed.iw", "ted.rank1")
+cols = c("#D62728", "#17BECF", "#FF7F0E", "#D62728", "#17BECF", "#9467BD")
+plot.default(factor(kcomp), varied_R5[2,], pch = 7, col = cols[1],
+             xlab = "Number of components", ylab = "Power", main = "Large n/R, varied",
+             xaxt='n', type = "l", lty = 2, lwd = 2, ylim = c(0.3, 0.45))
+lines(varied_R5[3,], pch = 7, col = cols[2], type = "l", lty = 2, lwd = 2)
+lines(varied_R5[4,], pch = 10, col = cols[3], type = "l", lwd = 2)
+lines(varied_R5[5,], pch = 10, col = cols[4], type = "l", lwd = 2)
+lines(varied_R5[6,], pch = 10, col = cols[5], type = "l", lwd = 2)
+lines(varied_R5[7,], pch = 10, col = cols[6], type = "l", lwd = 2)
+axis(side = 1, at = 1:7, labels = kcomp, cex.axis = 0.8)
+legend("topright", legend = algorithms, col = cols, lty = c(2,2,1,1,1,1), cex = 1, lwd =2)
+
+
+
+plot.default(factor(kcomp), varied_R50[2,], pch = 7, col = cols[1],
+             xlab = "Number of components", ylab = "Power", main = "Small n/R, varied",
+             xaxt='n', type = "l", lty = 2, lwd = 2, ylim = c(0,1))
+lines(varied_R50[3,], pch = 7, col = cols[2], type = "l", lty = 2, lwd = 2)
+lines(varied_R50[4,], pch = 10, col = cols[3], type = "l", lwd = 2)
+lines(varied_R50[5,], pch = 10, col = cols[4], type = "l", lwd = 2)
+lines(varied_R50[6,], pch = 10, col = cols[5], type = "l", lwd = 2)
+lines(varied_R50[7,], pch = 10, col = cols[6], type = "l", lwd = 2)
+axis(side = 1, at = 1:7, labels = kcomp, cex.axis = 0.8)
+
+
+plot.default(factor(kcomp), rank1_R5[2,], pch = 7, col = cols[1],
+             xlab = "Number of components", ylab = "Power", main = "Large n/R, rank1",
+             xaxt='n', ylim = c(0.1, 0.25), type = "l", lty = 2, lwd = 2)
+lines(rank1_R5[3,], pch = 7, col = cols[2], type = "l", lty = 2, lwd = 2)
+lines(rank1_R5[4,], pch = 10, col = cols[3], type = "l", lwd = 2)
+lines(rank1_R5[5,], pch = 10, col = cols[4], type = "l", lwd = 2)
+lines(rank1_R5[6,], pch = 10, col = cols[5], type = "l", lwd = 2)
+lines(rank1_R5[7,], pch = 10, col = cols[6], type = "l", lwd = 2)
+axis(side = 1, at = 1:7, labels = kcomp, cex.axis = 0.8)
+legend("topright", legend = algorithms, col = cols, lty = c(2,2,1,1,1,1), cex = 1, lwd =2)
+
+
+plot.default(factor(kcomp), rank1_R50[2,], pch = 7, col = cols[1],
+             xlab = "Number of components", ylab = "Power", main = "Small n/R, rank1",
+             xaxt='n', ylim = c(0.01, 0.6), type = "l", lty = 2, lwd = 2)
+lines(rank1_R50[3,], pch = 7, col = cols[2], type = "l", lty = 2, lwd = 2)
+lines(rank1_R50[4,], pch = 10, col = cols[3], type = "l", lwd = 2)
+lines(rank1_R50[5,], pch = 10, col = cols[4], type = "l", lwd = 2)
+lines(rank1_R50[6,], pch = 10, col = cols[5], type = "l", lwd = 2)
+lines(rank1_R50[7,], pch = 10, col = cols[6], type = "l", lwd = 2)
+axis(side = 1, at = 1:7, labels = kcomp, cex.axis = 0.8)
+
+
+```
+
+

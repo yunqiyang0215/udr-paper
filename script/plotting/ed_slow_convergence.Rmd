@@ -1,0 +1,145 @@
+---
+title: "ed_slow_convergence"
+author: "Yunqi Yang"
+date: "10/11/2023"
+output: html_document
+---
+
+## Description:
+Compare the convergence of TED vs. ED. We first run ED algorithm for 20 iterations, and then run TED/ED for 1e6 iterations. I did the experiment on 4 different data sets. The first two are data simulated with large n/R(n = 1e5, R = 5), the last two are data simulated from small n/R(n=1e3, R=50). 
+
+TED stopped at a few hundreds or thousands iterations because the log-likelihood starts to decrease to a very small amount, -1.455192e-11 for all 4 data. Wondering if this is the smallest number that R can handle? I think it means TED converges there. 
+
+ED will run 1e6 iterations. 
+
+
+```{r}
+library(udr)
+library(mvtnorm)
+```
+
+```{r}
+plot_likelihood <- function(loglik1, loglik2, names, cols, xlab, ylab, type, pch, cex){
+  ymin <- min(loglik1, loglik2)
+  ymax <- max(loglik1, loglik2)
+  xmax <- max(length(loglik1), length(loglik2))
+  plot(loglik1, col = cols[1], xlab = xlab, ylab = ylab, xlim = c(0, xmax + 2), ylim = c(ymin-2, ymax + 2), type, pch = pch, cex = cex)
+  lines(loglik2, col = cols[2], pch = pch, cex = cex)
+  legend("bottomright", legend = names, col = cols, pch = pch)
+}
+
+plot_convergence <- function(loglik1, loglik2, names, cols, xlab, ylab, pch, e, cex, lwd, type){
+  fbest = max(max(loglik1), max(loglik2))
+  dat1 <- data.frame(iter = 1:length(loglik1),
+                   dist = fbest - loglik1 + e)  
+  dat2 <- data.frame(iter = 1:length(loglik2),
+                   dist = fbest - loglik2 + e)  
+  ymin <- min(log10(dat1$dist), log10(dat2$dist))
+  ymax <- -log10(e)
+  xmax <- max(length(loglik1), length(loglik2))
+  plot(dat1$iter, log10(dat1$dist), col = cols[1], ylim = c(ymin-0.5, ymax+0.5), 
+       xlim = c(0, xmax + 2),  ylab = ylab, xlab = xlab, type = type, pch = pch, cex = cex, lwd = lwd)
+  lines(dat2$iter, log10(dat2$dist), col = cols[2], pch = pch, cex = cex, type = type, lwd = lwd)
+  legend("bottomright", legend = names, col = cols, pch = pch)
+}
+```
+
+
+
+
+## Data example 1:
+```{r}
+ted1 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202212/fig1_convergence/ted.rds")
+ed1 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202212/fig1_convergence/ed.rds")
+```
+## Data example 2:
+```{r}
+ted2 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202212/fig1_convergence/ted3.rds")
+ed2 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202212/fig1_convergence/ed3.rds")
+```
+
+## Data example 3:
+```{r}
+ted3 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202212/fig1_convergence/ted4.rds")
+ed3 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202212/fig1_convergence/ed4.rds")
+```
+
+## Data example 4:
+```{r}
+ted4 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202212/fig1_convergence/ted8.rds")
+ed4 <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202212/fig1_convergence/ed8.rds")
+```
+
+
+
+
+
+```{r}
+pdf("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Fig1/ed_slow_convergence.pdf", width = 7, height = 12)
+par(mfrow = c(4,2), mar = c(7, 5, 2, 2))
+
+# example 1 
+ted <- data.frame(iter = 1: (nrow(ted1$progress)-20),
+		  loglik = ted1$progress$loglik[21:nrow(ted1$progress)])
+ed  <- data.frame(iter = 1:1e5,
+		  loglik = ed1$progress$loglik[21:100020])
+plot(ted$iter, ted$loglik, type = "l", xlim = c(0, 1e5), lwd = 2, col = "#D62728", ylab = "log-likelihood", xlab = "iteration")
+lines(ed$iter,ed$loglik,type = "l",col = "#17BECF",lwd = 2)
+
+ted_iter = nrow(ted1$progress)
+plot_convergence(ted1$progress$loglik[21:ted_iter], ed1$progress$loglik[21:100020], names = c("TED", "ED"), 
+                cols = c(c("#D62728", "#17BECF")), xlab = "iteration", ylab = "log10_distance to best log-likelihood", pch = 20, e = 1e-4, cex = 0.3, type = "l", lwd = 2)
+
+
+
+
+#example2
+ted <- data.frame(iter = 1: (nrow(ted2$progress)-20),
+		  loglik = ted2$progress$loglik[21:nrow(ted2$progress)])
+ed  <- data.frame(iter = 1:1e5,
+		  loglik = ed2$progress$loglik[21:100020])
+plot(ted$iter, ted$loglik, type = "l", xlim = c(0, 1e5), lwd = 2, col = "#D62728", ylab = "log-likelihood", xlab = "iteration")
+lines(ed$iter,ed$loglik,type = "l",col = "#17BECF",lwd = 2)
+
+ted_iter = nrow(ted2$progress)
+plot_convergence(ted2$progress$loglik[21:ted_iter], ed2$progress$loglik[21:100020], names = c("TED", "ED"), 
+                cols = c(c("#D62728", "#17BECF")), xlab = "iteration", ylab = "log10_distance to best log-likelihood", pch = 20, e = 1e-4, cex = 0.3, type = "l", lwd = 2)
+
+
+#example3
+ted <- data.frame(iter = 1: (nrow(ted3$progress)-20),
+		  loglik = ted3$progress$loglik[21:nrow(ted3$progress)])
+ed  <- data.frame(iter = 1:1e5,
+		  loglik = ed3$progress$loglik[21:100020])
+plot(ted$iter, ted$loglik, type = "l", xlim = c(0, 1e5), lwd = 2, col = "#D62728", ylab = "log-likelihood", xlab = "iteration")
+lines(ed$iter,ed$loglik,type = "l",col = "#17BECF",lwd = 2)
+
+
+ted_iter = nrow(ted3$progress)
+plot_convergence(ted3$progress$loglik[21:ted_iter], ed3$progress$loglik[21:100020], names = c("TED", "ED"), 
+                cols = c(c("#D62728", "#17BECF")), xlab = "iteration", ylab = "log10_distance to best log-likelihood", pch = 20, e = 1e-4, cex = 0.3, type = "l", lwd = 2)
+
+
+
+
+#example4
+ted <- data.frame(iter = 1: (nrow(ted4$progress)-20),
+		  loglik = ted4$progress$loglik[21:nrow(ted4$progress)])
+ed  <- data.frame(iter = 1:1e5,
+		  loglik = ed4$progress$loglik[21:100020])
+plot(ted$iter, ted$loglik, type = "l", xlim = c(0, 1e5), lwd = 2, col = "#D62728", ylab = "log-likelihood", xlab = "iteration")
+lines(ed$iter,ed$loglik,type = "l",col = "#17BECF",lwd = 2)
+
+
+ted_iter = nrow(ted4$progress)
+plot_convergence(ted4$progress$loglik[21:ted_iter], ed4$progress$loglik[21:100020], names = c("TED", "ED"), 
+                cols = c(c("#D62728", "#17BECF")), xlab = "iteration", ylab = "log10_distance to best log-likelihood", pch = 20, e = 1e-4, cex = 0.3, type = "l", lwd = 2)
+#mtext("3(b)", side = 1, line = 5)
+```
+
+
+
+
+
+
+

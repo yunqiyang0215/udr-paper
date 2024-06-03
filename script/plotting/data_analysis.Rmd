@@ -1,0 +1,248 @@
+---
+title: "data_application"
+author: "Yunqi Yang"
+date: "5/8/2023"
+output: html_document
+---
+
+```{r}
+library(udr)
+library(ggplot2)
+library(cowplot)
+library(mvtnorm)
+library(gridExtra)
+library(stringr)
+
+```
+
+### Analysis 1:
+
+Compare initialization, with or without penalization, ED vs. TED on all the GTEx data.
+```{r}
+dat = readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/data_analysis/analysis1.rds")
+```
+
+### 1. Compare initialization
+```{r}
+names(dat)
+dat.smart = dat[[1]]
+dat.random = dat[[2]]
+
+ed1 = dat.random[[1]]
+ted1 = dat.random[[3]]
+ed1.iw = dat.random[[2]]
+ted1.iw = dat.random[[4]]
+
+ed2 = dat.smart[[1]]
+ted2 = dat.smart[[3]]
+ed2.iw = dat.smart[[2]]
+ted2.iw = dat.smart[[4]]
+```
+
+
+
+```{r}
+par(mfrow = c(1,2))
+
+plot(ed1$progress$loglik, type = "l", ylab = "log-likelihood")
+lines(ted1$progress$loglik, col = "red")
+legend("bottomright", legend=c("ed", "ted"), col=c("black", "red"), lty=1, cex=0.8)        
+
+plot(ed1.iw$progress$loglik.pen, type = "l", ylab = "penalized log-likelihood")
+lines(ted1.iw$progress$loglik.pen, col = "red")
+legend("bottomright", legend=c("ed.iw", "ted.iw"), col=c("black", "red"), lty=1, cex=0.8)   
+mtext("Random Initialization", side = 3, outer = TRUE, line = -1.5, cex = 1)
+
+
+plot(ed2$progress$loglik, type = "l", ylab = "log-likelihood", ylim = c(min(ed2$progress$loglik,ted2$progress$loglik), max(ed2$progress$loglik,ted2$progress$loglik)))
+lines(ted2$progress$loglik, col = "red")
+legend("bottomright", legend=c("ed", "ted"), col=c("black", "red"), lty=1, cex=0.8)        
+
+plot(ed2.iw$progress$loglik.pen, type = "l", ylab = "penalized log-likelihood")
+lines(ted2.iw$progress$loglik.pen, col = "red")
+legend("bottomright", legend=c("ed.iw", "ted.iw"), col=c("black", "red"), lty=1, cex=0.8)   
+mtext("Smart Initialization", side = 3, outer = TRUE, line = -1.5, cex = 1)
+```
+
+
+```{r fig.width=6, fig.height=3}
+pdf("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/data_analysis/real_data_comparison1.pdf", width = 8, height = 5)
+par(mfrow = c(1,2))
+
+plot(ed1$progress$loglik, type = "l", ylab = "log-likelihood", xlab = "iteration", ylim = c(-1520000, -1440000))
+lines(ed2$progress$loglik, lty = 2)
+lines(ted1$progress$loglik, type = "l", col = "red")
+lines(ted2$progress$loglik, col = "red", lty = 2)
+legend("bottomright", legend=c("ed+random init", "ed+smart init", "ted+random init", "ted+smart init"), lty=c(1,2,1,2), col = c(1,1,2,2), cex=0.8)    
+
+
+plot(ed1.iw$progress$loglik.pen, type = "l", ylab = "penalized log-likelihood", xlab = "iteration", ylim = c(-1600000, -1500000))
+lines(ed2.iw$progress$loglik.pen, lty = 2)
+lines(ted1.iw$progress$loglik.pen, type = "l", col = "red")
+lines(ted2.iw$progress$loglik.pen, col = "red", lty = 2)
+legend("bottomright", legend=c("ed.iw+random init", "ed.iw+smart init", "ted.iw+random init", "ted.iw+smart init"), lty=c(1,2,1,2), col = c(1,1,2,2), cex=0.8)   
+```
+
+```{r}
+pdf("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/data_analysis/mixture_weights2.pdf", width = 10, height = 6)
+pdat <-	rbind(data.frame(method = "ED + specialized initialization",w = ed2$w),
+               data.frame(method	= "TED(IW) + random initialization",w = ted1.iw$w))
+ggplot(pdat,aes(x = w,fill = method)) +
+  geom_histogram(color = "white",position = "dodge",bins = 20) +
+  scale_fill_manual(values = c("darkblue","darkorange")) +
+  scale_y_continuous(trans = "sqrt",breaks = c(0,1,5,10,20,50,100)) +
+  theme_cowplot(font_size = 10) +
+  xlab("Mixture weight") +  
+  ylab("Number of components")    
+```
+
+
+#### Plot sharing patterns on all GTEx data
+```{r}
+plot_sharing = function(X, to_cor=FALSE, title="", remove_names=F) {
+        clrs <- colorRampPalette(rev(c("#D73027","#FC8D59","#FEE090","#FFFFBF",
+                                       "#E0F3F8","#91BFDB","#4575B4")))(128)
+        if (to_cor) lat <- cov2cor(X)
+        else lat = X/max(diag(X))
+        lat[upper.tri(lat)] <- NA
+        n <- nrow(lat)
+        if (remove_names) {
+          colnames(lat) = NULL
+          rownames(lat) = NULL
+        }
+        #lower = min(lat, na.rm = TRUE)
+       # upper = max(lat, na.rm = TRUE)
+        
+        return(lattice::levelplot(lat[n:1,],col.regions = clrs,
+                                xlab = "",ylab = "", main=title,
+                                colorkey = TRUE, at = seq(-1, 1,length.out = 128),
+                                scales = list(cex = 0.2,x = list(rot = 45))))
+    }
+```
+
+
+```{r}
+w = ed2$w
+U =  lapply(ed2$U, function (e) "[["(e,"mat"))
+scale = unlist(lapply(U, function(x) max(x)))
+w_sorted = w[order(w, decreasing = TRUE)]
+U_sorted = U[order(w, decreasing = TRUE)]
+scale_sorted = scale[order(w, decreasing = TRUE)]
+indx = which(w_sorted >= 0.01)
+
+
+plts = list()
+for (i in 1:length(indx)){
+  title = paste(names(U_sorted)[indx[i]], "w =", round(w_sorted[indx[i]], 6))
+  plts[[i]] = plot_sharing(U_sorted[[indx[i]]], to_cor=FALSE, title = title)
+}
+
+unit = 4
+n_col = 3
+n_row = ceiling(length(indx) / n_col)
+pdf('/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/data_analysis/pattern_old_workflow.pdf', width = unit * n_col, height = unit * n_row)
+
+do.call("grid.arrange", c(plts, list(ncol = n_col, nrow = n_row)))
+
+```
+
+```{r}
+summary_old_workflow = matrix(NA, ncol = 3, nrow = length(indx))
+colnames(summary_old_workflow) = c("name", "weight", "scale")
+for (i in 1:length(indx)){
+  name = names(U_sorted)[indx[i]]
+  weight = round(w_sorted[indx[i]], 6)
+  scale = round(scale_sorted[indx[i]], 6)
+  summary_old_workflow[i, ] = c(name, weight, scale)
+}
+```
+
+```{r}
+w = ted1.iw$w
+U =  lapply(ted1.iw$U, function (e) "[["(e,"mat"))
+scale = unlist(lapply(U, function(x) max(x)))
+w_sorted = w[order(w, decreasing = TRUE)]
+U_sorted = U[order(w, decreasing = TRUE)]
+scale_sorted = scale[order(w, decreasing = TRUE)]
+indx = which(w_sorted >= 0.01)
+
+plts = list()
+for (i in 1:length(indx)){
+  title = paste(names(U_sorted)[indx[i]], "w =", round(w_sorted[indx[i]], 6))
+  plts[[i]] = plot_sharing(U_sorted[[indx[i]]], to_cor=FALSE, title = title)
+}
+
+unit = 4
+n_col = 3
+n_row = ceiling(length(indx) / n_col)
+pdf('/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/data_analysis/pattern_new_workflow.pdf', width = unit * n_col, height = unit * n_row)
+
+do.call("grid.arrange", c(plts, list(ncol = n_col, nrow = n_row)))
+
+```
+
+```{r}
+summary_new_workflow = matrix(NA, ncol = 3, nrow = length(indx))
+colnames(summary_old_workflow) = c("name", "weight", "scale")
+for (i in 1:length(indx)){
+  name = names(U_sorted)[indx[i]]
+  weight = round(w_sorted[indx[i]], 6)
+  scale = round(scale_sorted[indx[i]], 6)
+  summary_new_workflow[i, ] = c(name, weight, scale)
+}
+```
+
+```{r}
+summary = list(summary_old_workflow, summary_new_workflow)
+saveRDS(summary, file = "/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/data_analysis/pattern_summary.rds")
+```
+
+
+
+#### Compute log-likelihood for each test data point. 
+```{r eval = False}
+K <- length(U.old)
+n <- nrow(X)
+loglik_mat_old = matrix(0, nrow=K, ncol=n)
+for(k in 1:K){
+  loglik_mat_old[k,] <- t(dmvnorm(X,sigma = U.old[[k]] + V,log = TRUE))
+}
+
+
+K <- length(U.new)
+n <- nrow(X)
+loglik_mat_new = matrix(0, nrow=K, ncol=n)
+for(k in 1:K){
+  loglik_mat_new[k,] <- t(dmvnorm(X,sigma = U.new[[k]] + V,log = TRUE))
+}
+
+test.old = apply(loglik_mat_old + log(fit.old$w),2,udr:::log_sum_exp)
+test.new = apply(loglik_mat_new + log(fit.new$w),2,udr:::log_sum_exp)
+```
+
+
+#### Exam signals
+```{r}
+AD_genes = read.csv("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/data_analysis/combined_AD_genes.csv")
+```
+
+```{r}
+brain = ted1.iw$P[, "unconstrained15"]
+brain_sorted = sort(brain, decreasing = TRUE)
+genename_sorted = unlist(lapply(names(brain_sorted), function(x) unlist(strsplit(x, split = "_"))[1]))
+dat_brain = data.frame(cbind(brain_sorted, genename_sorted))
+dat_brain$brain_sorted = as.numeric(dat_brain$brain_sorted)
+```
+
+```{r}
+gene_merged = merge(dat_brain, AD_genes, 
+                    by.x = "genename_sorted",
+                    by.y = "gene_id")
+gene_merged2 = gene_merged[order(gene_merged$brain_sorted, decreasing = TRUE), ]
+```
+
+```{r}
+gene_merged3 = gene_merged2[gene_merged2$brain_sorted > 0.8, ]
+write.csv(gene_merged3, "udr_gene_list.csv")
+```
+

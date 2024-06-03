@@ -1,0 +1,272 @@
+---
+title: "Figure 2"
+author: "Yunqi Yang"
+date: "12/15/2022"
+output: html_document
+---
+
+```{r}
+setwd("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Fig2")
+```
+
+```{r}
+source("/Users/nicholeyang/Desktop/udr_related/udr-paper/code/simulation_func.R")
+loglik = readRDS("loglik.rds")
+post1 <- readRDS("post1.rds")
+post3 <- readRDS("post3.rds")
+```
+
+## Measurement 1: test log-likelihood
+```{r}
+n_replicates = 20
+algorithms = c("ted", "ed", "ted.nu", "ted.iw", "ed.iw", "ted.rank1" )
+n.test = 1e4
+```
+
+```{r}
+
+loglik.sub= loglik[loglik$simulate.p == 5 & loglik$simulate.U_true_pattern == "varied", ]
+res1 = matrix(NA, ncol = length(algorithms), nrow = n_replicates)
+colnames(res1) = c("ted", "ed", "ted.nn", "ted.iw", "ed.iw", "ted.rank1" )
+
+for (i in 1:length(algorithms)){
+  val = loglik.sub$evaluate.loglik[loglik.sub$fit.prior_cov_update == algorithms[i] & loglik.sub$evaluate == "loglik_test"] - loglik.sub$evaluate.loglik[loglik.sub$fit.prior_cov_update == "oracle" & loglik.sub$evaluate == "loglik_test"]
+  res1[,i] = -val/n.test
+}
+```
+
+```{r}
+
+loglik.sub = loglik[loglik$simulate.p == 50 & loglik$simulate.U_true_pattern == "varied", ]
+res3 = matrix(NA, ncol = length(algorithms), nrow = n_replicates)
+colnames(res3) = c("ted", "ed", "ted.nn", "ted.iw", "ed.iw", "ted.rank1" )
+
+for (i in 1:length(algorithms)){
+  val = loglik.sub$evaluate.loglik[loglik.sub$fit.prior_cov_update == algorithms[i] & loglik.sub$evaluate == "loglik_test"] - loglik.sub$evaluate.loglik[loglik.sub$fit.prior_cov_update == "oracle" & loglik.sub$evaluate == "loglik_test"]
+  res3[,i] = -val/n.test
+}
+```
+
+## Measurement 2: tpr vs. fdr
+
+```{r}
+n_replicates = 20
+algorithms = c("oracle", "ted", "ed", "fa", "ted.iw", "ted.nu", "ed.iw", "ted.rank1" )
+```
+
+```{r}
+ts = seq(-1e-4, 0.5, length.out = 50)
+```
+
+```{r}
+# Scenario 1
+mat1.all <- list()
+for (i in 1:length(algorithms)){
+  mat <- matrix(0, ncol = 2, nrow = length(ts))
+  # This is based on the sequence that dsc runs
+  rep_indx = seq(1 + (i-1)*20, i*20)
+  for (j in 1:length(ts)){
+    for (rep in rep_indx){
+      lfsr <- post1[["lfsr"]][[rep]]
+      theta <- post1[["theta"]][[rep]]
+      posterior_mean <- post1[["posterior_mean"]][[rep]]
+      mat[j, ] = mat[j, ] + create_tpr_vs_fdr_curve(theta, posterior_mean, lfsr, ts[j])
+    }
+  }
+  mat = mat / n_replicates
+  mat1.all[[i]] <- mat 
+}
+
+```
+
+```{r}
+mat3.all <- list()
+for (i in 1:length(algorithms)){
+  mat <- matrix(0, ncol = 2, nrow = length(ts))
+  rep_indx = seq(1 + (i-1)*20, i*20)
+  for (j in 1:length(ts)){
+    for (rep in rep_indx){
+      lfsr <- post3[["lfsr"]][[rep]]
+      theta <- post3[["theta"]][[rep]]
+      posterior_mean <- post3[["posterior_mean"]][[rep]]
+      mat[j, ] = mat[j, ] + create_tpr_vs_fdr_curve(theta, posterior_mean, lfsr, ts[j])
+    }
+  }
+  mat = mat / n_replicates
+  mat3.all[[i]] <- mat 
+}
+```
+
+
+## Measurement 3: fsr at 0.05
+```{r}
+t <- 0.05
+range <- c(t-5e-3, t+5e-3)
+fsr1 <- matrix(NA, ncol = length(algorithms), nrow  = n_replicates)
+colnames(fsr1) <- c("oracle", "ted", "ed", "fa", "ted.iw", "ted.nn", "ed.iw", "ted.rank1" )
+
+for (i in 1:length(algorithms)){
+  rep_indx = seq(1 + (i-1)*20, i*20)
+  for (j in 1:length(rep_indx)){
+    rep <- rep_indx[j]
+    lfsr <- post1[["lfsr"]][[rep]]
+    theta <- post1[["theta"]][[rep]]
+    posterior_mean <- post1[["posterior_mean"]][[rep]]
+    fsr1[j,i] <- compute_empirical_fsr(theta, posterior_mean, lfsr, t)
+  }
+}
+```
+
+```{r}
+t <- 0.05
+range <- c(t-5e-3, t+5e-3)
+fsr3 <- matrix(NA, ncol = length(algorithms), nrow  = n_replicates)
+colnames(fsr3) <- c("oracle", "ted", "ed", "fa", "ted.iw", "ted.nn", "ed.iw", "ted.rank1" )
+
+for (i in 1:8){
+  rep_indx = seq(1 + (i-1)*20, i*20)
+  for (j in 1:length(rep_indx)){
+    rep <- rep_indx[j]
+     lfsr <- post3[["lfsr"]][[rep]]
+     theta <- post3[["theta"]][[rep]]
+    posterior_mean <- post3[["posterior_mean"]][[rep]]
+    fsr3[j,i] <- compute_empirical_fsr(theta, posterior_mean, lfsr, t)
+  }
+}
+```
+
+
+## Measurement 4: fsr across all ranges
+```{r}
+ts = seq(0.01, 0.5, length.out = 50)
+```
+
+```{r}
+
+fsr1.all <- matrix(0, ncol = length(algorithms), nrow  = length(ts))
+fsr.nominal1 <- matrix(0, ncol = length(algorithms), nrow  = length(ts))
+colnames(fsr1.all) <- c("oracle", "ted", "ed", "fa", "ted.iw", "ted.nn", "ed.iw", "ted.rank1" )
+colnames(fsr.nominal1) <- c("oracle", "ted", "ed", "fa", "ted.iw", "ted.nn", "ed.iw", "ted.rank1" )
+
+for (j in 1:length(ts)){
+  range = c(ts[j] - 5e-3, ts[j] + 5e-3)
+  for (i in 1:8){
+    rep_indx = seq(1 + (i-1)*20, i*20)
+    for (rep in rep_indx){
+      lfsr <- post1[["lfsr"]][[rep]]
+      theta <- post1[["theta"]][[rep]]
+      posterior_mean <- post1[["posterior_mean"]][[rep]]
+      fsr1.all[j,i] <- fsr1.all[j,i] + compute_empirical_fsr(theta, posterior_mean, lfsr, ts[j])
+      fsr.nominal1[j, i] <- fsr.nominal1[j,i] + compute_nominal_fsr(lfsr, ts[j])
+    }
+  }
+}
+
+fsr1.all <- fsr1.all/n_replicates
+fsr.nominal1 <- fsr.nominal1/n_replicates
+```
+
+```{r}
+
+fsr3.all <- matrix(0, ncol = length(algorithms), nrow  = length(ts))
+fsr.nominal3 <- matrix(0, ncol = length(algorithms), nrow  = length(ts))
+colnames(fsr3.all) <- c("oracle", "ted", "ed", "fa", "ted.iw", "ted.nn", "ed.iw", "ted.rank1" )
+colnames(fsr.nominal3) <- c("oracle", "ted", "ed", "fa", "ted.iw", "ted.nn", "ed.iw", "ted.rank1" )
+
+for (j in 1:length(ts)){
+  range = c(ts[j] - 5e-3, ts[j] + 5e-3)
+  for (i in 1:8){
+    rep_indx = seq(1 + (i-1)*20, i*20)
+    for (rep in rep_indx){
+      lfsr <- post3[["lfsr"]][[rep]]
+      theta <- post3[["theta"]][[rep]]
+      posterior_mean <- post3[["posterior_mean"]][[rep]]
+      fsr3.all[j,i] <- fsr3.all[j,i] + compute_empirical_fsr(theta, posterior_mean, lfsr, ts[j])
+      fsr.nominal3[j, i] <- fsr.nominal3[j,i] + compute_nominal_fsr(lfsr, ts[j])
+    }
+  }
+}
+
+fsr3.all <- fsr3.all/n_replicates
+fsr.nominal3 <- fsr.nominal3/n_replicates
+```
+
+```{r}
+cols = c("#616161", "#D62728", "#17BECF", "#FF7F0E", "#D62728", "#17BECF", "#9467BD")
+names(cols) = c("oracle", "ted", "ed", "ted.nn", "ted.iw", "ed.iw", "ted.rank1")
+```
+
+```{r  fig.height=9, fig.width=9}
+pdf("fig2_main.pdf", width = 10, height = 12)
+par(mfrow = c(3,2), mar = c(4, 5, 3, 2) + 0.1, oma = c(3, 1, 0, 0) + 0.1) # c(bottom, left, top, right)
+# Measure1
+boxplot(res1, boxwex=0.5, ylab = "Estimated KL divergence")
+mtext("Large n/R", side = 3, line = 1)
+mtext("(a)", side = 1, line = 3)
+boxplot(res3, boxwex=0.5, ylim = c(0, 25), ylab = "Estimated KL divergence")
+mtext("Small n/R", side = 3, line = 1)
+mtext("(b)", side = 1, line = 3)
+
+# Measure2
+indx = c(1,2,3, 6, 5,7,8)
+plot(mat1.all[[1]][,2], mat1.all[[1]][,1], xlim = c(0, 0.2), ylim = c(0,0.9), xlab = "False discovery rate", ylab = "True positive rate", type = "l", lwd = 2, lty = 1, pch = 20, col = cols[1])
+lines(mat1.all[[2]][,2], mat1.all[[2]][,1], type = "l", lwd = 2, lty = 2, pch = 20, col = cols[2])
+lines(mat1.all[[3]][,2], mat1.all[[3]][,1], type = "l", lwd = 2, lty = 2, pch = 20, col = cols[3])
+lines(mat1.all[[6]][,2], mat1.all[[6]][,1], type = "l", lwd = 2, lty = 1, pch = 20, col = cols[4])
+lines(mat1.all[[5]][,2], mat1.all[[5]][,1], type = "l", lwd = 2, lty = 1, pch = 20, col = cols[5])
+lines(mat1.all[[7]][,2], mat1.all[[7]][,1], type = "l", lwd = 2, lty = 1, pch = 20, col = cols[6])
+lines(mat1.all[[8]][,2], mat1.all[[8]][,1], type = "l", lwd = 2, lty = 1, pch = 20, col = cols[7])
+legend("topleft", legend = c("oracle", "ted", "ed", "ted.nn", "ted.iw", "ed.iw", "ted.rank1"), col = cols, lty = c(1,2,2,1,1,1,1), lwd = 2)
+mtext("(c)", side = 1, line = 4.5)
+
+
+plot(mat3.all[[1]][,2], mat3.all[[1]][,1], xlim = c(0, 0.2), ylim = c(0,0.9), xlab = "False discovery rate", ylab = "True positive rate", type = "l", lwd = 2, lty = 1, pch = 20, col = cols[1])
+lines(mat3.all[[2]][,2], mat3.all[[2]][,1], type = "l", lwd = 2, lty = 2, pch = 20, col = cols[2])
+lines(mat3.all[[3]][,2], mat3.all[[3]][,1], type = "l", lwd = 2, lty = 2, pch = 20, col = cols[3])
+lines(mat3.all[[6]][,2], mat3.all[[6]][,1], type = "l", lwd = 2, lty = 1, pch = 20, col = cols[4])
+lines(mat3.all[[5]][,2], mat3.all[[5]][,1], type = "l", lwd = 2, lty = 1, pch = 20, col = cols[5])
+lines(mat3.all[[7]][,2], mat3.all[[7]][,1], type = "l", lwd = 2, lty = 1, pch = 20, col = cols[6])
+lines(mat3.all[[8]][,2], mat3.all[[8]][,1], type = "l", lwd = 2, lty = 1, pch = 20, col = cols[7])
+mtext("(d)", side = 1, line = 4.5)
+
+# Measure4
+fsr1 = fsr1[, indx]
+fsr3 = fsr3[, indx]
+boxplot(fsr1, boxwex =0.5, xlab = "Empirical fsr at 0.05", cex = 0.6, ylim = c(0, 0.15))
+abline(h = 0.05, lty = 2, col = "red")
+mtext("(e)", side = 1, line = 4.5)
+boxplot(fsr3, boxwex =0.5, xlab = "Empirical fsr at 0.05", cex = 0.6)
+abline(h = 0.05, lty = 2, col = "red")
+mtext("(f)", side = 1, line = 4.5)
+dev.off()
+```
+
+
+```{r}
+pdf("calibration.pdf", width = 10, height = 6)
+# Measure3: nominal fsr vs. empirical fsr
+par(mfrow = c(1,2), mar = c(4, 5, 3, 2) + 0.1, oma = c(3, 1, 0, 0) + 0.1) # c(bottom, left, top, right)
+
+
+plot(fsr.nominal1[,1], fsr1.all[,1], ylab = "Empirical fsr", type = "l", ylim = c(0, 0.4), xlab = "Nominal fsr", main = "Large n/R", col = cols[1], lwd = 2)
+abline(a = 0, b = 1, lty = 4)
+lines(fsr.nominal1[,2], fsr1.all[,2], type = "l", lty = 2,  col = cols[2], lwd = 2)
+lines(fsr.nominal1[,3], fsr1.all[,3], type = "l", lty = 2, col = cols[3], lwd = 2)
+lines(fsr.nominal1[,6], fsr1.all[,6], type = "l", col = cols[4], lwd = 2)
+lines(fsr.nominal1[,5], fsr1.all[,5], type = "l", col = cols[5], lwd = 2)
+lines(fsr.nominal1[,7], fsr1.all[,7], type = "l", col = cols[6], lwd = 2)
+lines(fsr.nominal1[,8], fsr1.all[,8], type = "l", col = cols[7], lwd = 2)
+legend("bottomright", legend = c("oracle", "ted", "ed", "ted.nn", "ted.iw", "ed.iw", "ted.rank1"), col = cols, lty = c(1,2,2,1,1,1,1), cex = 0.8, lwd = 2)
+mtext("(a)", side = 1, line = 4.5)
+
+plot(fsr.nominal3[,1], fsr3.all[,1], ylab = "Empirical fsr", type = "l", ylim = c(0, 0.4), xlab = "Nominal fsr", main = "Small n/R", col = cols[1], lwd = 2)
+abline(a = 0, b = 1, lty = 4)
+lines(fsr.nominal3[,2], fsr3.all[,2], type = "l", lty = 2, col = cols[2], lwd = 2)
+lines(fsr.nominal3[,3], fsr3.all[,3], type = "l", lty = 2, col = cols[3], lwd = 2)
+lines(fsr.nominal3[,6], fsr3.all[,6], type = "l", col = cols[4], lwd = 2)
+lines(fsr.nominal3[,5], fsr3.all[,5], type = "l", col = cols[5], lwd = 2)
+lines(fsr.nominal3[,7], fsr3.all[,7], type = "l", col = cols[6], lwd = 2)
+lines(fsr.nominal3[,8], fsr3.all[,8], type = "l", col = cols[7], lwd = 2)
+mtext("(b)", side = 1, line = 4.5)
+```
+

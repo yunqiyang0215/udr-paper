@@ -1,0 +1,272 @@
+---
+title: "Figure 1 plot"
+author: "Yunqi Yang"
+date: "6/30/2023"
+output: html_document
+---
+
+### Compare convergence behavior of different algorithms
+
+### The code of correct version: 
+```{r}
+plot_likelihood <- function(loglik1, loglik2, names, cols, xlab, ylab, pch = 20, cex = 1, type = "l", lty = 1){
+  ymin <- min(loglik1, loglik2)
+  ymax <- max(loglik1, loglik2)
+  xmax <- max(length(loglik1), length(loglik2))
+  plot(1:length(loglik1), loglik1, col = cols[1], xlab = xlab, ylab = ylab, xlim = c(0, xmax + 2), ylim = c(ymin-2, ymax + 2), pch = pch, cex = cex, type)
+  lines(1:length(loglik2), loglik2, col = cols[2], pch = pch, cex = cex, type)
+  legend("bottomright", legend = names, col = cols, lty)
+}
+```
+
+
+### Simulated data
+```{r}
+res <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Fig1/res202309.rds")
+res_progress <- readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Fig1/res202309_progress.rds")
+```
+
+
+```{r}
+res1_ted = res_progress$fit.progress[res_progress$simulate.p == 5 & res_progress$fit.prior_cov_update == 'ted']
+res1_ed = res_progress$fit.progress[res_progress$simulate.p == 5 & res_progress$fit.prior_cov_update == 'ed']
+res1_fa = res_progress$fit.progress[res_progress$simulate.p == 5 & res_progress$fit.prior_cov_update == 'fa']
+res1_tediw = res_progress$fit.progress[res_progress$simulate.p == 5 & res_progress$fit.prior_cov_update == 'ted.iw']
+res1_ediw = res_progress$fit.progress[res_progress$simulate.p == 5 & res_progress$fit.prior_cov_update == 'ed.iw']
+
+
+res2_ted = res_progress$fit.progress[res_progress$simulate.p == 50 & res_progress$fit.prior_cov_update == 'ted']
+res2_ed = res_progress$fit.progress[res_progress$simulate.p == 50 & res_progress$fit.prior_cov_update == 'ed']
+res2_fa = res_progress$fit.progress[res_progress$simulate.p == 50 & res_progress$fit.prior_cov_update == 'fa']
+res2_tediw = res_progress$fit.progress[res_progress$simulate.p == 50 & res_progress$fit.prior_cov_update == 'ted.iw']
+res2_ediw = res_progress$fit.progress[res_progress$simulate.p == 50 & res_progress$fit.prior_cov_update == 'ed.iw']
+
+```
+
+
+#### Convergence plot
+```{r}
+pdf("fig1_convergence.pdf", width = 8, height = 8)
+par(mfrow = c(2,2), mar = c(4, 5, 3, 2) + 0.1, oma = c(3, 1, 0, 0) + 0.1) # c(bottom, left, top, right)
+
+# Row 1-2 plot 
+ted = res1_ted[[3]][-c(1:20)]
+ed = res1_ed[[3]][-c(1:20)]
+fa = res1_fa[[3]][-c(1:20)]
+ymin = min(ted, ed, fa)
+ymax = max(ted, ed, fa)
+plot(1:length(ted), ted, type = "l", col = "#D62728", xlim = c(0, 2000), 
+     ylim = c(ymin-1, ymax + 1), xlab = "iteration", ylab = "Log-likelihood")
+lines(1:length(ed), ed, col = "#17BECF")
+lines(1:length(fa), fa)
+legend("bottomright", legend = c("TED", "ED", "FA"), col = c("#D62728", "#17BECF", 1), lty = 1)
+mtext("(a)", side = 1, line = 4.5)
+mtext("Large n/R", side = 3, line = 1)
+
+
+ted = res2_ted[[4]][-c(1:20)]
+ed = res2_ed[[4]][-c(1:20)]
+fa = res2_fa[[4]][-c(1:20)]
+ymin = min(ted, ed, fa)
+ymax = max(ted, ed, fa)
+plot(1:length(ted), ted, type = "l", col = "#D62728", xlim = c(0, 2000), 
+     ylim = c(ymin-1, ymax + 1), xlab = "iteration", ylab = "Log-likelihood")
+lines(1:length(ed), ed, col = "#17BECF")
+lines(1:length(fa), fa)
+legend("bottomright", legend = c("TED", "ED", "FA"), col = c("#D62728", "#17BECF", 1), lty = 1)
+mtext("(b)", side = 1, line = 4.5)
+mtext("Small n/R", side = 3, line = 1)
+
+tediw = res1_tediw[[3]][-c(1:20)]
+ediw = res1_ediw[[3]][-c(1:20)]
+ymin = min(tediw, ediw)
+ymax = max(tediw, ediw)
+plot(1:length(tediw), tediw, type = "l", col = "#D62728", xlim = c(0, 2000), 
+     ylim = c(ymin-1, ymax + 1), xlab = "iteration", ylab = "Penalized log-likelihood")
+lines(1:length(ediw), ediw, col = "#17BECF")
+legend("bottomright", legend = c("TED.iw", "ED.iw"), col = c("#D62728", "#17BECF"), lty = 1)
+mtext("(c)", side = 1, line = 4.5)
+
+
+tediw = res1_tediw[[4]][-c(1:20)]
+ediw = res1_ediw[[4]][-c(1:20)]
+ymin = min(tediw, ediw)
+ymax = max(tediw, ediw)
+plot(1:length(tediw), tediw, type = "l", col = "#D62728", xlim = c(0, 2000), 
+     ylim = c(ymin-1, ymax + 1), xlab = "iteration", ylab = "Penalized log-likelihood")
+lines(1:length(ediw), ediw, col = "#17BECF")
+legend("bottomright", legend = c("TED.iw", "ED.iw"), col = c("#D62728", "#17BECF"), lty = 1)
+mtext("(d)", side = 1, line = 4.5)
+
+```
+
+
+#### Compare TED and ED
+```{r fig.width = 10, fig.height = 16}
+pdf("fig1_hist.pdf", width = 8, height = 10)
+par(mfrow = c(3,2), mar = c(4, 5, 3, 2) + 0.1, oma = c(3, 1, 0, 0) + 0.1) # c(bottom, left, top, right)
+### Histogram 
+n_replicates = 100
+algorithms = unique(res$fit.prior_cov_update)
+
+diff1 = res$fit.loglik[res$simulate.p == 5 & res$fit.prior_cov_update == "ted"] - res$fit.loglik[res$simulate.p == 5 & res$fit.prior_cov_update == "ed"]
+diff2 = res$fit.loglik[res$simulate.p == 50 & res$fit.prior_cov_update == "ted"] - res$fit.loglik[res$simulate.p == 50 & res$fit.prior_cov_update == "ed"]
+diff3 = res$fit.loglik[res$simulate.p == 5 & res$fit.prior_cov_update == "ted"] - res$fit.loglik[res$simulate.p == 5 & res$fit.prior_cov_update == "fa"]
+diff4 = res$fit.loglik[res$simulate.p == 50 & res$fit.prior_cov_update == "ted"] - res$fit.loglik[res$simulate.p == 50 & res$fit.prior_cov_update == "fa"]
+diff5 = res$fit.loglik_pen[res$simulate.p == 5 & res$fit.prior_cov_update == "ted.iw"] - res$fit.loglik_pen[res$simulate.p == 5 & res$fit.prior_cov_update == "ed.iw"]
+diff6 = res$fit.loglik_pen[res$simulate.p == 50 & res$fit.prior_cov_update == "ted.iw"] - res$fit.loglik_pen[res$simulate.p == 50 & res$fit.prior_cov_update == "ed.iw"]
+
+
+hist(diff3, main = "", 
+     xlab = "Log-likelihood difference: TED - FA", xlim = c(-50, 200))
+abline(v = 0, lty = 2, col = "red")
+mtext("(a)", side = 1, line = 4.5)
+mtext("Large n/R", side = 3, line = 1)
+
+hist(diff4, main = "", breaks = 15,
+     xlab = "Log-likelihood difference: TED - FA", xlim = c(-1000, 2000))
+abline(v = 0, lty = 2, col = "red")
+mtext("(b)", side = 1, line = 4.5)
+mtext("Small n/R", side = 3, line = 1)
+
+
+hist(diff1, main = "", 
+     xlab = "Log-likelihood difference: TED - ED", xlim = c(-50, 200))
+abline(v = 0, lty = 2, col = "red")
+mtext("(c)", side = 1, line = 4.5)
+
+hist(diff2, main = "", breaks =5,
+     xlab = "Log-likelihood difference: TED - ED", xlim = c(-1000, 2000))
+abline(v = 0, lty = 2, col = "red")
+mtext("(d)", side = 1, line = 4.5)
+
+
+hist(diff5, main = "", 
+     xlab = "Penalized log-likelihood difference: TED.iw - ED.iw")
+abline(v = 0, lty = 2, col = "red")
+mtext("(e)", side = 1, line = 4.5)
+
+hist(diff6, 
+     main = "", xlab = "Penalized log-likelihood difference: TED.iw - ED.iw")
+abline(v = 0, lty = 2, col = "red")
+mtext("(f)", side = 1, line = 4.5)
+
+```
+
+
+#### Compare TED and FA
+
+```{r}
+res.fa = res_progress$fit.progress[res_progress$simulate.p == 50 & res_progress$fit.prior_cov_update == 'fa']
+res.ted = res_progress$fit.progress[res_progress$simulate.p == 50 & res_progress$fit.prior_cov_update == 'ted']
+```
+
+```{r fig.width = 10, fig.height = 16}
+pdf("fig_ted_fa.pdf", width = 10, height = 8)
+par(mfrow = c(2,2), mar = c(4, 5, 3, 2) + 0.1, oma = c(3, 1, 0, 0) + 0.1) # c(bottom, left, top, right)
+
+### Row 1 plot 
+plot_likelihood(example1[[2]]$progress$loglik[-c(1:20)], example1[[3]]$progress$loglik[-c(1:20)], names = c("TED", "FA"), 
+                cols = c("#D62728", "#17BECF"), xlab = "iteration", ylab = "Log-likelihood", pch = 20)
+mtext("Large n/R", side = 3, line = 1)
+mtext("(a)", side = 1, line = 4.5)
+
+
+plot_likelihood(res.ted[[1]][-c(1:20)], res.fa[[1]][-c(1:20)], names = c("TED", "FA"), 
+                cols = c("#D62728", "#17BECF"), xlab = "iteration", ylab = "Log-likelihood", pch = 20)
+mtext("Small n/R", side = 3, line = 1)
+mtext("(b)", side = 1, line = 4.5)
+
+
+
+```
+
+#### Compare TED and ED-TED
+```{r}
+diff1 = res$fit.loglik[res$simulate.p == 5 & res$fit.prior_cov_update == "ted"] - res$fit.loglik[res$simulate.p == 5 & res$fit.prior_cov_update == "ed_ted"]
+diff2 = res$fit.loglik[res$simulate.p == 50 & res$fit.prior_cov_update == "ted"] - res$fit.loglik[res$simulate.p == 50 & res$fit.prior_cov_update == "ed_ted"]
+diff3 = res$fit.loglik_pen[res$simulate.p == 5 & res$fit.prior_cov_update == "ted.iw"] - res$fit.loglik_pen[res$simulate.p == 5 & res$fit.prior_cov_update == "ed.iw_ted.iw"]
+diff4 = res$fit.loglik_pen[res$simulate.p == 50 & res$fit.prior_cov_update == "ted.iw"] - res$fit.loglik_pen[res$simulate.p == 50 & res$fit.prior_cov_update == "ed.iw_ted.iw"]
+```
+
+```{r fig.height = 8, fig.width=8}
+pdf("fig_ed_ted.pdf", width = 10, height = 8) 
+par(mfrow = c(2,2))
+hist(diff1, breaks = 20, main = "Large n/R", 
+     xlab = "(a) Log-likelihood difference: TED - ED+TED")
+abline(v = 0, lty = 2, col = "red")
+hist(diff2, breaks = 20, main = "Small n/R", 
+     xlab = "(b) Log-likelihood difference: TED - ED+TED")
+abline(v = 0, lty = 2, col = "red")
+hist(diff3, breaks = 20, main = "Large n/R", 
+     xlab = "(c) Penalized log-likelihood difference: TED.iw - ED.iw+TED.iw")
+abline(v = 0, lty = 2, col = "red")
+hist(diff4, breaks = 20, 
+     main = "Small n/R", xlab = "(d) Penalized log-likelihood difference: TED.iw - ED.iw+TED.iw")
+abline(v = 0, lty = 2, col = "red")
+#dev.off()
+```
+
+
+
+
+
+
+
+
+#### Compare TED and FA
+```{r fig.height = 8, fig.width=8}
+pdf("fig1_fa.pdf", width = 8, height = 8) 
+par(mfrow = c(2,2))
+diff1 = res$fit.loglik[res$simulate.p == 5 & res$fit.prior_cov_update == "fa_ted"] - res$fit.loglik[res$simulate.p == 5 & res$fit.prior_cov_update == "fa"]
+diff2 = res$fit.loglik[res$simulate.p == 50 & res$fit.prior_cov_update == "fa_ted"] - res$fit.loglik[res$simulate.p == 50 & res$fit.prior_cov_update == "fa"]
+
+diff3 = res$fit.loglik[res$simulate.p == 5 & res$fit.prior_cov_update == "ed_ted"] - res$fit.loglik[res$simulate.p == 5 & res$fit.prior_cov_update == "ed_fa"]
+diff4 = res$fit.loglik[res$simulate.p == 50 & res$fit.prior_cov_update == "ed_ted"] - res$fit.loglik[res$simulate.p == 50 & res$fit.prior_cov_update == "ed_fa"]
+
+
+par(mfrow = c(2,2))
+hist(diff1, breaks= 10, main = "Large n/R", 
+     xlab = "(a) FA-TED - FA-FA")
+abline(v = 0, lty = 2, col = "red")
+hist(diff2, breaks = 10, main = "Small n/R", 
+     xlab = "(b) FA-TED - FA-FA")
+abline(v = 0, lty = 2, col = "red")
+
+hist(diff3, breaks= 10, main = "Large n/R", 
+     xlab = "(c) ED-TED - ED-FA")
+abline(v = 0, lty = 2, col = "red")
+hist(diff4, breaks = 10, main = "Small n/R", 
+     xlab = "(d) ED-TED - ED-FA")
+abline(v = 0, lty = 2, col = "red")
+```
+
+
+
+### Compare iterations taken by ED and TED
+```{r}
+res = readRDS("/Users/nicholeyang/Desktop/udr_related/udr_simulation202306/Fig1/res202309_progress.rds")
+```
+
+```{r}
+progress.ted = res$fit.progress[res$simulate.p == 5 & res$fit.prior_cov_update == "ted"]
+loglik.ted = matrix(NA, nrow = length(progress.ted), ncol = 2)
+for (i in 1:nrow(loglik.ted)){
+  niter = length(progress.ted[[i]])
+  loglik.ted[i, ] = c(niter, tail(progress.ted[[i]], 1))
+}
+
+progress.ed = res$fit.progress[res$simulate.p == 5 & res$fit.prior_cov_update == "ed"]
+loglik.ed = matrix(NA, nrow = length(progress.ed), ncol = 2)
+for (i in 1:nrow(loglik.ed)){
+  niter = length(progress.ed[[i]])
+  loglik.ed[i, ] = c(niter, tail(progress.ed[[i]], 1))
+}
+```
+
+```{r}
+diff = (loglik.ted - loglik.ed)
+hist(-diff[which(diff[,2] < 10),1], breaks = 20, xlab = "", main = "Iteration(ED-TED) within 10 log-likelihood difference")
+```
+
+

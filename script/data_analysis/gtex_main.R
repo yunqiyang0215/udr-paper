@@ -31,7 +31,7 @@ LAMBDA  <- 10^seq(-3,3,length.out = 20)
 K       <- 30
 tol     <- 0.01
 tol_lik <- 0.01
-maxiter <- 50 # 5000
+maxiter <- 200
 
 # CROSS-VALIDATION FOR PENALTY STRENGTH
 # -------------------------------------
@@ -54,10 +54,14 @@ fit0 <- ud_init(dat_train,V = dat$null.cor,U_scaled = NULL,
                 U_unconstrained = U_rand,n_rank1 = 0)
 
 # Repeat for each setting of the penalty strength.
+# This step is expected to take about...
 n <- length(LAMBDA)
 cv_iw <- vector("list",n)
+cv_nn <- vector("list",n)
 for (i in 1:n) {
   lambda <- LAMBDA[i]
+
+  t0 <- proc.time()
   
   # Run the TED updates with the IW penalty.
   cv_iw[[i]] <- ud_fit(fit0,verbose = TRUE,
@@ -66,8 +70,13 @@ for (i in 1:n) {
                          maxiter = maxiter,lambda = lambda,penalty.type = "iw"))
 
   # Run the TED updates with the nuclear norm penalty.
-  
-  
+  cv_nn[[i]] <- ud_fit(fit0,verbose = TRUE,
+                       control = list(unconstrained.update = "ted",
+                         resid.update = "none",tol = tol,tol.lik = tol_lik,
+                         maxiter = maxiter,lambda = lambda,penalty.type = "nu"))
+
+  t1 <- proc.time()
+  print(t1 - t0)
   stop()
 }
 

@@ -2,9 +2,9 @@
 # /project2/mstephens/yunqiyang/udr-paper/result202306/data_analysis/analysis2.R
 #
 # sinteractive -p mstephens --account=pi-mstephens -c 4 --mem=8G \
-#   --time=20:00:00
+#   --time=48:00:00
 # module load R/4.1.0
-# R
+# R --no-save
 # > .libPaths()[1]
 # [1] "/home/pcarbo/R_libs_4_10"
 #
@@ -13,12 +13,12 @@
 # setwd("/project2/mstephens/yunqiyang/udr-data-application")
 
 # Load the packages needed to perform the analyses.
+library(udr)           # 0.3.158
 # library(Matrix)        # 1.3.3
 # library(mvtnorm)       # 1.3.3
 # library(ashr)          # 2.2.66
 # library(mashr)         # 0.2.81
 # library(flashier)      # 1.0.56
-library(udr)           # 0.3.158
 # library(LaplacesDemon) # 16.1.6
 
 # Load the z-scores stored as a 15,636 x 49 matrix (genes x tissues).
@@ -54,15 +54,13 @@ fit0 <- ud_init(dat_train,V = dat$null.cor,U_scaled = NULL,
                 U_unconstrained = U_rand,n_rank1 = 0)
 
 # Repeat for each setting of the penalty strength.
-# This step is expected to take about...
+# This step is expected to take about 5 h.
 n <- length(LAMBDA)
 cv_iw <- vector("list",n)
 cv_nn <- vector("list",n)
 for (i in 1:n) {
   lambda <- LAMBDA[i]
 
-  t0 <- proc.time()
-  
   # Run the TED updates with the IW penalty.
   cv_iw[[i]] <- ud_fit(fit0,verbose = TRUE,
                        control = list(unconstrained.update = "ted",
@@ -74,10 +72,6 @@ for (i in 1:n) {
                        control = list(unconstrained.update = "ted",
                          resid.update = "none",tol = tol,tol.lik = tol_lik,
                          maxiter = maxiter,lambda = lambda,penalty.type = "nu"))
-
-  t1 <- proc.time()
-  print(t1 - t0)
-  stop()
 }
 
 stop()

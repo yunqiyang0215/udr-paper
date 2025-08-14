@@ -12,14 +12,66 @@
 ## Description: Compare old workflow with new workflow
 # setwd("/project2/mstephens/yunqiyang/udr-data-application")
 
-# Load packages
-library(Matrix)        # 1.3.3
-library(mvtnorm)       # 1.3.3
-library(ashr)          # 2.2.66
-library(mashr)         # 0.2.81
-library(flashier)      # 1.0.56
+# Load the packages needed to perform the analyses.
+# library(Matrix)        # 1.3.3
+# library(mvtnorm)       # 1.3.3
+# library(ashr)          # 2.2.66
+# library(mashr)         # 0.2.81
+# library(flashier)      # 1.0.56
 library(udr)           # 0.3.158
-library(LaplacesDemon) # 16.1.6
+# library(LaplacesDemon) # 16.1.6
+
+# Load the z-scores stored as a 15,636 x 49 matrix (genes x tissues).
+dat <- readRDS("../../data/data_analysis/GTEx_V8_strong_z.rds")
+n <- nrow(dat$strong.z)
+R <- ncol(dat$strong.z)
+
+# Tuning parameters.
+LAMBDA  <- 10^seq(-3,3,length.out = 20)
+K       <- 30
+tol     <- 0.01
+tol_lik <- 0.01
+maxiter <- 50 # 5000
+
+# CROSS-VALIDATION FOR PENALTY STRENGTH
+# -------------------------------------
+# Split the data into a "training set" (80%) and a "test set" (20%).
+set.seed(1)
+i <- sort(sample(n,12509))
+j <- sort(setdiff(1:n,i))
+dat_train <- dat$strong.z[i,]
+dat_est   <- dat$strong.z[j,]
+
+# Randomly initialize the U matrices.
+U_rand <- vector("list",K)
+names(U_rand) <- paste0("U",1:K)
+for (k in 1:K) {
+  U_rand[[k]] <- udr:::sim_unconstrained(R)
+}
+
+# Initialize the model.
+fit0 <- ud_init(dat_train,V = dat$null.cor,U_scaled = NULL,
+                U_unconstrained = U_rand,n_rank1 = 0)
+
+# Repeat for each setting of the penalty strength.
+n <- length(LAMBDA)
+cv_iw <- vector("list",n)
+for (i in 1:n) {
+  lambda <- LAMBDA[i]
+  
+  # Run the TED updates with the IW penalty.
+  cv_iw[[i]] <- ud_fit(fit0,verbose = TRUE,
+                       control = list(unconstrained.update = "ted",
+                         resid.update = "none",tol = tol,tol.lik = tol_lik,
+                         maxiter = maxiter,lambda = lambda,penalty.type = "iw"))
+
+  # Run the TED updates with the nuclear norm penalty.
+  
+  
+  stop()
+}
+
+stop()
 
 smart_initialization <- function(mash_data) {
   X.center <- apply(mash_data$Bhat,2,function(x) x - mean(x))
@@ -31,19 +83,7 @@ smart_initialization <- function(mash_data) {
   return(U.init)
 }
 
-# Load the data.
-# /project2/mstephens/yunqiyang/udr-data-application/
-# mvSuSiE_output/GTEx_V8_strong_z.rds")
-dat <- readRDS("GTEx_V8_strong_z.rds")
-
-# Fixed parameters.
-tol <- 0.01
-tol.lik <- 0.01
-R <- nrow(dat$strong.z)
-
 # split data
-set.seed(999)
-n <- nrow(dat$strong.z)
 output <- list()
 
 nfold <- 5

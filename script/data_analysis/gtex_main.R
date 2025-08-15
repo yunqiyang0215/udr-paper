@@ -27,7 +27,7 @@ n <- nrow(dat$strong.z)
 R <- ncol(dat$strong.z)
 
 # Tuning parameters.
-LAMBDA  <- 10^seq(-3,3,length.out = 20)
+LAMBDA  <- 10^seq(-1,2.7,length.out = 20)
 K       <- 30
 tol     <- 0.01
 tol_lik <- 0.01
@@ -40,7 +40,7 @@ set.seed(1)
 i <- sort(sample(n,12509))
 j <- sort(setdiff(1:n,i))
 dat_train <- dat$strong.z[i,]
-dat_est   <- dat$strong.z[j,]
+dat_test  <- dat$strong.z[j,]
 
 # Randomly initialize the U matrices.
 U_rand <- vector("list",K)
@@ -56,22 +56,38 @@ fit0 <- ud_init(dat_train,V = dat$null.cor,U_scaled = NULL,
 # Repeat for each setting of the penalty strength.
 # This step is expected to take about 5 h.
 n <- length(LAMBDA)
-cv_iw <- vector("list",n)
-cv_nn <- vector("list",n)
+cv_iw_fits <- vector("list",n)
+cv_nn_fits <- vector("list",n)
+cv_iw_loglik_test <- rep(0,n)
+cv_nn_loglik_test <- rep(0,n)
 for (i in 1:n) {
   lambda <- LAMBDA[i]
 
   # Run the TED updates with the IW penalty.
-  cv_iw[[i]] <- ud_fit(fit0,verbose = TRUE,
-                       control = list(unconstrained.update = "ted",
-                         resid.update = "none",tol = tol,tol.lik = tol_lik,
-                         maxiter = maxiter,lambda = lambda,penalty.type = "iw"))
+  fit <- ud_fit(fit0,verbose = TRUE,
+                control = list(unconstrained.update = "ted",
+                  resid.update = "none",tol = tol,tol.lik = tol_lik,
+                  maxiter = maxiter,lambda = lambda,penalty.type = "iw"))
+  fit["X"] <- NULL
+  fit["P"] <- NULL
+  cv_iw_fits[[i]] <- fit
 
+  # Compute the test-set log-likelihood.
+  cv_iw_loglik_test[i] <- udr:::loglik_ud(dat_test,fit$w,fit$U,fit$V,
+                                          version = "Rcpp")
+  
   # Run the TED updates with the nuclear norm penalty.
-  cv_nn[[i]] <- ud_fit(fit0,verbose = TRUE,
-                       control = list(unconstrained.update = "ted",
-                         resid.update = "none",tol = tol,tol.lik = tol_lik,
-                         maxiter = maxiter,lambda = lambda,penalty.type = "nu"))
+  fit <- ud_fit(fit0,verbose = TRUE,
+                control = list(unconstrained.update = "ted",
+                  resid.update = "none",tol = tol,tol.lik = tol_lik,
+                  maxiter = maxiter,lambda = lambda,penalty.type = "nu"))
+  fit["X"] <- NULL
+  fit["P"] <- NULL
+  cv_nn_fits[[i]] <- fit
+
+  # Compute the test-set log-likelihood.
+  cv_nn_loglik_test[i] <- udr:::loglik_ud(dat_test,fit$w,fit$U,fit$V,
+                                          version = "Rcpp")
 }
 
 stop()

@@ -1,3 +1,6 @@
+# This script performs a simple cross-validation on the GTEx data
+# to choose the penalty strength for the IW and NN penalties.
+#
 # This is an updated version of the script from here:
 # /project2/mstephens/yunqiyang/udr-paper/result202306/data_analysis/analysis2.R
 #
@@ -25,8 +28,6 @@ tol     <- 0.01
 tol_lik <- 0.01
 maxiter <- 200
 
-# CROSS-VALIDATION FOR PENALTY STRENGTH
-# -------------------------------------
 # Split the data into a "training set" (80%) and a "test set" (20%).
 set.seed(1)
 i <- sort(sample(n,12509))
@@ -46,7 +47,7 @@ fit0 <- ud_init(dat_train,V = dat$null.cor,U_scaled = NULL,
                 U_unconstrained = U_rand,n_rank1 = 0)
 
 # Repeat for each setting of the penalty strength.
-# This step is expected to take about 5 h.
+# This step is expected to take roughly 5 h.
 n <- length(LAMBDA)
 cv_iw_fits <- vector("list",n)
 cv_nn_fits <- vector("list",n)

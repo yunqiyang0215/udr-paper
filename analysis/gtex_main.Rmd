@@ -1,7 +1,13 @@
 ---
 title: Updated analysis of the GTEx data
 author: Yunqi Yang and Peter Carbonetto
-output: workflowr::wflow_html
+output:
+  workflowr::wflow_html:
+    toc: no
+    theme: readable
+    highlight: textmate
+    lib_dir: site_libs
+    self_contained: no
 ---
 
 Here we summarize the results of the updated udr analysis of the GTEx
@@ -23,6 +29,11 @@ Load the z-scores:
 
 ```{r load-data}
 dat <- readRDS("data/data_analysis/GTEx_V8_strong_z.rds")
+dim(dat$strong.z)
 ```
 
+Load the results of the cross-validation:
 
+```{r load-cv}
+load("output/data_analysis/gtex_cv_out.RData")
+```

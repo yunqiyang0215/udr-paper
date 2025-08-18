@@ -3,12 +3,8 @@ output_dir: ../docs
 navbar:
   title: udr-paper
   left:
-  - text: Home
+  - text: Overview
     href: index.html
-  - text: About
-    href: about.html
-  - text: License
-    href: license.html
   right:
   - icon: fa-github
     text: Source code

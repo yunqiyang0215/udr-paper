@@ -35,7 +35,7 @@ lambda_nn <- 34.0
 nfold     <- 5
 tol       <- 0.01
 tol_lik   <- 0.01
-maxiter   <- 1000
+maxiter   <- 50 # 1000
 
 smart_initialization <- function (mash_data) {
   X.center <- apply(mash_data$Bhat,2,function(x) x - mean(x))
@@ -48,7 +48,11 @@ smart_initialization <- function (mash_data) {
 
 # Repeat for each "fold".
 split_points <- round(seq(from = 0,to = n,length.out = nfold + 1))
+out <- vector("list",nfold)
 for (i in 1:nfold) {
+  fits <- vector("list",5)
+  names(fits) <- c("smart_ed","smart_ed_iw","smart_ted","smart_ted_iw",
+                   "smart_ted_nn")
   
   # Split the data into a "training set" and a "test set".
   indx      <- c(seq(split_points[i] + 1,split_points[i + 1]))
@@ -56,45 +60,71 @@ for (i in 1:nfold) {
   dat_train <- dat$strong.z[-indx,]
   mash_data <- mashr::mash_set_data(dat_train,V = dat$null.cor)
 
-  # "Smart" initialization.
+  # Use the "smart" initialization.
   U_smart <- smart_initialization(mash_data)
   K <- length(U_smart)
+  fit0 <- ud_init(dat_train,V = dat$null.cor,U_scaled = NULL,
+                  U_unconstrained = U_smart,n_rank1 = 0)
 
-  stop()
+  # Run the ED updates.
+  fit <- ud_fit(fit0,verbose = TRUE,
+                control = list(unconstrained.update = "ed",
+                  resid.update = "none",lambda = 0,tol = tol,
+                  tol.lik = tol_lik,maxiter = maxiter))
+  fit["X"] <- NULL
+  fit["P"] <- NULL
+  fits$smart_ed <- fit
+
+  # Run the ED updates using the IW penalty.
+  fit <- ud_fit(fit0,verbose = TRUE,
+                control = list(unconstrained.update = "ed",
+                  resid.update = "none",penalty.type = "iw",
+                  tol = tol,tol.lik = tol_lik,lambda = lambda_iw,
+                  maxiter = maxiter))
+  fit["X"] <- NULL
+  fit["P"] <- NULL
+  fits$smart_ed_iw <- fit
+
+  # Run the TED updates.
+  fit <- ud_fit(fit0,verbose = TRUE,
+                control = list(unconstrained.update = "ted",
+                  resid.update = "none",tol = tol,tol.lik = tol_lik,
+                  lambda = 0,maxiter = maxiter))
+  fit["X"] <- NULL
+  fit["P"] <- NULL
+  fits$smart_ted <- fit
   
-  U.random <- list()
+  # Run the TED updates using the IW penalty.
+  fit <- ud_fit(fit0,verbose = TRUE,
+                control = list(unconstrained.update = "ted",
+                  resid.update = "none",tol = tol,tol.lik = tol_lik,
+                  lambda = lambda_iw,penalty.type = "iw",
+                  maxiter = maxiter))
+  fit["X"] <- NULL
+  fit["P"] <- NULL
+  fits$smart_ted_iw <- fit
+
+  # Run the TED updates with the nuclear norm penalty.
+  fit <- ud_fit(fit0,verbose = TRUE,
+                control = list(unconstrained.update = "ted",
+                  resid.update = "none",tol = tol,tol.lik = tol_lik,
+                  lambda = lambda_nn,penalty.type = "nu",
+                  maxiter = maxiter))
+  fit["X"] <- NULL
+  fit["P"] <- NULL
+  fits$smart_ted_nn <- fit
+  
+  # Randomly initialize the U matrices.
+  U_rand <- vector("list",K)
+  names(U_rand) <- paste0("U",1:K)
   for (k in 1:K) {
-    U.random[[k]] <- udr:::sim_unconstrained(R)
+    U_rand[[k]] <- udr:::sim_unconstrained(R)
   }
 
-  # Smart initialization 
-  ## Run ED & ED.iw
-  f0 <- ud_init(dat.train,V = dat$null.cor,U_scaled = NULL,
-                U_unconstrained = U.smart,n_rank1 = 0)
-  ed <- ud_fit(f0,verbose = TRUE,
-               control = list(unconstrained.update = "ed",
-                 resid.update = "none",tol = 1e-02,tol.lik = 1e-2,
-                 lambda = 0,maxiter = 5e3))
-               
-  ed.iw <- ud_fit(f0,verbose = TRUE,
-                  control = list(unconstrained.update = "ed",
-                    resid.update = "none",penalty.type = "iw",
-                    tol = 1e-02,tol.lik = 1e-2,lambda = lambda,
-                    maxiter = 5e3))
-  
-  ## Run TED & TED.iw
-  f0 <- ud_init(dat.train,V = dat$null.cor,U_scaled = NULL,
-                U_unconstrained = U.smart,n_rank1 = 0)
-  ted <- ud_fit(f0,verbose = TRUE,
-                control = list(unconstrained.update = "ted",
-                  resid.update = "none",penalty.type = "iw",
-                  tol = 1e-02,tol.lik = 1e-2,lambda = 0,maxiter = 5e3))
-  ted.iw <- ud_fit(f0,verbose = TRUE,
-                   control = list(unconstrained.update = "ted",
-                     resid.update = "none",tol = 1e-02,tol.lik = 1e-2,
-                     lambda = lambda,penalty.type = "iw",maxiter = 5e3))
-  
-  res1 <- list(ed,ed.iw,ted,ted.iw)
+  # Store the results for this "fold".
+  out[[i]] <- fits
+
+  stop()
   
   # Random initialization
   ## Run ED & ED.iw
@@ -129,4 +159,5 @@ for (i in 1:nfold) {
   output[[i]]   <- result
 }
 
-saveRDS(output,"result2.rds")
+# Save the results to an .RData file.
+# TO DO.

@@ -22,7 +22,7 @@ library(cowplot)
 Load the z-scores:
 
 ```{r load-data}
-dat <- readRDS("../../data/data_analysis/GTEx_V8_strong_z.rds")
+dat <- readRDS("data/data_analysis/GTEx_V8_strong_z.rds")
 ```
 
 

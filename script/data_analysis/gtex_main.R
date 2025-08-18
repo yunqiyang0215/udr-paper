@@ -4,7 +4,7 @@
 # /project2/mstephens/yunqiyang/udr-paper/result202306/data_analysis/analysis2.R
 #
 # sinteractive -p mstephens --account=pi-mstephens -c 4 --mem=8G \
-#   --time=48:00:00
+#   --time=36:00:00
 # module load R/4.1.0
 # R --no-save
 # > .libPaths()[1]
@@ -13,15 +13,10 @@
 
 # Load the packages needed to perform the analyses.
 library(tools)
-library(udr)   # 0.3.158
-library(mashr) # 0.2.81
-#
-# library(Matrix)        # 1.3.3
-# library(mvtnorm)       # 1.3.3
-# library(ashr)          # 2.2.66
-# library(flashier)      # 1.0.56
-# library(LaplacesDemon) # 16.1.6
-#
+library(ashr)     # 2.2.66
+library(udr)      # 0.3.158
+library(mashr)    # 0.2.81
+library(flashier) # 1.0.56
 
 # Load the z-scores stored as a 15,636 x 49 matrix (genes x tissues).
 dat <- readRDS("../../data/data_analysis/GTEx_V8_strong_z.rds")
@@ -47,8 +42,9 @@ smart_initialization <- function (mash_data) {
 
 # Repeat for each "fold".
 split_points <- round(seq(from = 0,to = n,length.out = nfold + 1))
-variants     <- c("smart_ed","smart_ed_iw","smart_ted","smart_ted_iw",
-                   "smart_ted_nn")
+variants <- c("smart_ed","smart_ed_iw","smart_ted","smart_ted_iw",
+              "smart_ted_nn","rand_ed","rand_ed_iw","rand_ted",
+              "rand_ted_iw","rand_ted_nn")
 nvar         <- length(variants)
 fits         <- vector("list",nfold)
 loglik_test  <- matrix(0,nvar,nfold)
@@ -68,7 +64,8 @@ for (i in 1:nfold) {
   dat_test  <- dat$strong.z[indx,]
   mash_data <- mashr::mash_set_data(dat_train,V = dat$null.cor)
 
-  # Use the "smart" initialization.
+  # "SMART" INITIALIZATION
+  # ----------------------
   U_smart <- smart_initialization(mash_data)
   K <- length(U_smart)
   fit0 <- ud_init(dat_train,V = dat$null.cor,U_scaled = NULL,
@@ -146,51 +143,98 @@ for (i in 1:nfold) {
   fit["X"] <- NULL
   fit["P"] <- NULL
   f$smart_ted_nn <- fit
-  
+
+  # RANDOM INITIALIZATION
+  # ---------------------
   # Randomly initialize the U matrices.
   U_rand <- vector("list",K)
   names(U_rand) <- paste0("U",1:K)
   for (k in 1:K) {
     U_rand[[k]] <- udr:::sim_unconstrained(R)
   }
+  fit0 <- ud_init(dat_train,V = dat$null.cor,U_scaled = NULL,
+                  U_unconstrained = U_rand,n_rank1 = 0)
 
+  # Run the ED updates.
+  t0 <- proc.time()
+  fit <- ud_fit(fit0,verbose = TRUE,
+                control = list(unconstrained.update = "ed",
+                  resid.update = "none",lambda = 0,tol = tol,
+                  tol.lik = tol_lik,maxiter = maxiter))
+  t1 <- proc.time()
+  timings["rand_ed",i] <- (t1 - t0)["elapsed"]
+  loglik_test["rand_ed",i] <- udr:::loglik_ud(dat_test,fit$w,fit$U,fit$V,
+                                              version = "Rcpp")
+  fit["X"] <- NULL
+  fit["P"] <- NULL
+  f$rand_ed <- fit
+
+  # Run the ED updates using the IW penalty.
+  t0 <- proc.time()
+  fit <- ud_fit(fit0,verbose = TRUE,
+                control = list(unconstrained.update = "ed",
+                  resid.update = "none",penalty.type = "iw",
+                  tol = tol,tol.lik = tol_lik,lambda = lambda_iw,
+                  maxiter = maxiter))
+  t1 <- proc.time()
+  timings["rand_ed_iw",i] <- (t1 - t0)["elapsed"]
+  loglik_test["rand_ed_iw",i] <- udr:::loglik_ud(dat_test,fit$w,fit$U,fit$V,
+                                                 version = "Rcpp")
+  fit["X"] <- NULL
+  fit["P"] <- NULL
+  f$rand_ed_iw <- fit
+
+  # Run the TED updates.
+  t0 <- proc.time()
+  fit <- ud_fit(fit0,verbose = TRUE,
+                control = list(unconstrained.update = "ted",
+                  resid.update = "none",tol = tol,tol.lik = tol_lik,
+                  lambda = 0,maxiter = maxiter))
+  t1 <- proc.time()
+  timings["rand_ted",i] <- (t1 - t0)["elapsed"]
+  loglik_test["rand_ted",i] <- udr:::loglik_ud(dat_test,fit$w,fit$U,fit$V,
+                                               version = "Rcpp")
+  fit["X"] <- NULL
+  fit["P"] <- NULL
+  f$rand_ted <- fit
+  
+  # Run the TED updates using the IW penalty.
+  t0 <- proc.time()
+  fit <- ud_fit(fit0,verbose = TRUE,
+                control = list(unconstrained.update = "ted",
+                  resid.update = "none",tol = tol,tol.lik = tol_lik,
+                  lambda = lambda_iw,penalty.type = "iw",
+                  maxiter = maxiter))
+  t1 <- proc.time()
+  timings["rand_ted_iw",i] <- (t1 - t0)["elapsed"]
+  loglik_test["rand_ted_iw",i] <- udr:::loglik_ud(dat_test,fit$w,fit$U,fit$V,
+                                                  version = "Rcpp")
+  fit["X"] <- NULL
+  fit["P"] <- NULL
+  f$rand_ted_iw <- fit
+
+  # Run the TED updates with the nuclear norm penalty.
+  t0 <- proc.time()
+  fit <- ud_fit(fit0,verbose = TRUE,
+                control = list(unconstrained.update = "ted",
+                  resid.update = "none",tol = tol,tol.lik = tol_lik,
+                  lambda = lambda_nn,penalty.type = "nu",
+                  maxiter = maxiter))
+  t1 <- proc.time() 
+  timings["rand_ted_nn",i] <- (t1 - t0)["elapsed"]
+  loglik_test["rand_ted_nn",i] <- udr:::loglik_ud(dat_test,fit$w,fit$U,fit$V,
+                                                  version = "Rcpp")
+  fit["X"] <- NULL
+  fit["P"] <- NULL
+  f$rand_ted_nn <- fit
+  
   # Store the results for this "fold".
   fits[[i]] <- f
-
-  stop()
-  
-  # Random initialization
-  ## Run ED & ED.iw
-  f0 <- ud_init(dat.train,V = dat$null.cor,U_scaled = NULL,
-                U_unconstrained = U.random,n_rank1 = 0)
-  ed <- ud_fit(f0,verbose = TRUE,
-               control = list(unconstrained.update = "ed",
-                 resid.update = "none",tol = 1e-02,tol.lik = 1e-2,
-                 lambda = 0,maxiter = 5e3))
-  ed.iw <- ud_fit(f0,verbose = TRUE,
-                  control = list(unconstrained.update = "ed",
-                    resid.update = "none",penalty.type = "iw",
-                    tol = 1e-02,tol.lik = 1e-2,lambda = lambda,
-                    maxiter = 5e3))
-  
-  ## Run TED & TED.iw
-  f0 <- ud_init(dat.train,V = dat$null.cor,U_scaled = NULL,
-                U_unconstrained = U.random,n_rank1 = 0)
-  ted <- ud_fit(f0,verbose = TRUE,
-                control = list(unconstrained.update = "ted",
-                  resid.update = "none",penalty.type = "iw",
-                  tol = 1e-02,tol.lik = 1e-2,lambda = 0,maxiter = 5e3))
-  ted.iw <- ud_fit(f0,verbose = TRUE,
-                   control = list(unconstrained.update = "ted",
-                     resid.update = "none",tol = 1e-02,tol.lik = 1e-2,
-                     lambda = lambda,penalty.type = "iw",maxiter = 5e3))
-  
-  time.init <- t2 - t1
-  res2      <- list(ed,ed.iw,ted,ted.iw)
-  result    <- list(res1,res2,dat.test,time.init)
-  names(result) <- c("smart","random","test","time")
-  output[[i]]   <- result
 }
 
 # Save the results to an .RData file.
-# TO DO.
+save(list = c("lambda_iw","lambda_nn","tol","tol_lik","maxiter",
+              "fits","loglik_test","timings"),
+     file = "gtex_main_out.RData")
+resaveRdaFiles("gtex_main_out.RData")
+

@@ -29,7 +29,7 @@ lambda_nn <- 34.0
 nfold     <- 5
 tol       <- 0.01
 tol_lik   <- 0.01
-maxiter   <- 50 # 1000
+maxiter   <- 1000
 
 smart_initialization <- function (mash_data) {
   X.center <- apply(mash_data$Bhat,2,function(x) x - mean(x))

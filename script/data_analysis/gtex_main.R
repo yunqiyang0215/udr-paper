@@ -1,47 +1,66 @@
+# This script performs the main analysis of the GTEx data.
+#
+# This is an updated version of the script from here:
+# /project2/mstephens/yunqiyang/udr-paper/result202306/data_analysis/analysis2.R
+#
+#
+# sinteractive -p mstephens --account=pi-mstephens -c 4 --mem=8G \
+#   --time=48:00:00
+# module load R/4.1.0
+# R --no-save
+# > .libPaths()[1]
+# [1] "/home/pcarbo/R_libs_4_10"
+#
+
 # Load the packages needed to perform the analyses.
-library(udr)           # 0.3.158
+library(tools)
+library(udr)   # 0.3.158
+library(mashr) # 0.2.81
+#
 # library(Matrix)        # 1.3.3
 # library(mvtnorm)       # 1.3.3
 # library(ashr)          # 2.2.66
-# library(mashr)         # 0.2.81
 # library(flashier)      # 1.0.56
 # library(LaplacesDemon) # 16.1.6
+#
 
+# Load the z-scores stored as a 15,636 x 49 matrix (genes x tissues).
+dat <- readRDS("../../data/data_analysis/GTEx_V8_strong_z.rds")
+n <- nrow(dat$strong.z)
+R <- ncol(dat$strong.z)
 
-smart_initialization <- function(mash_data) {
+# Tuning parameters.
+lambda_iw <- 83.4
+lambda_nn <- 34.0
+nfold     <- 5
+tol       <- 0.01
+tol_lik   <- 0.01
+maxiter   <- 1000
+
+smart_initialization <- function (mash_data) {
   X.center <- apply(mash_data$Bhat,2,function(x) x - mean(x))
-  XtX <- t(X.center) %*% X.center / nrow(X.center)
-  # From mashr vignette.
-  U.f <- cov_flash(mash_data,factors = "nonneg",tag = "non_neg")
-  U.pca <- cov_pca(mash_data,5)
-  U.init <- c(U.f,U.pca,list(XtX))
+  XtX      <- t(X.center) %*% X.center / nrow(X.center)
+  U.f      <- cov_flash(mash_data,factors = "nonneg",tag = "non_neg")
+  U.pca    <- cov_pca(mash_data,5)
+  U.init   <- c(U.f,U.pca,list(XtX))
   return(U.init)
 }
 
-# split data
-output <- list()
-
-nfold <- 5
+# Repeat for each "fold".
 split_points <- round(seq(from = 0,to = n,length.out = nfold + 1))
-
 for (i in 1:nfold) {
   
-  # Split data.
-  indx      <- c((split_points[i] + 1):split_points[i + 1])
-  dat.test  <- dat$strong.z[indx,]
-  dat.train <- dat$strong.z[-indx,]
-  
-  # Set mashr data object.
-  mash_data <- mashr::mash_set_data(dat.train,V = dat$null.cor)
-  
-  # Initialization.
-  V  <- dat$null.cor
-  t1 <- proc.time()
-  U.smart <- smart_initialization(mash_data)
-  t2 <- proc.time()
-  K  <- length(U.smart)
-  R  <- nrow(U.smart[[1]])
-  lambda <- R
+  # Split the data into a "training set" and a "test set".
+  indx      <- c(seq(split_points[i] + 1,split_points[i + 1]))
+  dat_test  <- dat$strong.z[indx,]
+  dat_train <- dat$strong.z[-indx,]
+  mash_data <- mashr::mash_set_data(dat_train,V = dat$null.cor)
+
+  # "Smart" initialization.
+  U_smart <- smart_initialization(mash_data)
+  K       <- length(U.smart)
+
+  stop()
   
   U.random <- list()
   for (k in 1:K) {

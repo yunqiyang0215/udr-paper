@@ -22,4 +22,4 @@ output: workflowr::wflow_html
 
 + [GTEx V8 data overview](gtex_data_overview.html)
 
-+ [Updated analysis of the GTEx data](gtex_main.Rmd)
++ [Updated analysis of the GTEx data](gtex_main.html)

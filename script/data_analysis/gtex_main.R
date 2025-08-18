@@ -42,7 +42,7 @@ smart_initialization <- function (mash_data) {
   XtX      <- t(X.center) %*% X.center / nrow(X.center)
   U.f      <- cov_flash(mash_data,factors = "nonneg",tag = "non_neg")
   U.pca    <- cov_pca(mash_data,5)
-  U.init   <- c(U.f,U.pca,list(XtX))
+  U.init   <- c(U.f,U.pca,list(XtX = XtX))
   return(U.init)
 }
 
@@ -58,7 +58,7 @@ for (i in 1:nfold) {
 
   # "Smart" initialization.
   U_smart <- smart_initialization(mash_data)
-  K       <- length(U.smart)
+  K <- length(U_smart)
 
   stop()
   

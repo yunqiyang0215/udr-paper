@@ -1,0 +1,28 @@
+---
+title: Updated analysis of the GTEx data
+author: Yunqi Yang and Peter Carbonetto
+output: workflowr::wflow_html
+---
+
+Here we summarize the results of the updated udr analysis of the GTEx
+data.
+
+```{r knitr-opts, include=FALSE}
+knitr::opts_chunk$set(comment = "#",collapse = TRUE,results = "hold",
+                      fig.align = "center",dpi = 120)
+```
+
+Load the packages used in the analyses below:
+
+```{r load-pkgs, message=FALSE}
+library(ggplot2)
+library(cowplot)
+```
+
+Load the z-scores:
+
+```{r load-data}
+dat <- readRDS("../../data/data_analysis/GTEx_V8_strong_z.rds")
+```
+
+

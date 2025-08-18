@@ -37,3 +37,39 @@ Load the results of the cross-validation:
 ```{r load-cv}
 load("output/data_analysis/gtex_cv_out.RData")
 ```
+
+These two plots summarize the results of the cross-validation, showing
+the setting of $\lambda$ vs. the test-set log-likelihood (relative to
+the largest achieved test-set log-likelihood):
+
+```{r cv-results-1, fig.height=2, fig.width=4.5}
+n <- 3127
+pdat <- data.frame(lambda = log10(LAMBDA),
+                   iw = cv_iw_loglik_test/n,
+                   nn = cv_nn_loglik_test/n)
+pdat <- transform(pdat,
+                  iw = iw - max(iw),
+				  nn = nn - max(nn))
+p1 <- ggplot(pdat,aes(x = lambda,y = iw)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = seq(-1,3,0.5)) +
+  labs(x = "log10 lambda",y = "mean test-set loglik") +
+  theme_cowplot(font_size = 10)
+p2 <- ggplot(pdat,aes(x = lambda,y = nn)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = seq(-1,3,0.5)) +
+  labs(x = "log10 lambda",y = "mean test-set loglik") +
+  theme_cowplot(font_size = 10)
+plot_grid(p1,p2,nrow = 1,ncol = 2)
+```
+
+These are the settings of the penalty strength parameter $\lambda$
+that achieve the best test-set log-likelihood for the inverse Wishart
+(IW) penalty and the nuclear norm (NN) penalty:
+
+```{r cv-results-2}
+LAMBDA[which.max(cv_iw_loglik_test)]
+LAMBDA[which.max(cv_nn_loglik_test)]
+```

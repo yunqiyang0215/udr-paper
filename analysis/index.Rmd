@@ -1,10 +1,8 @@
 ---
-title: "Home"
-Date: October, 2022
+title: Overview of analyses for udr paper
 site: workflowr::wflow_site
 output: workflowr::wflow_html
 ---
-
 
 + [Test code for true positive rate](test_tpr_code.html)
 
@@ -23,3 +21,5 @@ output: workflowr::wflow_html
 + [Compare test loglikelihood using simulation from real data](simulation_real_data.html)
 
 + [GTEx V8 data overview](gtex_data_overview.html)
+
++ [Updated analysis of the GTEx data](gtex_main.Rmd)

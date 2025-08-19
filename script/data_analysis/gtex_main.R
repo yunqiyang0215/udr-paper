@@ -27,8 +27,8 @@ R <- ncol(dat$strong.z)
 lambda_iw <- 83.4
 lambda_nn <- 34.0
 nfold     <- 5
-tol       <- 0.01
-tol_lik   <- 0.01
+tol       <- 0.0001
+tol_lik   <- 0.0001
 maxiter   <- 1000
 
 smart_initialization <- function (mash_data) {

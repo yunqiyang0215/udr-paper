@@ -1,8 +1,9 @@
 # This script performs final analysis of the GTEx data
 # informed by the results of the "gtex_main" analysis.
+# Running this script is expected to take at most 1 h.
 #
 # sinteractive -p mstephens --account=pi-mstephens -c 4 --mem=8G \
-#   --time=36:00:00
+#   --time=4:00:00
 # module load R/4.1.0
 # R --no-save
 # > .libPaths()[1]
@@ -25,7 +26,7 @@ R <- ncol(dat$strong.z)
 lambda  <- 83.4
 tol     <- 0.0001
 tol_lik <- 0.0001
-maxiter <- 50 # 1000
+maxiter <- 1000
 
 # "Smart" initialization
 # ----------------------
@@ -68,7 +69,8 @@ timings["ted_iw"] <- (t1 - t0)["elapsed"]
 fit_ted_iw["X"] <- NULL
 fit_ted_iw["P"] <- NULL
 
-stop()
-
 # Save the results to an .RData file.
-# TO DO.
+save(list = c("lambda","tol","tol_lik","maxiter","timings",
+              "fit_ed","fit_ted_iw"),
+     file = "gtex_all_data_out.RData")
+resaveRdaFiles("gtex_all_data_out.RData")

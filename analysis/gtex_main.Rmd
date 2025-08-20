@@ -73,3 +73,39 @@ that achieve the best test-set log-likelihood for the inverse Wishart
 LAMBDA[which.max(cv_iw_loglik_test)]
 LAMBDA[which.max(cv_nn_loglik_test)]
 ```
+
+Now load the results from running the different variants of udr on the
+training sets and the "left out" test sets:
+
+```{r load-results}
+load("output/data_analysis/gtex_main_out.RData")
+```
+
+Summarize the results in a table:
+
+```{r summarize-results}
+methods <- rownames(loglik_test)
+numiter <- matrix(0,10,5)
+rownames(numiter) <- methods
+colnames(numiter) <- paste0("k",1:5)
+for (i in methods) {
+  numiter[i,] <- sapply(fits,function (x) nrow(x[[i]]$progress))
+}
+timings <- timings/60
+loglik_test_relative <- rowSums(loglik_test)
+loglik_test_relative <- loglik_test_relative - max(loglik_test_relative)
+res <- data.frame(ll_test   = loglik_test_relative/n,
+                  time_mean = rowMeans(timings),
+				  time_min  = apply(timings,1,min),
+				  time_max  = apply(timings,1,max),
+				  iter_mean = rowMeans(numiter),
+				  iter_min  = apply(numiter,1,min),
+				  iter_max  = apply(numiter,1,max))
+rows <- order(res$ll_test,decreasing = TRUE)
+res  <- res[rows,]
+round(res,digits = 3)
+```
+
+TO DO: Re-run (1) TED updates with "smart" initialization and IW
+penalty, (2) ED updates with "smart" initialization and no penalty.
+Create a new script, gtex_all_samples.R.

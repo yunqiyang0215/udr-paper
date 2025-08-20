@@ -1,6 +1,6 @@
-# This script performs final analysis of the GTEx data
-# informed by the results of the "gtex_main" analysis.
-# Running this script is expected to take at most 1 h.
+# This script performs final analysis of the GTEx data informed by the
+# results of the "gtex_main" analysis.  Running this script is
+# expected to take at most 1 h.
 #
 # sinteractive -p mstephens --account=pi-mstephens -c 4 --mem=8G \
 #   --time=4:00:00

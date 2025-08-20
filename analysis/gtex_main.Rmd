@@ -106,6 +106,10 @@ res  <- res[rows,]
 round(res,digits = 3)
 ```
 
+In this table, "ll_test" is the average per-sample test
+log-likelihood, and the "iter" columns give the number of updates
+performed. The running times are in minutes.
+
 TO DO: Re-run (1) TED updates with "smart" initialization and IW
 penalty, (2) ED updates with "smart" initialization and no penalty.
 Create a new script, gtex_all_samples.R.

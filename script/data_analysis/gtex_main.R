@@ -237,4 +237,3 @@ save(list = c("lambda_iw","lambda_nn","tol","tol_lik","maxiter",
               "fits","loglik_test","timings"),
      file = "gtex_main_out.RData")
 resaveRdaFiles("gtex_main_out.RData")
-

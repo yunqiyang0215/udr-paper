@@ -17,7 +17,7 @@
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -30,9 +30,6 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -235,69 +232,6 @@ $(document).ready(function () {
 
 
 
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
 
 </head>
 
@@ -305,16 +239,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -332,13 +256,7 @@ div.tocify {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">Home</a>
-</li>
-<li>
-  <a href="about.html">About</a>
-</li>
-<li>
-  <a href="license.html">License</a>
+  <a href="index.html">Overview</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -388,7 +306,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2025-08-18
+<strong>Last updated:</strong> 2025-08-20
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -519,15 +437,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree43ffa86b0761659e6752bb7e92b7ac1aaa578c27targetblank43ffa86a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreea28a47ecb5cbb5cd6cedbbaf574a29b11d89635etargetblanka28a47ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/yunqiyang0215/udr-paper/tree/43ffa86b0761659e6752bb7e92b7ac1aaa578c27" target="_blank">43ffa86</a>
+<a href="https://github.com/yunqiyang0215/udr-paper/tree/a28a47ecb5cbb5cd6cedbbaf574a29b11d89635e" target="_blank">a28a47e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree43ffa86b0761659e6752bb7e92b7ac1aaa578c27targetblank43ffa86a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreea28a47ecb5cbb5cd6cedbbaf574a29b11d89635etargetblanka28a47ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -537,7 +455,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/yunqiyang0215/udr-paper/tree/43ffa86b0761659e6752bb7e92b7ac1aaa578c27" target="_blank">43ffa86</a>.
+<a href="https://github.com/yunqiyang0215/udr-paper/tree/a28a47ecb5cbb5cd6cedbbaf574a29b11d89635e" target="_blank">a28a47e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -601,6 +519,75 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/a28a47ecb5cbb5cd6cedbbaf574a29b11d89635e/analysis/gtex_main.Rmd" target="_blank">a28a47e</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-08-20
+</td>
+<td>
+Added a table to gtex_main.Rmd summarizing the gtex_main.R output.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/9b8179430b05f54d02b613f72a227aaf568518d0/analysis/gtex_main.Rmd" target="_blank">9b81794</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-08-18
+</td>
+<td>
+Added code chunks to gtex_main.Rmd summarizing the results of the
+cross-validation.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/3d8d8f110a9063c5af663cd2bdc4be26754cb5f2/analysis/gtex_main.Rmd" target="_blank">3d8d8f1</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-08-18
+</td>
+<td>
+A few improvements to gtex_main.Rmd.
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/beac5d8ce5c8f5d7378496335a1d0ef6b16a9b2c/docs/gtex_main.html" target="_blank">beac5d8</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-08-18
+</td>
+<td>
+Ran wflow_publish("analysis/gtex_main.Rmd").
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/yunqiyang0215/udr-paper/blob/43ffa86b0761659e6752bb7e92b7ac1aaa578c27/analysis/gtex_main.Rmd" target="_blank">43ffa86</a>
 </td>
 <td>
@@ -644,7 +631,82 @@ data.</p>
 <pre class="r"><code>library(ggplot2)
 library(cowplot)</code></pre>
 <p>Load the z-scores:</p>
-<pre class="r"><code>dat &lt;- readRDS(&quot;data/data_analysis/GTEx_V8_strong_z.rds&quot;)</code></pre>
+<pre class="r"><code>dat &lt;- readRDS(&quot;data/data_analysis/GTEx_V8_strong_z.rds&quot;)
+dim(dat$strong.z)
+# [1] 15636    49</code></pre>
+<p>Load the results of the cross-validation:</p>
+<pre class="r"><code>load(&quot;output/data_analysis/gtex_cv_out.RData&quot;)</code></pre>
+<p>These two plots summarize the results of the cross-validation,
+showing the setting of <span class="math inline">\(\lambda\)</span>
+vs. the test-set log-likelihood (relative to the largest achieved
+test-set log-likelihood):</p>
+<pre class="r"><code>n &lt;- 3127
+pdat &lt;- data.frame(lambda = log10(LAMBDA),
+                   iw = cv_iw_loglik_test/n,
+                   nn = cv_nn_loglik_test/n)
+pdat &lt;- transform(pdat,
+                  iw = iw - max(iw),
+                  nn = nn - max(nn))
+p1 &lt;- ggplot(pdat,aes(x = lambda,y = iw)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = seq(-1,3,0.5)) +
+  labs(x = &quot;log10 lambda&quot;,y = &quot;mean test-set loglik&quot;) +
+  theme_cowplot(font_size = 10)
+p2 &lt;- ggplot(pdat,aes(x = lambda,y = nn)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = seq(-1,3,0.5)) +
+  labs(x = &quot;log10 lambda&quot;,y = &quot;mean test-set loglik&quot;) +
+  theme_cowplot(font_size = 10)
+plot_grid(p1,p2,nrow = 1,ncol = 2)</code></pre>
+<p><img src="figure/gtex_main.Rmd/cv-results-1-1.png" width="540" style="display: block; margin: auto;" /></p>
+<p>These are the settings of the penalty strength parameter <span
+class="math inline">\(\lambda\)</span> that achieve the best test-set
+log-likelihood for the inverse Wishart (IW) penalty and the nuclear norm
+(NN) penalty:</p>
+<pre class="r"><code>LAMBDA[which.max(cv_iw_loglik_test)]
+LAMBDA[which.max(cv_nn_loglik_test)]
+# [1] 83.37822
+# [1] 34.00783</code></pre>
+<p>Now load the results from running the different variants of udr on
+the training sets and the “left out” test sets:</p>
+<pre class="r"><code>load(&quot;output/data_analysis/gtex_main_out.RData&quot;)</code></pre>
+<p>Summarize the results in a table:</p>
+<pre class="r"><code>methods &lt;- rownames(loglik_test)
+numiter &lt;- matrix(0,10,5)
+rownames(numiter) &lt;- methods
+colnames(numiter) &lt;- paste0(&quot;k&quot;,1:5)
+for (i in methods) {
+  numiter[i,] &lt;- sapply(fits,function (x) nrow(x[[i]]$progress))
+}
+timings &lt;- timings/60
+loglik_test_relative &lt;- rowSums(loglik_test)
+loglik_test_relative &lt;- loglik_test_relative - max(loglik_test_relative)
+res &lt;- data.frame(ll_test   = loglik_test_relative/n,
+                  time_mean = rowMeans(timings),
+                  time_min  = apply(timings,1,min),
+                  time_max  = apply(timings,1,max),
+                  iter_mean = rowMeans(numiter),
+                  iter_min  = apply(numiter,1,min),
+                  iter_max  = apply(numiter,1,max))
+rows &lt;- order(res$ll_test,decreasing = TRUE)
+res  &lt;- res[rows,]
+round(res,digits = 3)
+#              ll_test time_mean time_min time_max iter_mean iter_min iter_max
+# smart_ed_iw    0.000     9.986    8.698   11.405     789.6      706     1000
+# smart_ted_iw  -0.004    10.569    5.211   17.433     469.6      259      708
+# rand_ed_iw    -0.184    13.362   11.940   14.797    1000.0     1000     1000
+# rand_ted_iw   -0.272    16.326    7.325   29.403     592.6      296     1000
+# smart_ted     -0.421    10.549    8.597   12.298     888.2      637     1000
+# smart_ted_nn  -1.330     8.089    6.128   11.422     362.6      281      503
+# rand_ted_nn   -1.352    11.870    7.395   20.841     451.0      307      729
+# rand_ed       -3.361    13.182   11.729   14.830    1000.0     1000     1000
+# rand_ted      -3.390    10.508    7.596   13.309     868.2      660     1000
+# smart_ed      -7.878     6.149    5.170    7.588     478.6      431      574</code></pre>
+<p>TO DO: Re-run (1) TED updates with “smart” initialization and IW
+penalty, (2) ED updates with “smart” initialization and no penalty.
+Create a new script, gtex_all_samples.R.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -679,15 +741,15 @@ Session information
 #  [5] promises_1.3.3     tidyselect_1.2.1   Rcpp_1.1.0         stringr_1.5.1     
 #  [9] git2r_0.33.0       dichromat_2.0-0.1  callr_3.7.5        later_1.4.2       
 # [13] jquerylib_0.1.4    scales_1.4.0       yaml_2.3.10        fastmap_1.2.0     
-# [17] R6_2.6.1           generics_0.1.4     knitr_1.50         tibble_3.3.0      
-# [21] rprojroot_2.0.4    RColorBrewer_1.1-3 bslib_0.9.0        pillar_1.11.0     
-# [25] rlang_1.1.6        cachem_1.1.0       stringi_1.8.7      httpuv_1.6.14     
-# [29] xfun_0.52          getPass_0.2-4      fs_1.6.6           sass_0.4.10       
-# [33] cli_3.6.5          withr_3.0.2        magrittr_2.0.3     ps_1.7.6          
-# [37] digest_0.6.37      grid_4.3.3         processx_3.8.3     rstudioapi_0.15.0 
-# [41] lifecycle_1.0.4    vctrs_0.6.5        evaluate_1.0.4     glue_1.8.0        
-# [45] farver_2.1.2       whisker_0.4.1      rmarkdown_2.29     httr_1.4.7        
-# [49] tools_4.3.3        pkgconfig_2.0.3    htmltools_0.5.8.1</code></pre>
+# [17] R6_2.6.1           labeling_0.4.3     generics_0.1.4     knitr_1.50        
+# [21] tibble_3.3.0       rprojroot_2.0.4    RColorBrewer_1.1-3 bslib_0.9.0       
+# [25] pillar_1.11.0      rlang_1.1.6        cachem_1.1.0       stringi_1.8.7     
+# [29] httpuv_1.6.14      xfun_0.52          getPass_0.2-4      fs_1.6.6          
+# [33] sass_0.4.10        cli_3.6.5          withr_3.0.2        magrittr_2.0.3    
+# [37] ps_1.7.6           digest_0.6.37      grid_4.3.3         processx_3.8.3    
+# [41] rstudioapi_0.15.0  lifecycle_1.0.4    vctrs_0.6.5        evaluate_1.0.4    
+# [45] glue_1.8.0         farver_2.1.2       whisker_0.4.1      rmarkdown_2.29    
+# [49] httr_1.4.7         tools_4.3.3        pkgconfig_2.0.3    htmltools_0.5.8.1</code></pre>
 </div>
 
 
@@ -706,8 +768,6 @@ footer is added to webpages before the MathJax javascript. -->
 
 
 
-</div>
-</div>
 
 </div>
 
@@ -740,35 +800,6 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

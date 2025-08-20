@@ -140,3 +140,33 @@ plot_grid(p1,p2,nrow = 1,ncol = 2)
 ```
 
 TO DO: Plot the effect-sharing patterns from the two analyses.
+
+```{r}
+k <- 15
+U <- fit_ted_iw$U[[k]]$mat
+s <- max(diag(U))
+U <- U/s
+n <- nrow(U)
+pdat <- cbind(expand.grid(row = 1:n,col = 1:n),
+              data.frame(value = as.vector(U)))
+pdat <- subset(pdat,row >= col)
+colors <- colorRampPalette(rev(c("#D73027","#FC8D59","#FEE090","#FFFFBF",
+                                 "#E0F3F8","#91BFDB","#4575B4")))(128)
+p <- ggplot(pdat,aes(x = col,y = row,fill = value)) +
+  geom_tile(color = "white") +
+  scale_x_continuous(breaks = 1:n) +
+  scale_y_continuous(breaks = 1:n,transform = "reverse") +
+  scale_fill_gradientn(values = seq(-1,1,length.out = 128),colors = colors) +
+  guides(fill = "none") +
+  labs(x = "",y = "",title = paste("component",k)) +
+  theme_cowplot(font_size = 10) +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(size = 10,face = "plain"))
+```
+
+These are the 49 tissues:
+
+```{r tissues}
+colnames(dat$strong.z)
+```
+

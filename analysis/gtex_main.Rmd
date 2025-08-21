@@ -65,6 +65,12 @@ p2 <- ggplot(pdat,aes(x = lambda,y = nn)) +
 plot_grid(p1,p2,nrow = 1,ncol = 2)
 ```
 
+```{r cv-results-ggsave, echo=FALSE}
+ggsave("gtex_cv.pdf",
+       plot_grid(p1,p2,nrow = 1,ncol = 2),
+       height = 2.5,width = 5.2)
+```
+
 These are the settings of the penalty strength parameter $\lambda$
 that achieve the best test-set log-likelihood for the inverse Wishart
 (IW) penalty and the nuclear norm (NN) penalty:
@@ -139,6 +145,12 @@ p2 <- ggplot(pdat,aes(x = ted_iw)) +
 plot_grid(p1,p2,nrow = 1,ncol = 2)
 ```
 
+```{r results-all-data-ggsave-1, echo=FALSE}
+ggsave("gtex_weights.pdf",
+       plot_grid(p1,p2,nrow = 1,ncol = 2),
+       height = 2,width = 4.2)
+```
+
 Now let's take a look at the top effect-sharing patterns from the two
 analyses.
 
@@ -149,7 +161,7 @@ effect_plot <- function (U, w, k) {
   s <- max(diag(U))
   U <- U/s
   n <- nrow(U)
-  plot_title <- sprintf("k%d (w = %0.3f, s = %0.2f)",k,w,s)
+  plot_title <- sprintf("k%d (w = %0.4f, s = %0.3f)",k,w,s)
   pdat <- cbind(expand.grid(row = 1:n,col = 1:n),
                 data.frame(value = as.vector(U)))
   pdat <- subset(pdat,row >= col)
@@ -186,6 +198,15 @@ plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
 		  nrow = 3,ncol = 4)
 ```
 
+```{r ed-top-effect-sharing-patterns-ggsave, echo=FALSE}
+ggsave("gtex_sharing_patterns_ed.pdf",
+       plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
+                 plots[[5]],plots[[6]],plots[[7]],plots[[8]],
+		         plots[[9]],plots[[10]],plots[[11]],plots[[12]],
+		         nrow = 3,ncol = 4),
+       height = 7,width = 8)
+```
+
 These are the top 12 effect-sharing patterns from running the TED
 updates with the IW penalty on the covariance matrices:
 
@@ -205,6 +226,15 @@ plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
 		  nrow = 3,ncol = 4)
 ```
 
+```{r ted-iw-top-effect-sharing-patterns-ggsave, echo=FALSE}
+ggsave("gtex_sharing_patterns_ted_iw.pdf",
+       plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
+                 plots[[5]],plots[[6]],plots[[7]],plots[[8]], 
+ 		         plots[[9]],plots[[10]],plots[[11]],plots[[12]],
+		         nrow = 3,ncol = 4),
+       height = 7,width = 8)
+```
+
 These are the 49 tissues:
 
 ```{r tissues}
@@ -213,12 +243,17 @@ colnames(dat$strong.z)
 
 This is the legend for the effect-sharing plots:
 
-```{r effect-sharing-plot,legend,fig.height=2,fig.width=2.75}
+```{r effect-sharing-plot-legend, fig.height=2, fig.width=2.75}
 pdat <- data.frame(x = seq(1,3,length.out = 1000),
                    y = seq(1,3,length.out = 1000),
 				   value = seq(-1,1,length.out = 1000))
-ggplot(pdat,aes(x = x,y = y,color = value)) +
+p <- ggplot(pdat,aes(x = x,y = y,color = value)) +
   geom_point() +
   scale_color_gradientn(colors = colors,values = seq(0,1,length.out = 9)) +
   theme_cowplot(font_size = 12)
+print(p)
+```
+
+```{r effect-sharing-plot-legend-ggsave, echo=FALSE}
+ggsave("gtex_sharing_pattern_legend.pdf",p,height = 2,width = 2.75)
 ```

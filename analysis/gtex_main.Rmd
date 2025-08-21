@@ -139,29 +139,70 @@ p2 <- ggplot(pdat,aes(x = ted_iw)) +
 plot_grid(p1,p2,nrow = 1,ncol = 2)
 ```
 
-TO DO: Plot the effect-sharing patterns from the two analyses.
+Now let's take a look at the top effect-sharing patterns from the two
+analyses.
 
-```{r}
-k <- 15
-U <- fit_ted_iw$U[[k]]$mat
-s <- max(diag(U))
-U <- U/s
-n <- nrow(U)
-pdat <- cbind(expand.grid(row = 1:n,col = 1:n),
-              data.frame(value = as.vector(U)))
-pdat <- subset(pdat,row >= col)
-colors <- colorRampPalette(rev(c("#D73027","#FC8D59","#FEE090","#FFFFBF",
-                                 "#E0F3F8","#91BFDB","#4575B4")))(128)
-p <- ggplot(pdat,aes(x = col,y = row,fill = value)) +
-  geom_tile(color = "white") +
-  scale_x_continuous(breaks = 1:n) +
-  scale_y_continuous(breaks = 1:n,transform = "reverse") +
-  scale_fill_gradientn(values = seq(-1,1,length.out = 128),colors = colors) +
-  guides(fill = "none") +
-  labs(x = "",y = "",title = paste("component",k)) +
-  theme_cowplot(font_size = 10) +
-  theme(axis.line = element_blank(),
-        plot.title = element_text(size = 10,face = "plain"))
+```{r effect-plot}
+colors <- c("#3288bd","#66c2a5","#abdda4","#e6f598","#ffffbf",
+            "#fee08b","#fdae61","#f46d43","#d53e4f")
+effect_plot <- function (U, w, k) {
+  s <- max(diag(U))
+  U <- U/s
+  n <- nrow(U)
+  plot_title <- sprintf("k%d (w = %0.3f, s = %0.2f)",k,w,s)
+  pdat <- cbind(expand.grid(row = 1:n,col = 1:n),
+                data.frame(value = as.vector(U)))
+  pdat <- subset(pdat,row >= col)
+  pdat <- rbind(pdat,data.frame(row = c(1,1),col = c(n-1,n),value = c(-1,1)))
+  return(ggplot(pdat,aes(x = col,y = row,fill = value)) +
+    geom_tile(color = "white") +
+    scale_x_continuous(breaks = c(1,seq(5,n,5),49)) +
+    scale_y_continuous(breaks = c(1,seq(5,n,5),49),transform = "reverse") +
+    scale_fill_gradientn(colors = colors,values = seq(0,1,length.out = 9)) +
+    guides(fill = "none") +
+    labs(x = "",y = "",title = plot_title) +
+    theme_cowplot(font_size = 8) +
+    theme(axis.line = element_blank(),
+          plot.title = element_text(size = 8,face = "plain")))
+}
+```
+
+These are the top 12 effect-sharing patterns from running the ED
+updates with no penalty on the covariance matrices:
+
+```{r ed-top-effect-sharing-patterns, fig.height=6.75, fig.width=8}
+w <- fit_ed$w
+k <- order(fit_ed$w,decreasing = TRUE)
+k <- k[1:12]
+plots <- vector("list",12)
+names(plots) <- paste0("k",k)
+for (i in k) {
+  U <- fit_ed$U[[i]]$mat
+  plots[[paste0("k",i)]] <- effect_plot(U,w[i],i)
+}
+plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
+          plots[[5]],plots[[6]],plots[[7]],plots[[8]],
+		  plots[[9]],plots[[10]],plots[[11]],plots[[12]],
+		  nrow = 3,ncol = 4)
+```
+
+These are the top 12 effect-sharing patterns from running the TED
+updates with the IW penalty on the covariance matrices:
+
+```{r ted-iw-top-effect-sharing-patterns, fig.height=6.75, fig.width=8}
+w <- fit_ted_iw$w
+k <- order(fit_ted_iw$w,decreasing = TRUE)
+k <- k[1:12]
+plots <- vector("list",12)
+names(plots) <- paste0("k",k)
+for (i in k) {
+  U <- fit_ted_iw$U[[i]]$mat
+  plots[[paste0("k",i)]] <- effect_plot(U,w[i],i)
+}
+plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
+          plots[[5]],plots[[6]],plots[[7]],plots[[8]],
+		  plots[[9]],plots[[10]],plots[[11]],plots[[12]],
+		  nrow = 3,ncol = 4)
 ```
 
 These are the 49 tissues:
@@ -170,3 +211,14 @@ These are the 49 tissues:
 colnames(dat$strong.z)
 ```
 
+This is the legend for the effect-sharing plots:
+
+```{r effect-sharing-plot,legend,fig.height=2,fig.width=2.75}
+pdat <- data.frame(x = seq(1,3,length.out = 1000),
+                   y = seq(1,3,length.out = 1000),
+				   value = seq(-1,1,length.out = 1000))
+ggplot(pdat,aes(x = x,y = y,color = value)) +
+  geom_point() +
+  scale_color_gradientn(colors = colors,values = seq(0,1,length.out = 9)) +
+  theme_cowplot(font_size = 12)
+```

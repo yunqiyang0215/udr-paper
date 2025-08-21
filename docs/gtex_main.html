@@ -437,15 +437,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree167721d610ab3dab0382f313ca6ce602e4e58c38targetblank167721da">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree971a61bced0e8de724edd12da6a01b5c62307abatargetblank971a61ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/yunqiyang0215/udr-paper/tree/167721d610ab3dab0382f313ca6ce602e4e58c38" target="_blank">167721d</a>
+<a href="https://github.com/yunqiyang0215/udr-paper/tree/971a61bced0e8de724edd12da6a01b5c62307aba" target="_blank">971a61b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree167721d610ab3dab0382f313ca6ce602e4e58c38targetblank167721da"
+id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree971a61bced0e8de724edd12da6a01b5c62307abatargetblank971a61ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -455,7 +455,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/yunqiyang0215/udr-paper/tree/167721d610ab3dab0382f313ca6ce602e4e58c38" target="_blank">167721d</a>.
+<a href="https://github.com/yunqiyang0215/udr-paper/tree/971a61bced0e8de724edd12da6a01b5c62307aba" target="_blank">971a61b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -469,7 +469,16 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-working directory clean
+Ignored files:
+    Ignored:    .DS_Store
+
+Untracked files:
+    Untracked:  gtex_cv.pdf
+    Untracked:  gtex_sharing_pattern_legend.pdf
+    Untracked:  gtex_sharing_patterns_ed.pdf
+    Untracked:  gtex_sharing_patterns_ted_iw.pdf
+    Untracked:  gtex_weights.pdf
+
 </code></pre>
 <p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not
@@ -514,6 +523,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/971a61bced0e8de724edd12da6a01b5c62307aba/analysis/gtex_main.Rmd" target="_blank">971a61b</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-08-21
+</td>
+<td>
+wflow_publish("analysis/gtex_main.Rmd", view = F, verbose = T)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/e6df56452bf0205dca12e6e1bdcba240d502708f/docs/gtex_main.html" target="_blank">e6df564</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-08-21
+</td>
+<td>
+Added the final estimates of the effect-sharing patterns to the
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -853,6 +896,43 @@ p2 &lt;- ggplot(pdat,aes(x = ted_iw)) +
   theme_cowplot(font_size = 10)
 plot_grid(p1,p2,nrow = 1,ncol = 2)</code></pre>
 <p><img src="figure/gtex_main.Rmd/examine-results-all-data-2-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-examine-results-all-data-2-1">
+Past versions of examine-results-all-data-2-1.png
+</button>
+</p>
+<div id="fig-examine-results-all-data-2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/e6df56452bf0205dca12e6e1bdcba240d502708f/docs/figure/gtex_main.Rmd/examine-results-all-data-2-1.png" target="_blank">e6df564</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-08-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Now let’s take a look at the top effect-sharing patterns from the two
 analyses.</p>
 <pre class="r"><code>colors &lt;- c(&quot;#3288bd&quot;,&quot;#66c2a5&quot;,&quot;#abdda4&quot;,&quot;#e6f598&quot;,&quot;#ffffbf&quot;,
@@ -861,7 +941,7 @@ effect_plot &lt;- function (U, w, k) {
   s &lt;- max(diag(U))
   U &lt;- U/s
   n &lt;- nrow(U)
-  plot_title &lt;- sprintf(&quot;k%d (w = %0.3f, s = %0.2f)&quot;,k,w,s)
+  plot_title &lt;- sprintf(&quot;k%d (w = %0.4f, s = %0.3f)&quot;,k,w,s)
   pdat &lt;- cbind(expand.grid(row = 1:n,col = 1:n),
                 data.frame(value = as.vector(U)))
   pdat &lt;- subset(pdat,row &gt;= col)
@@ -893,6 +973,43 @@ plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
           plots[[9]],plots[[10]],plots[[11]],plots[[12]],
           nrow = 3,ncol = 4)</code></pre>
 <p><img src="figure/gtex_main.Rmd/ed-top-effect-sharing-patterns-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-ed-top-effect-sharing-patterns-1">
+Past versions of ed-top-effect-sharing-patterns-1.png
+</button>
+</p>
+<div id="fig-ed-top-effect-sharing-patterns-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/e6df56452bf0205dca12e6e1bdcba240d502708f/docs/figure/gtex_main.Rmd/ed-top-effect-sharing-patterns-1.png" target="_blank">e6df564</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-08-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>These are the top 12 effect-sharing patterns from running the TED
 updates with the IW penalty on the covariance matrices:</p>
 <pre class="r"><code>w &lt;- fit_ted_iw$w
@@ -909,6 +1026,43 @@ plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
           plots[[9]],plots[[10]],plots[[11]],plots[[12]],
           nrow = 3,ncol = 4)</code></pre>
 <p><img src="figure/gtex_main.Rmd/ted-iw-top-effect-sharing-patterns-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-ted-iw-top-effect-sharing-patterns-1">
+Past versions of ted-iw-top-effect-sharing-patterns-1.png
+</button>
+</p>
+<div id="fig-ted-iw-top-effect-sharing-patterns-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/e6df56452bf0205dca12e6e1bdcba240d502708f/docs/figure/gtex_main.Rmd/ted-iw-top-effect-sharing-patterns-1.png" target="_blank">e6df564</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-08-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>These are the 49 tissues:</p>
 <pre class="r"><code>colnames(dat$strong.z)
 #  [1] &quot;Adipose_Subcutaneous&quot;                 
@@ -964,11 +1118,12 @@ plot_grid(plots[[1]],plots[[2]],plots[[3]],plots[[4]],
 <pre class="r"><code>pdat &lt;- data.frame(x = seq(1,3,length.out = 1000),
                    y = seq(1,3,length.out = 1000),
                    value = seq(-1,1,length.out = 1000))
-ggplot(pdat,aes(x = x,y = y,color = value)) +
+p &lt;- ggplot(pdat,aes(x = x,y = y,color = value)) +
   geom_point() +
   scale_color_gradientn(colors = colors,values = seq(0,1,length.out = 9)) +
-  theme_cowplot(font_size = 12)</code></pre>
-<p><img src="figure/gtex_main.Rmd/effect-sharing-plot,legend-1.png" width="330" style="display: block; margin: auto;" /></p>
+  theme_cowplot(font_size = 12)
+print(p)</code></pre>
+<p><img src="figure/gtex_main.Rmd/effect-sharing-plot-legend-1.png" width="330" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1002,16 +1157,17 @@ Session information
 #  [1] gtable_0.3.6       jsonlite_2.0.0     dplyr_1.1.4        compiler_4.3.3    
 #  [5] promises_1.3.3     tidyselect_1.2.1   Rcpp_1.1.0         stringr_1.5.1     
 #  [9] git2r_0.33.0       dichromat_2.0-0.1  callr_3.7.5        later_1.4.2       
-# [13] jquerylib_0.1.4    scales_1.4.0       yaml_2.3.10        fastmap_1.2.0     
-# [17] R6_2.6.1           labeling_0.4.3     generics_0.1.4     knitr_1.50        
-# [21] tibble_3.3.0       rprojroot_2.0.4    RColorBrewer_1.1-3 bslib_0.9.0       
-# [25] pillar_1.11.0      rlang_1.1.6        cachem_1.1.0       stringi_1.8.7     
-# [29] httpuv_1.6.14      xfun_0.52          getPass_0.2-4      fs_1.6.6          
-# [33] sass_0.4.10        cli_3.6.5          withr_3.0.2        magrittr_2.0.3    
-# [37] ps_1.7.6           digest_0.6.37      grid_4.3.3         processx_3.8.3    
-# [41] rstudioapi_0.15.0  lifecycle_1.0.4    vctrs_0.6.5        evaluate_1.0.4    
-# [45] glue_1.8.0         farver_2.1.2       whisker_0.4.1      rmarkdown_2.29    
-# [49] httr_1.4.7         tools_4.3.3        pkgconfig_2.0.3    htmltools_0.5.8.1</code></pre>
+# [13] jquerylib_0.1.4    textshaping_0.3.7  systemfonts_1.0.6  scales_1.4.0      
+# [17] yaml_2.3.10        fastmap_1.2.0      R6_2.6.1           labeling_0.4.3    
+# [21] generics_0.1.4     knitr_1.50         tibble_3.3.0       rprojroot_2.0.4   
+# [25] RColorBrewer_1.1-3 bslib_0.9.0        pillar_1.11.0      rlang_1.1.6       
+# [29] cachem_1.1.0       stringi_1.8.7      httpuv_1.6.14      xfun_0.52         
+# [33] getPass_0.2-4      fs_1.6.6           sass_0.4.10        cli_3.6.5         
+# [37] withr_3.0.2        magrittr_2.0.3     ps_1.7.6           digest_0.6.37     
+# [41] grid_4.3.3         processx_3.8.3     rstudioapi_0.15.0  lifecycle_1.0.4   
+# [45] vctrs_0.6.5        evaluate_1.0.4     glue_1.8.0         farver_2.1.2      
+# [49] whisker_0.4.1      ragg_1.2.7         rmarkdown_2.29     httr_1.4.7        
+# [53] tools_4.3.3        pkgconfig_2.0.3    htmltools_0.5.8.1</code></pre>
 </div>
 
 

@@ -445,15 +445,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree5aa2e5538abc9078549433b7fd5d8635545ea2a1targetblank5aa2e55a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreea1ee226c0b451b9b46e13653effd6fd6fce57718targetblanka1ee226a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/yunqiyang0215/udr-paper/tree/5aa2e5538abc9078549433b7fd5d8635545ea2a1" target="_blank">5aa2e55</a>
+<a href="https://github.com/yunqiyang0215/udr-paper/tree/a1ee226c0b451b9b46e13653effd6fd6fce57718" target="_blank">a1ee226</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertree5aa2e5538abc9078549433b7fd5d8635545ea2a1targetblank5aa2e55a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomyunqiyang0215udrpapertreea1ee226c0b451b9b46e13653effd6fd6fce57718targetblanka1ee226a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -463,7 +463,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/yunqiyang0215/udr-paper/tree/5aa2e5538abc9078549433b7fd5d8635545ea2a1" target="_blank">5aa2e55</a>.
+<a href="https://github.com/yunqiyang0215/udr-paper/tree/a1ee226c0b451b9b46e13653effd6fd6fce57718" target="_blank">a1ee226</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -483,6 +483,7 @@ Ignored files:
 
 Untracked files:
     Untracked:  gtex_cv.pdf
+    Untracked:  gtex_lfsr.pdf
     Untracked:  gtex_sharing_pattern_legend.pdf
     Untracked:  gtex_sharing_patterns_ed.pdf
     Untracked:  gtex_sharing_patterns_ted_iw.pdf
@@ -532,6 +533,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/a1ee226c0b451b9b46e13653effd6fd6fce57718/analysis/gtex_main.Rmd" target="_blank">a1ee226</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-08-22
+</td>
+<td>
+wflow_publish("analysis/gtex_main.Rmd", verbose = T, view = F)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/yunqiyang0215/udr-paper/42fb2754075647e85dd8a7bc7f951a0ef37f86df/docs/gtex_main.html" target="_blank">42fb275</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-08-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1323,12 +1358,52 @@ analyses:</p>
 res_ted_iw &lt;- get_lfsr(mash_ted_iw)
 pdat &lt;- data.frame(ed     = quantile(res_ed,seq(0,1,0.05)),
                    ted_iw = quantile(res_ted_iw,seq(0,1,0.05)))
-ggplot(pdat,aes(x = ed,y = ted_iw)) +
+p &lt;- ggplot(pdat,aes(x = ed,y = ted_iw)) +
   geom_point() +
   geom_line() +
   geom_abline(intercept = 0,slope = 1,color = &quot;magenta&quot;,linetype = &quot;dotted&quot;) +
-  theme_cowplot(font_size = 12)</code></pre>
+  scale_x_continuous(breaks = seq(0,1,0.1),limits = c(0,0.55)) +
+  scale_y_continuous(breaks = seq(0,1,0.1),limits = c(0,0.55)) +
+  theme_cowplot(font_size = 10)
+print(p)</code></pre>
 <p><img src="figure/gtex_main.Rmd/mash-lfsr-1.png" width="360" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-mash-lfsr-1">
+Past versions of mash-lfsr-1.png
+</button>
+</p>
+<div id="fig-mash-lfsr-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/yunqiyang0215/udr-paper/blob/42fb2754075647e85dd8a7bc7f951a0ef37f86df/docs/figure/gtex_main.Rmd/mash-lfsr-1.png" target="_blank">42fb275</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2025-08-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The short story here is that the “new” workflow concentrates more of
 the lfsrs on values near 1, meaning fewer “significant” effects on gene
 expression. I interpret this result as the new workflow providing a

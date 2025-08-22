@@ -21,6 +21,7 @@ knitr::opts_chunk$set(comment = "#",collapse = TRUE,results = "hold",
 Load the packages used in the analyses below:
 
 ```{r load-pkgs, message=FALSE}
+library(mashr)
 library(ggplot2)
 library(cowplot)
 ```
@@ -257,3 +258,50 @@ print(p)
 ```{r effect-sharing-plot-legend-ggsave, echo=FALSE}
 ggsave("gtex_sharing_pattern_legend.pdf",p,height = 2,width = 2.75)
 ```
+
+Let's briefly understand how these choices of prior covariances would
+affect a MASH analysis of the GTEx data.
+
+```{r mash, cache=TRUE}
+mash_data   <- mashr::mash_set_data(dat$strong.z,V = dat$null.cor)
+U_ed        <- lapply(fit_ed$U,"[[","mat")
+U_ted_iw    <- lapply(fit_ted_iw$U,"[[","mat")
+mash_ed     <- mash(mash_data,U_ed)
+mash_ted_iw <- mash(mash_data,U_ted_iw)
+```
+
+As expected, using the covariance matrices estimated using the "new"
+workflow (smart initialization, TED updates, IW penalty) resulted in
+a more even spread of the mixture weights:
+
+```{r mash-weights}
+sum(mash_ed$fitted_g$pi > 0.01)
+sum(mash_ted_iw$fitted_g$pi > 0.01)
+```
+
+This plot compares the 5% quantiles of the lfsrs from the two MASH analyses:
+
+```{r mash-lfsr, fig.height=3, fig.width=3}
+res_ed     <- get_lfsr(mash_ed)
+res_ted_iw <- get_lfsr(mash_ted_iw)
+pdat <- data.frame(ed     = quantile(res_ed,seq(0,1,0.05)),
+                   ted_iw = quantile(res_ted_iw,seq(0,1,0.05)))
+ggplot(pdat,aes(x = ed,y = ted_iw)) +
+  geom_point() +
+  geom_line() +
+  geom_abline(intercept = 0,slope = 1,color = "magenta",linetype = "dotted") +
+  theme_cowplot(font_size = 12)
+```
+
+The short story here is that the "new" workflow concentrates more of the
+lfsrs on values near 1, meaning fewer "significant" effects on gene
+expression. I interpret this result as the new workflow providing a
+posterior distribution than is better calibrated. (Can we say that the
+posterior distribution is better calibrated, or is the lfsrs that are
+better calibrated?) The question of how to obtain a "well calibrated"
+MASH model remains an open question; one limitation of MASH
+(and more generally empirical Bayes methods) is that they do not
+fully account for uncertainty in the model and model parameters,
+notably in the prior covariance matrices. This is why better estimates
+of the prior covariance matrices will result in a more trustworthy
+MASH analysis.

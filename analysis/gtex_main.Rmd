@@ -286,14 +286,13 @@ res_ed     <- get_lfsr(mash_ed)
 res_ted_iw <- get_lfsr(mash_ted_iw)
 pdat <- data.frame(ed     = quantile(res_ed,seq(0,1,0.05)),
                    ted_iw = quantile(res_ted_iw,seq(0,1,0.05)))
-p <- ggplot(pdat,aes(x = ed,y = ted_iw)) +
+ggplot(pdat,aes(x = ed,y = ted_iw)) +
   geom_point() +
   geom_line() +
   geom_abline(intercept = 0,slope = 1,color = "magenta",linetype = "dotted") +
   scale_x_continuous(breaks = seq(0,1,0.1),limits = c(0,0.55)) +
   scale_y_continuous(breaks = seq(0,1,0.1),limits = c(0,0.55)) +
   theme_cowplot(font_size = 10)
-print(p)
 ```
 
 The short story here is that the "new" workflow concentrates more of the
